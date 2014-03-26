@@ -1,0 +1,27 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+
+{% block root_breadcrumb %}{% endblock %}
+
+{% block fos_user_content %}
+    <div class="row login">
+        <div class="large-6 large-centered columns">
+            <div class="panel">
+                {% if invalid_email is defined %}
+                    <div class="error">{{ 'resetting.request.invalid_email'|trans({'%email%': invalid_email}, 'FOSUserBundle') }}</div>
+                {% endif %}
+
+                <form action="{{ path('fos_user_resetting_send_email') }}" method="POST" class="fos_user_resetting_request">
+                    <div>
+                        <label for="email">{{ 'resetting.request.email'|trans({}, 'FOSUserBundle') }}</label>
+                        <input type="text" id="email" name="email" required="required" />
+                    </div>
+                    <div>
+                        <input class="button success" type="submit" value="{{ 'resetting.request.submit'|trans({}, 'FOSUserBundle') }}" />
+                    </div>
+                </form>
+
+                <a href="{{ path("fos_user_security_login") }}">Back to login</a>
+            </div>
+        </div>
+    </div>
+{% endblock fos_user_content %}

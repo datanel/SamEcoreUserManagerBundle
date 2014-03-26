@@ -1,0 +1,13 @@
+{% if (link_back_to_list is not defined) or (link_back_to_list != false) -%}
+    <a class="btn btn-default" href="{{ path('sam_user_list') }}">
+        <span class="glyphicon glyphicon-arrow-left"></span> 
+        {{'ctp_user.user.actions.back.list'|trans}}
+    </a>
+{% endif %}
+
+{% if (link_add_user is not defined) or (link_add_user != false) -%}
+    <a class="btn btn-primary" href="{{ path('fos_user_registration_register') }}">
+        <span class="glyphicon glyphicon-plus"></span> 
+        {{'ctp_user.user.actions.add.full'|trans}}
+    </a>
+{% endif %}

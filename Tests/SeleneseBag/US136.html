@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head profile="http://selenium-ide.openqa.org/profiles/test-case">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>US-136 : Un admin peux créer user</title>
+    </head>
+    <body>
+        <table cellpadding="1" cellspacing="1" border="1">
+            <thead>
+                <tr>
+                    <td rowspan="1" colspan="3">US-136 : Un admin peux créer user</td>
+                </tr>
+            </thead>
+            <tbody>
+                <!--Login en ADMIN-->
+                <tr>
+                    <td>open</td>
+                    <td>logout</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>type</td>
+                    <td>id=username</td>
+                    <td>selenium.admin@none.com</td>
+                </tr>
+                <tr>
+                    <td>type</td>
+                    <td>id=password</td>
+                    <td>selenium</td>
+                </tr>
+                <tr>
+                    <td>submitAndWait</td>
+                    <td>//form</td>
+                    <td></td>
+                </tr>
+                <!--Enregistrement d'un compte temporaire-->
+                <tr>
+                    <td>open</td>
+                    <td>register/</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>type</td>
+                    <td>id=fos_user_registration_form_username</td>
+                    <td>temp</td>
+                </tr>
+                <tr>
+                    <td>store</td>
+                    <td>temp@none.com</td>
+                    <td>email</td>
+                </tr>
+                <tr>
+                    <td>type</td>
+                    <td>id=fos_user_registration_form_email</td>
+                    <td>${email}</td>
+                </tr>
+                <tr>
+                    <td>submitAndWait</td>
+                    <td>//form[contains(@class,&quot;fos_user_registration_register&quot;)]</td>
+                    <td></td>
+                </tr>
+                <!--Affichage de la liste des utilisateurs-->
+                <tr>
+                    <td>open</td>
+                    <td>user/</td>
+                    <td></td>
+                </tr>
+                <!--Demande de suppression du compte temporaire-->
+                <tr>
+                    <td>clickAndWait</td>
+                    <td>//tr[./td[contains(.,&quot;${email}&quot;)]]/td/a[contains(@href, &quot;delete&quot;)]</td>
+                    <td></td>
+                </tr>
+                <!--Confirmation de la suppression du compte temporaire-->
+                <tr>
+                    <td>submitAndWait</td>
+                    <td>//form[contains(@action, &quot;delete&quot;)]</td>
+                    <td></td>
+                </tr>
+                <!--Affichage de la liste des utilisateurs-->
+                <tr>
+                    <td>open</td>
+                    <td>user/</td>
+                    <td></td>
+                </tr>
+                <!--Verification que l'utilisateur temporaire est bien supprimé-->
+                <tr>
+                    <td>assertXpathCount</td>
+                    <td>//tr[./td[contains(.,&quot;${email}&quot;)]]</td>
+                    <td>0</td>
+                </tr>
+                <!--Enregistrement d'un compte temporaire avec le meme email-->
+                <tr>
+                    <td>open</td>
+                    <td>register/</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>type</td>
+                    <td>id=fos_user_registration_form_username</td>
+                    <td>temp_other</td>
+                </tr>
+                <tr>
+                    <td>store</td>
+                    <td>temp@none.com</td>
+                    <td>email</td>
+                </tr>
+                <tr>
+                    <td>type</td>
+                    <td>id=fos_user_registration_form_email</td>
+                    <td>${email}</td>
+                </tr>
+                <tr>
+                    <td>submitAndWait</td>
+                    <td>//form[contains(@class,&quot;fos_user_registration_register&quot;)]</td>
+                    <td></td>
+                </tr>
+                <!--Affichage de la liste des utilisateurs-->
+                <tr>
+                    <td>open</td>
+                    <td>user/</td>
+                    <td></td>
+                </tr>
+                <!--Demande de suppression du compte temporaire-->
+                <tr>
+                    <td>clickAndWait</td>
+                    <td>//tr[./td[contains(.,&quot;${email}&quot;)]]/td/a[contains(@href, &quot;delete&quot;)]</td>
+                    <td></td>
+                </tr>
+                <!--Confirmation de la suppression du compte temporaire-->
+                <tr>
+                    <td>submitAndWait</td>
+                    <td>//form[contains(@action, &quot;delete&quot;)]</td>
+                    <td></td>
+                </tr>
+                <!--Login en USER-->
+                <tr>
+                    <td>open</td>
+                    <td>logout</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>type</td>
+                    <td>id=username</td>
+                    <td>selenium.user@none.com</td>
+                </tr>
+                <tr>
+                    <td>type</td>
+                    <td>id=password</td>
+                    <td>selenium</td>
+                </tr>
+                <tr>
+                    <td>submitAndWait</td>
+                    <td>//form</td>
+                    <td></td>
+                </tr>
+                <!--Verification qu'un user n'a pas acces à la suppression du compte-->
+                <tr>
+                    <td>open</td>
+                    <td>user/208/delete</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>assertElementNotPresent</td>
+                    <td>//form[contains(@action, &quot;delete&quot;)]</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>

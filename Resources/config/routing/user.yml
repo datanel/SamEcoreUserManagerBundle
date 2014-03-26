@@ -1,0 +1,18 @@
+sam_user_list:
+    pattern:  /{page}
+    defaults: { _controller: "CanalTPSamEcoreUserManagerBundle:User:index", page: 1 }
+    requirements:
+        page:  \d+
+
+sam_user_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "CanalTPSamEcoreUserManagerBundle:User:edit" }
+
+sam_user_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "CanalTPSamEcoreUserManagerBundle:User:update" }
+    requirements: { _method: post|put }
+
+sam_user_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "CanalTPSamEcoreUserManagerBundle:User:delete" }

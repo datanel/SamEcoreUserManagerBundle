@@ -1,0 +1,51 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+
+{% form_theme form _self %}
+
+{% block choice_widget_expanded %}
+{% spaceless %}
+    <div {{ block('widget_container_attributes') }}>
+    {% for child in form %}
+        {{ form_widget(child) }}
+        {% if multiple != true  %}
+            {{ form_label(child) }}
+        {% endif %}
+    {% endfor %}
+    </div>
+{% endspaceless %}
+{% endblock choice_widget_expanded %}
+
+{% block checkbox_widget %}
+{% spaceless %}
+<label class="checkbox-inline">
+    <input type="checkbox" {{ block('widget_attributes') }} {% if value is defined %} value="{{ value }}"{% endif %} {% if checked %} checked="checked"{% endif %} />
+    {{ label }}
+</label>
+{% endspaceless %}
+{% endblock checkbox_widget %}
+
+{% block breadcrumb %}
+    {{ parent() }}
+    <li class="active"><a href="{{ path('fos_user_registration_register') }}">{{'ctp_user.user.add._breadcrumb'|trans}}</a></li>
+{% endblock %}
+
+{% block main_content -%}
+    <h1>{{'ctp_user.user.add._title'|trans}}</h1>
+    <hr/>
+    <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register custom">
+        {{ form_row(form.username) }}
+        {{ form_row(form.email) }}
+        {{ form_rest(form) }}
+        <div>
+            <input class="btn btn-success" type="submit" value="{{'ctp_user.user.actions.add.short'|trans}}" />
+        </div>
+    </form>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('sam_user_list') }}">
+            {{'ctp_user.user.actions.back.list'|trans}}
+        </a>
+    </li>
+</ul>
+{% endblock %}

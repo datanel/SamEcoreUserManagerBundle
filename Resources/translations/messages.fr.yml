@@ -1,0 +1,77 @@
+ctp_core:
+    _breadcrumb: Accueil
+    _breadcrumb_list: Liste
+    add:
+        short: Ajouter
+    edit:
+        short: Modifier
+    delete:
+        short: Supprimer
+    cancel: Annuler
+
+ctp_user:
+    user:
+        _menu: Utilisateurs
+        _breadcrumb: Utilisateurs
+        roles:
+            super_admin: Super Admin
+            admin: Admin
+            user: User
+        actions:
+            edit:
+                short: Modifier
+            add:
+                short: Ajouter
+                full: Ajouter un utilisateur
+            delete:
+                short: Supprimer
+            cancel:
+                short: Annuler
+            back:
+                list: Revenir à la liste
+            reset_password: Réinitialiser le password
+        list:
+            _breadcrumb: Liste
+            _title: Liste des utilisateurs
+            profil: Rôle
+            affiliate: Filiale
+            name: Nom
+            email: Email
+            last_login: Dernière connexion
+            enabled: Actif
+            locked: Bloqué
+            actions: Actions
+        edit:
+            _breadcrumb: Modification
+            _title: Modification d'un utilisateur
+        add:
+            _breadcrumb: Ajout
+            _title: Ajout d'un utilisateur
+            roles: "Rôle :"
+            groups: "Filiales :"
+        delete:
+            _breadcrumb: Suppression
+            _title: Suppression d'un utilisateur
+            confirm: Etes vous sur de vouloir supprimer cet utilisateur ?
+    affiliate:
+        _menu: Filiales
+        _breadcrumb: Filiales
+        actions:
+            edit:
+                short: Modifier
+            add:
+                short: Ajouter
+                full: Ajouter une filiale
+            back:
+                list: Revenir à la liste
+        list:
+            _breadcrumb: Liste
+            _title: Liste des filiales
+            actions: Actions
+            name: Nom
+        edit:
+            _breadcrumb: Modification
+            _title: Modification d'une filiale
+        add:
+            _breadcrumb: Ajout
+            _title: Ajout d'une filiale

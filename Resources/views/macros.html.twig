@@ -1,0 +1,7 @@
+{% macro display_bool(value) %}
+    {% if value is defined and value == true %}
+        <span class="glyphicon glyphicon-ok"></span>
+    {% else %}
+        <span class="glyphicon glyphicon-remove"></span>
+    {% endif %}
+{% endmacro %}

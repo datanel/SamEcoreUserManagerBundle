@@ -1,0 +1,118 @@
+{% extends "CanalTPSamEcoreUserManagerBundle::generic_list.html.twig" %}
+
+{% block left_menu -%}
+    {% include 'CanalTPSamEcoreUserManagerBundle:User:common_menu.html.twig' with {'link_back_to_list': false} %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ parent() }}
+    <li class="current"><a href="{{ path('sam_user_list') }}">{{'ctp_user.user.list._breadcrumb'|trans}}</a></li>
+{% endblock %}
+
+{% block link_back_to_list -%}{% endblock %}
+
+{% block list_title -%}
+    {{'ctp_user.user.list._title'|trans}}
+{% endblock %}
+
+{% block table_head -%}
+    <th>{{'ctp_user.user.list.profil'|trans}}</th>
+    <th>{{'ctp_user.user.list.groups'|trans}}</th>
+    <th>{{'ctp_user.user.list.name'|trans}}</th>
+    <th>{{'ctp_user.user.list.email'|trans}}</th>
+    <th>{{'ctp_user.user.list.last_login'|trans}}</th>
+    <th>{{'ctp_user.user.list.enabled'|trans}}</th>
+    <th>{{'ctp_user.user.list.locked'|trans}}</th>
+    <th>{{'ctp_user.user.list.actions'|trans}}</th>
+{% endblock %}
+
+{% block table_body -%}
+
+    {% for entity in entities %}
+        <tr>
+            <td>
+                {% for role in entity.roles %}
+                    <div>{{role|trans}}</div>
+                {% endfor %}
+            </td>
+            <td>
+                {% for group in entity.groups -%}
+                    {% if loop.index0 != 0 %},{% endif %}
+                    {{ group.name }}
+                {%- endfor %}
+            </td>
+            <td>{{ entity.lastname }} {{ entity.firstname }}</td>
+            <td><a href="mailto:{{ entity.email }}">{{ entity.email }}</a></td>
+            <td>{% if entity.lastLogin %}{{ entity.lastLogin|date() }}{% endif %}</td>
+            <td class="text-center">{{ macros.display_bool(entity.enabled) }}</td>
+            <td class="text-center">{{ macros.display_bool(entity.locked) }}</td>
+            <td class="action">
+                {% if is_granted('ROLE_SUPER_ADMIN') or 'ROLE_ADMIN' not in entity.roles %}
+                
+                    <div class="btn-group">
+                        <a href="{{ path('sam_user_edit', { 'id': entity.id }) }}" class="btn btn-default">
+                            <span class="glyphicon glyphicon-edit"></span> {{'ctp_user.user.actions.edit.short'|trans}}
+                        </a>
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            <span class="caret"></span>
+                            <span class="sr-only">{{'ctp_core.toggle_menu'|trans}}</span>
+                        </button>
+                        <ul class="dropdown-menu pull-right" role="menu">
+                            <li>    
+                                <a class="danger" href="{{ path('ctp_user_resetting_admin_reset', { 'email': entity.email }) }}">
+                                    <span class="glyphicon glyphicon-refresh"></span> {{'ctp_user.user.actions.reset_password'|trans}}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="danger" href="{{ path('sam_user_delete', { 'id': entity.id }) }}">
+                                    <span class="glyphicon glyphicon-trash"></span> {{'ctp_user.user.actions.delete.short'|trans}}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    
+{% endblock %}
+        
+{% block list_pagination -%}
+
+    {% if pagination is defined %}
+        <div class="text-center">
+            <ul class="pagination">
+                {% if pagination.current > 1 %}
+                    {% set class = ' class="arrow"' %}
+                    {% set href = path('sam_user_list', {'page': pagination.current-1}) %}
+                {% else %}
+                    {% set class = ' class="arrow disabled"' %}
+                    {% set href = path('sam_user_list') %}
+                {% endif %}
+                <li{{class|raw}}><a href="{{ href }}">&laquo;</a></li>
+
+                {% for page in range(1, pagination.total, 1) %}
+                    {% if page == pagination.current %}
+                        {% set class = ' class="active"' %}
+                    {% else %}
+                        {% set class = '' %}
+                    {% endif %}
+                    <li{{class|raw}}>
+                        <a href="{{ path('sam_user_list', {'page': page}) }}">{{ page }}</a>
+                    </li>
+                {% endfor %}
+
+                {% if pagination.current < pagination.total %}
+                    {% set class = ' class="arrow"' %}
+                    {% set href = path('sam_user_list', {'page': pagination.current+1}) %}
+                {% else %}
+                    {% set class = ' class="arrow disabled"' %}
+                    {% set href = path('sam_user_list', {'page': pagination.total}) %}
+                {% endif %}
+                <li{{class|raw}}><a href="{{ href }}">&raquo;</a></li>
+            </ul>
+        </div>
+    {% endif %}
+
+{% endblock %}

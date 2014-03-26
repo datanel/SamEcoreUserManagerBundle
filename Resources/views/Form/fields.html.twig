@@ -1,0 +1,59 @@
+{% trans_default_domain 'messages' %}
+
+{% block form_label %}
+{% if label is not sameas(false) %}
+{% spaceless %}
+    {% if not compound %}
+        {% set label_attr = label_attr|merge({'for': id}) %}
+    {% endif %}
+    {% if required %}
+        {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+    {% endif %}
+    {% if form_type is defined and form_type == 'horizontal' %}
+        {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' control-label')|trim}) %}
+    {% endif %}
+    {% if label is not sameas(false) %}
+        {% if label is empty %}
+            {% set label = name|humanize %}
+        {% endif %}
+        {% if original_type is defined and original_type == 'form' %}
+            <legend{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ label|trans({}, translation_domain) }}</legend>
+        {% else %}
+            <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ label|trans({}, translation_domain) }}</label>
+        {% endif %}
+    {% endif %}
+{% endspaceless %}
+{% endif %}
+{% endblock form_label %}
+
+{% block role_selector_widget %}
+{% spaceless %}
+    <input type="hidden" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+{% endspaceless %}
+{% endblock role_selector_widget %}
+            
+{% block ctp_corebobundle_permission_widget %}
+{% spaceless %}
+        <tr>
+            {{ form_errors(form) }}
+            <td>
+            {{ form_label(form.role) }}
+            {{ form_widget(form.role, {'attr' : {'class' : 'role_label'}}) }}
+           </td>
+           <td>
+            {{ form_widget(form.view) }}
+           </td>
+           <td>
+            {{ form_widget(form.create) }}
+           </td>
+           <td>
+            {{ form_widget(form.edit) }}
+           </td>
+           <td>
+            {{ form_widget(form.delete) }}
+           </td>
+            {{ form_rest(form) }}
+        </tr>
+
+{% endspaceless %}
+{% endblock %}

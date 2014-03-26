@@ -1,0 +1,83 @@
+CanalTP\SamEcoreUserManagerBundle\Entity\User:
+    type: entity
+    table: t_user
+    fields:
+        id:
+            type: integer
+            scale: 0
+            length: null
+            unique: false
+            nullable: false
+            precision: 0
+            id: true
+            generator:
+                strategy: SEQUENCE
+        firstname:
+            type: string
+            scale: 0
+            length: null
+            unique: false
+            nullable: true
+            precision: 0
+        lastname:
+            type: string
+            scale: 0
+            length: null
+            unique: false
+            nullable: true
+            precision: 0
+    manyToMany:
+        applicationRoles:
+            targetEntity: CanalTP\SamCoreBundle\Entity\ApplicationRole
+            cascade:
+              - persist
+            mappedBy: null
+            inversedBy: users
+            joinTable:
+                name: tj_user_applicationrole_uar
+                schema: null
+                joinColumns:
+                    -
+                        name: user_id
+                        unique: false
+                        nullable: true
+                        onDelete: null
+                        columnDefinition: null
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    -
+                        name: apr_id
+                        unique: false
+                        nullable: true
+                        onDelete: null
+                        columnDefinition: null
+                        referencedColumnName: apr_id
+        groups:
+            targetEntity: CanalTP\SamCoreBundle\Entity\Application
+            cascade:
+              - persist
+            mappedBy: null
+            inversedBy: users
+            joinTable:
+                name: tj_user_application_uap
+                schema: null
+                joinColumns:
+                    -
+                        name: user_id
+                        unique: false
+                        nullable: true
+                        onDelete: null
+                        columnDefinition: null
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    -
+                        name: app_id
+                        unique: false
+                        nullable: true
+                        onDelete: null
+                        columnDefinition: null
+                        referencedColumnName: app_id
+            orderBy: null
+    lifecycleCallbacks:
+        postLoad:
+            - onPostLoad

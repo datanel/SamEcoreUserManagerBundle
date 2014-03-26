@@ -1,0 +1,296 @@
+<?xml version="1.0" ?>
+<constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping
+        http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+
+    <class name="CanalTP\SamEcoreUserManagerBundle\Entity\User">
+        <constraint name="Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity">
+            <option name="fields">usernameCanonical</option>
+            <option name="errorPath">username</option>
+            <option name="message">fos_user.username.already_used</option>
+            <option name="groups">
+                <value>AdminRegistration</value>
+            </option>
+        </constraint>
+
+        <constraint name="Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity">
+            <option name="fields">emailCanonical</option>
+            <option name="errorPath">email</option>
+            <option name="message">fos_user.email.already_used</option>
+            <option name="groups">
+                <value>AdminRegistration</value>
+            </option>
+        </constraint>
+
+        <property name="username">
+            <constraint name="NotBlank">
+                <option name="message">fos_user.username.blank</option>
+                <option name="groups">
+                    <value>AdminRegistration</value>
+                    <value>Registration</value>
+                    <value>Profile</value>
+                </option>
+            </constraint>
+            <constraint name="Length">
+                <option name="min">2</option>
+                <option name="minMessage">fos_user.username.short</option>
+                <option name="max">255</option>
+                <option name="maxMessage">fos_user.username.long</option>
+                <option name="groups">
+                    <value>AdminRegistration</value>
+                    <value>Registration</value>
+                    <value>Profile</value>
+                </option>
+            </constraint>
+        </property>
+
+        <property name="email">
+            <constraint name="NotBlank">
+                <option name="message">fos_user.email.blank</option>
+                <option name="groups">
+                    <value>AdminRegistration</value>
+                    <value>Registration</value>
+                    <value>Profile</value>
+                </option>
+            </constraint>
+            <constraint name="Length">
+                <option name="min">2</option>
+                <option name="minMessage">fos_user.email.short</option>
+                <option name="max">254</option>
+                <option name="maxMessage">fos_user.email.long</option>
+                <option name="groups">
+                    <value>AdminRegistration</value>
+                    <value>Registration</value>
+                    <value>Profile</value>
+                </option>
+            </constraint>
+            <constraint name="Email">
+                <option name="message">fos_user.email.invalid</option>
+                <option name="groups">
+                    <value>AdminRegistration</value>
+                    <value>Registration</value>
+                    <value>Profile</value>
+                </option>
+            </constraint>
+        </property>
+
+        <property name="plainPassword">
+            <constraint name="NotBlank">
+                <option name="message">fos_user.password.blank</option>
+                <option name="groups">Registration</option>
+            </constraint>
+            <constraint name="Length">
+                <option name="min">2</option>
+                <option name="minMessage">fos_user.password.short</option>
+                <option name="groups">
+                    <value>Registration</value>
+                    <value>Profile</value>
+                </option>
+            </constraint>
+        </property>
+
+        <property name="groups">
+            <constraint name="Count">
+                <option name="min">1</option>
+                <option name="minMessage">ctp_user.user.groups.min</option>
+                <option name="groups">
+                    <value>AdminRegistration</value>
+                </option>
+            </constraint>
+        </property>
+    </class>
+
+    <class name="CanalTP\SamEcoreUserManagerBundle\Form\Model\ConfirmUser">
+        <property name="firstname">
+            <constraint name="NotBlank">
+                <option name="message">ctp_user.firstname.blank</option>
+                <option name="groups">
+                    <value>Confirmation</value>
+                </option>
+            </constraint>
+            <constraint name="Length">
+                <option name="min">2</option>
+                <option name="minMessage">ctp_user.firstname.short</option>
+                <option name="max">255</option>
+                <option name="maxMessage">ctp_user.firstname.long</option>
+                <option name="groups">
+                    <value>Confirmation</value>
+                </option>
+            </constraint>
+        </property>
+        <property name="lastname">
+            <constraint name="NotBlank">
+                <option name="message">ctp_user.lastname.blank</option>
+                <option name="groups">
+                    <value>Confirmation</value>
+                </option>
+            </constraint>
+            <constraint name="Length">
+                <option name="min">2</option>
+                <option name="minMessage">ctp_user.lastname.short</option>
+                <option name="max">255</option>
+                <option name="maxMessage">ctp_user.lastname.long</option>
+                <option name="groups">
+                    <value>Confirmation</value>
+                </option>
+            </constraint>
+        </property>
+        <property name="new">
+            <constraint name="NotBlank">
+                <option name="message">fos_user.new_password.blank</option>
+                <option name="groups">
+                    <value>Confirmation</value>
+                </option>
+            </constraint>
+            <constraint name="Length">
+                <option name="min">2</option>
+                <option name="minMessage">fos_user.new_password.short</option>
+                <option name="groups">
+                    <value>Confirmation</value>
+                </option>
+            </constraint>
+        </property>
+    </class>
+
+    <class name="FOS\UserBundle\Form\Model\ChangePassword">
+        <property name="new">
+            <constraint name="NotBlank">
+                <option name="message">fos_user.new_password.blank</option>
+                <option name="groups">
+                    <value>ChangePassword</value>
+                    <value>ResetPassword</value>
+                </option>
+            </constraint>
+            <constraint name="Length">
+                <option name="min">2</option>
+                <option name="minMessage">fos_user.new_password.short</option>
+                <option name="groups">
+                    <value>ChangePassword</value>
+                    <value>ResetPassword</value>
+                </option>
+            </constraint>
+        </property>
+    </class>
+
+    <class name="FOS\UserBundle\Model\Group">
+        <property name="name">
+            <constraint name="NotBlank">
+                <option name="message">fos_user.group.blank</option>
+                <option name="groups">Registration</option>
+            </constraint>
+            <constraint name="Length">
+                <option name="min">2</option>
+                <option name="minMessage">fos_user.group.short</option>
+                <option name="max">255</option>
+                <option name="maxMessage">fos_user.group.long</option>
+                <option name="groups">Registration</option>
+            </constraint>
+
+        </property>
+    </class>
+
+    <!-- Propel classes. This should stay in sync with the Model classes -->
+
+    <class name="FOS\UserBundle\Propel\User">
+
+        <property name="username">
+            <constraint name="NotBlank">
+                <option name="message">fos_user.username.blank</option>
+                <option name="groups">
+                    <value>Registration</value>
+                    <value>Profile</value>
+                </option>
+            </constraint>
+            <constraint name="Length">
+                <option name="min">2</option>
+                <option name="minMessage">fos_user.username.short</option>
+                <option name="max">255</option>
+                <option name="maxMessage">fos_user.username.long</option>
+                <option name="groups">
+                    <value>Registration</value>
+                    <value>Profile</value>
+                </option>
+            </constraint>
+        </property>
+
+        <property name="email">
+            <constraint name="NotBlank">
+                <option name="message">fos_user.email.blank</option>
+                <option name="groups">
+                    <value>Registration</value>
+                    <value>Profile</value>
+                </option>
+            </constraint>
+            <constraint name="Length">
+                <option name="min">2</option>
+                <option name="minMessage">fos_user.email.short</option>
+                <option name="max">255</option>
+                <option name="maxMessage">fos_user.email.long</option>
+                <option name="groups">
+                    <value>Registration</value>
+                    <value>Profile</value>
+                </option>
+            </constraint>
+            <constraint name="Email">
+                <option name="message">fos_user.email.invalid</option>
+                <option name="groups">
+                    <value>Registration</value>
+                    <value>Profile</value>
+                </option>
+            </constraint>
+        </property>
+
+        <property name="plainPassword">
+            <constraint name="NotBlank">
+                <option name="message">fos_user.password.blank</option>
+                <option name="groups">Registration</option>
+            </constraint>
+            <constraint name="Length">
+                <option name="min">2</option>
+                <option name="minMessage">fos_user.password.short</option>
+                <option name="groups">
+                    <value>Registration</value>
+                    <value>Profile</value>
+                </option>
+            </constraint>
+        </property>
+    </class>
+
+    <class name="FOS\UserBundle\Propel\Group">
+        <property name="name">
+            <constraint name="NotBlank">
+                <option name="message">fos_user.group.blank</option>
+                <option name="groups">Registration</option>
+            </constraint>
+            <constraint name="Length">
+                <option name="min">2</option>
+                <option name="minMessage">fos_user.group.short</option>
+                <option name="max">255</option>
+                <option name="maxMessage">fos_user.group.long</option>
+                <option name="groups">Registration</option>
+            </constraint>
+        </property>
+    </class>
+
+    <class name="CanalTP\SamEcoreUserManagerBundle\Entity\Affiliate">
+        <constraint name="Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity">
+            <option name="fields">nameCanonical</option>
+            <option name="errorPath">name</option>
+            <option name="message">ctp_user.affiliate.name.already_used</option>
+        </constraint>
+
+        <property name="name">
+            <constraint name="NotBlank">
+                <option name="message">ctp_user.affiliate.name.blank</option>
+            </constraint>
+            <constraint name="Length">
+                <option name="min">2</option>
+                <option name="minMessage">ctp_user.affiliate.name.short</option>
+                <option name="max">255</option>
+                <option name="maxMessage">ctp_user.affiliate.name.long</option>
+            </constraint>
+        </property>
+    </class>
+
+</constraint-mapping>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head profile="http://selenium-ide.openqa.org/profiles/test-case">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>US-102 : ETQ admin je peux envoyer un lien permettant de réinitialiser un mot de passe</title>
+    </head>
+    <body>
+        <table cellpadding="1" cellspacing="1" border="1">
+            <thead>
+                <tr>
+                    <td rowspan="1" colspan="3">US-102 : ETQ admin je peux envoyer un lien permettant de réinitialiser un mot de passe</td>
+                </tr>
+            </thead>
+            <tbody>
+                <!--Login en ADMIN-->
+                <tr>
+                    <td>open</td>
+                    <td>logout</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>type</td>
+                    <td>id=username</td>
+                    <td>selenium.admin@none.com</td>
+                </tr>
+                <tr>
+                    <td>type</td>
+                    <td>id=password</td>
+                    <td>selenium</td>
+                </tr>
+                <tr>
+                    <td>submitAndWait</td>
+                    <td>//form</td>
+                    <td></td>
+                </tr>
+                <!--Verification qu'un admin peut reseter un password-->
+                <tr>
+                    <td>assertNotXpathCount</td>
+                    <td>//tr/td[contains(@class,&quot;action&quot;)]/a[contains(@class,&quot;reset_password&quot;)]</td>
+                    <td>0</td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>
