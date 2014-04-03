@@ -52,6 +52,14 @@ class FixturesUser extends AbstractFixture implements OrderedFixtureInterface
                 'password'  => 'david',
                 'roles'     => array('ROLE_ADMIN')
             ),
+            array(
+                'username'  => 'Maître du monde',
+                'firstname' => 'Kévin',
+                'lastname'  => 'ZIEMIANSKI',
+                'email'     => 'kevin.ziemianski@canaltp.fr',
+                'password'  => 'kevin',
+                'roles'     => array('SO_USELESSS')
+            ),
         );
 
         // $sim = $this->initSim($em);
