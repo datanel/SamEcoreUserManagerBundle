@@ -16,17 +16,12 @@ use CanalTP\SamCoreBundle\Entity\ApplicationRole;
 
 class RegistrationSuscriber implements EventSubscriberInterface
 {
-
-    protected $factory;
     protected $securityContext;
-    protected $roleHierarchy;
     protected $em;
 
-    public function __construct(FormFactoryInterface $factory, SecurityContext $securityContext, RoleHierarchy $roleHierarchy, EntityManager $em)
+    public function __construct(SecurityContext $securityContext, EntityManager $em)
     {
-        $this->factory = $factory;
         $this->securityContext = $securityContext;
-        $this->roleHierarchy = $roleHierarchy;
         $this->em = $em;
     }
 
@@ -85,14 +80,13 @@ class RegistrationSuscriber implements EventSubscriberInterface
         }
 
         // Récupération de l'objet Mode d'id $oCommercialMode->id
-        $applications = $this->em->getRepository('CanalTPSamCoreBundle:Application')->findAllByUser($user);
+        $applications = $this->em->getRepository('CanalTPSamCoreBundle:Application')->findAll();
 
         foreach ($applications as $application) {
             $applicationRole = new ApplicationRole();
             $applicationRole->setApplication($application);
             $applicationRole->setCurrentRole(null);
             $data->addRoleGroupByApplication($applicationRole);
-
         }
 
         $form->add('roleGroupByApplications', 'collection', array(

@@ -25,9 +25,7 @@
         </service>
 
         <service id="sam_user.registration.form.listener" class="%sam_user.registration.form.listener.class%">
-            <argument type="service" id="form.factory" />
             <argument type="service" id="security.context" />
-            <argument type="service" id="canaltp.security.role_hierarchy" />
             <argument type="service" id="doctrine.orm.entity_manager" />
         </service>
 
