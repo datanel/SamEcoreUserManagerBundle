@@ -35,7 +35,7 @@ class RegistrationSuscriber implements EventSubscriberInterface
         return array(
             FormEvents::PRE_SET_DATA  => 'preSetData',
             FormEvents::POST_SET_DATA => 'postSetData',
-            FormEvents::SUBMIT => 'submit',
+            //FormEvents::SUBMIT => 'submit',
         );
     }
 
@@ -105,7 +105,7 @@ class RegistrationSuscriber implements EventSubscriberInterface
     }
 
     /**
-     * Méthode appelé avant soumission des données du formulaire
+     * @deprecated
      * @param \Symfony\Component\Form\FormEvent $event
      */
     public function submit(FormEvent $event)
