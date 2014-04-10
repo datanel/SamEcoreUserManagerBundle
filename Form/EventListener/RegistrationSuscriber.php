@@ -35,7 +35,7 @@ class RegistrationSuscriber implements EventSubscriberInterface
         return array(
             FormEvents::PRE_SET_DATA  => 'preSetData',
             FormEvents::POST_SET_DATA => 'postSetData',
-            //FormEvents::SUBMIT => 'submit',
+            FormEvents::SUBMIT => 'submit',
         );
     }
 
