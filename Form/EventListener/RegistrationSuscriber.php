@@ -101,11 +101,9 @@ class RegistrationSuscriber implements EventSubscriberInterface
                 'attr' => array('class' => 'application-role-box')
             ),
         ));
-
     }
 
     /**
-     * @deprecated
      * @param \Symfony\Component\Form\FormEvent $event
      */
     public function submit(FormEvent $event)

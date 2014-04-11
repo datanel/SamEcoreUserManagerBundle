@@ -19,7 +19,6 @@ class RegistrationController extends BaseRegistrationController
     {
         $form = $this->container->get('fos_user.registration.form');
         $formHandler = $this->container->get('fos_user.registration.form.handler');
-
         $confirmationEnabled = true;
 
         $process = $formHandler->process($confirmationEnabled);

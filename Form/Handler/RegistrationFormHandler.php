@@ -11,6 +11,7 @@
 
 namespace CanalTP\SamEcoreUserManagerBundle\Form\Handler;
 
+use CanalTP\SamEcoreApplicationManagerBundle\Exception\OutOfBoundsException;
 use CanalTP\SamEcoreApplicationManagerBundle\Security\BusinessComponentRegistry;
 use FOS\UserBundle\Form\Handler\RegistrationFormHandler as BaseRegistrationFormHandler;
 use FOS\UserBundle\Model\UserInterface;
@@ -37,10 +38,26 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
 
         $this->userManager->updateUser($user);
 
+        $selectedApps = array();
+        foreach ($user->getGroups() as $selectedApp) {
+            $selectedApps[] = $selectedApp->getId();
+        }
+
         // Add Perimeters to the user
-        $businessPerimeterManager = $this->businessRegistry->getBusinessComponent()->getPerimetersManager();
-        foreach ($businessPerimeterManager->getPerimeters() as $perimeter) {
-            $businessPerimeterManager->addUserToPerimeter($user, $perimeter);
+        foreach ($user->getRoleGroupByApplications() as $app) {
+            if (in_array($app->getApplication()->getId(), $selectedApps)) {
+                try {
+                    $businessPerimeterManager = $this->businessRegistry
+                        ->getBusinessComponent($app->getApplication()->getCanonicalName())
+                        ->getPerimetersManager();
+
+                    foreach ($app->getPerimeters() as $perimeter) {
+                        $businessPerimeterManager->addUserToPerimeter($user, $perimeter);
+                    }
+                } catch (OutOfBoundsException $e) {
+                    // If no business component found, we do not break anything
+                }
+            }
         }
     }
 
