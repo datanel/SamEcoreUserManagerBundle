@@ -2,31 +2,110 @@
 
 namespace CanalTP\SamEcoreUserManagerBundle\Entity;
 
-use FOS\UserBundle\Entity\User as BaseUser;
+use FOS\UserBundle\Model\User as AbstractUser;
+use Doctrine\Common\Collections\ArrayCollection;
 
-class User extends BaseUser
+class User extends AbstractUser
 {
     const ROLE_ADMIN = 'ROLE_ADMIN';
 
-    /**
-     * @var integer
-     */
     protected $id;
 
     /**
      * @var string
      */
-    protected $firstname;
+    protected $username;
 
     /**
      * @var string
      */
-    protected $lastname;
+    protected $usernameCanonical;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var string
      */
-    protected $groups;
+    private $firstName;
+
+    /**
+     * @var string
+     */
+    private $lastName;
+
+    /**
+     * @var string
+     */
+    protected $email;
+
+    /**
+     * @var string
+     */
+    protected $emailCanonical;
+
+    /**
+     * @var boolean
+     */
+    protected $enabled;
+
+    /**
+     * The salt to use for hashing
+     *
+     * @var string
+     */
+    protected $salt;
+
+    /**
+     * Encrypted password. Must be persisted.
+     *
+     * @var string
+     */
+    protected $password;
+
+    /**
+     * @var \DateTime
+     */
+    protected $lastLogin;
+
+    /**
+     * Random string sent to the user email address in order to verify it
+     *
+     * @var string
+     */
+    protected $confirmationToken;
+
+    /**
+     * @var \DateTime
+     */
+    protected $passwordRequestedAt;
+
+    /**
+     * @var boolean
+     */
+    protected $locked;
+
+    /**
+     * @var boolean
+     */
+    protected $expired;
+
+    /**
+     * @var \DateTime
+     */
+    protected $expiresAt;
+
+    /**
+     * @var array
+     */
+    protected $role;
+
+    /**
+     * @var boolean
+     */
+    protected $credentialsExpired;
+
+    /**
+     * @var \DateTime
+     */
+    protected $credentialsExpireAt;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -44,63 +123,53 @@ class User extends BaseUser
     public function __construct()
     {
         parent::__construct();
-        $this->applicationRoles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->applicationRoles = new ArrayCollection();
     }
 
     /**
-     * Get id
+     * Set firstName
      *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set firstname
-     *
-     * @param  string $firstname
+     * @param  string $firstName
      * @return User
      */
-    public function setFirstname($firstname)
+    public function setFirstname($firstName)
     {
-        $this->firstname = $firstname;
+        $this->firstName = $firstName;
 
         return $this;
     }
 
     /**
-     * Get firstname
+     * Get firstName
      *
      * @return string
      */
     public function getFirstname()
     {
-        return $this->firstname;
+        return $this->firstName;
     }
 
     /**
-     * Set lastname
+     * Set lastName
      *
-     * @param  string $lastname
+     * @param  string $lastName
      * @return User
      */
-    public function setLastname($lastname)
+    public function setLastname($lastName)
     {
-        $this->lastname = $lastname;
+        $this->lastName = $lastName;
 
         return $this;
     }
 
     /**
-     * Get lastname
+     * Get lastName
      *
      * @return string
      */
     public function getLastname()
     {
-        return $this->lastname;
+        return $this->lastName;
     }
 
     /**

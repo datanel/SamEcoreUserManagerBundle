@@ -1,83 +1,83 @@
 CanalTP\SamEcoreUserManagerBundle\Entity\User:
     type: entity
-    table: t_user
+    table: t_user_usr
     fields:
         id:
+            column: usr_id
             type: integer
-            scale: 0
-            length: null
-            unique: false
-            nullable: false
-            precision: 0
             id: true
             generator:
-                strategy: SEQUENCE
-        firstname:
+                strategy: IDENTITY
+        firstName:
+            column: usr_first_name
             type: string
-            scale: 0
-            length: null
-            unique: false
-            nullable: true
-            precision: 0
-        lastname:
+            length: 255
+        lastName:
+            column: usr_last_name
             type: string
-            scale: 0
-            length: null
-            unique: false
+            length: 255
+        username:
+            column: usr_username
+            type: string
+            length: 255
+        usernameCanonical:
+            column: usr_username_canonical
+            type: string
+            length: 255
+            unique: true
+        email:
+            column: usr_email
+            type: string
+            length: 255
+        emailCanonical:
+            column: usr_email_canonical
+            type: string
+            length: 255
+            unique: true
+        salt:
+            column: usr_salt
+            type: string
+        password:
+            column: usr_password
+            type: string
+        enabled:
+            column: usr_enabled
+            type: boolean
+        locked:
+            column: usr_locked
+            type: boolean
+        lastLogin:
+            column: usr_last_login
+            type: datetime
             nullable: true
-            precision: 0
-    manyToMany:
+        expired:
+            column: usr_expired
+            type: boolean
+        expiresAt:
+            column: usr_expires_at
+            type: boolean
+            nullable: true
+        confirmationToken:
+            column: usr_confirmation_token
+            type: string
+            unique: true
+        passwordRequestedAt:
+            column: usr_password_requested_at
+            type: datetime
+            unique: true
+        credentialsExpired:
+            column: usr_credentials_expired
+            type: boolean
+        credentialsExpireAt:
+            column: usr_credentials_expire_at
+            type: datetime
+            unique: true
+    oneToMany:
         applicationRoles:
-            targetEntity: CanalTP\SamCoreBundle\Entity\ApplicationRole
+            targetEntity: CanalTP\SamCoreBundle\Entity\UserApplicationRole
             cascade:
               - persist
-            mappedBy: null
-            inversedBy: users
-            joinTable:
-                name: tj_user_applicationrole_uar
-                schema: null
-                joinColumns:
-                    -
-                        name: user_id
-                        unique: false
-                        nullable: true
-                        onDelete: null
-                        columnDefinition: null
-                        referencedColumnName: id
-                inverseJoinColumns:
-                    -
-                        name: apr_id
-                        unique: false
-                        nullable: true
-                        onDelete: null
-                        columnDefinition: null
-                        referencedColumnName: apr_id
-        groups:
-            targetEntity: CanalTP\SamCoreBundle\Entity\Application
-            cascade:
-              - persist
-            mappedBy: null
-            inversedBy: users
-            joinTable:
-                name: tj_user_application_uap
-                schema: null
-                joinColumns:
-                    -
-                        name: user_id
-                        unique: false
-                        nullable: true
-                        onDelete: null
-                        columnDefinition: null
-                        referencedColumnName: id
-                inverseJoinColumns:
-                    -
-                        name: app_id
-                        unique: false
-                        nullable: true
-                        onDelete: null
-                        columnDefinition: null
-                        referencedColumnName: app_id
-            orderBy: null
+            mappedBy: user
     lifecycleCallbacks:
         postLoad:
             - onPostLoad
