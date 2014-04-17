@@ -12,7 +12,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use CanalTP\SamEcoreUserManagerBundle\Form\DataTransformer\RoleToRolesTransformer;
 use CanalTP\SamEcoreUserManagerBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
-use CanalTP\SamCoreBundle\Entity\ApplicationRole;
+use CanalTP\SamCoreBundle\Entity\UserApplicationRole;
 
 class RegistrationSuscriber implements EventSubscriberInterface
 {

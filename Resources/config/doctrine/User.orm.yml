@@ -60,18 +60,18 @@ CanalTP\SamEcoreUserManagerBundle\Entity\User:
         confirmationToken:
             column: usr_confirmation_token
             type: string
-            unique: true
+            nullable: true
         passwordRequestedAt:
             column: usr_password_requested_at
             type: datetime
-            unique: true
+            nullable: true
         credentialsExpired:
             column: usr_credentials_expired
             type: boolean
         credentialsExpireAt:
             column: usr_credentials_expire_at
             type: datetime
-            unique: true
+            nullable: true
     oneToMany:
         applicationRoles:
             targetEntity: CanalTP\SamCoreBundle\Entity\UserApplicationRole

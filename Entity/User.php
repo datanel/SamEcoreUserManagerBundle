@@ -175,10 +175,10 @@ class User extends AbstractUser
     /**
      * Add applicationRoles
      *
-     * @param \CanalTP\SamCoreBundle\Entity\ApplicationRole $applicationRoles
+     * @param \CanalTP\SamCoreBundle\Entity\UserApplicationRole $applicationRoles
      * @return User
      */
-    public function addApplicationRole(\CanalTP\SamCoreBundle\Entity\ApplicationRole $applicationRoles)
+    public function addApplicationRole(\CanalTP\SamCoreBundle\Entity\UserApplicationRole $applicationRoles)
     {
         $this->applicationRoles[] = $applicationRoles;
 
@@ -188,9 +188,9 @@ class User extends AbstractUser
     /**
      * Remove applicationRoles
      *
-     * @param \CanalTP\SamCoreBundle\Entity\ApplicationRole $applicationRoles
+     * @param \CanalTP\SamCoreBundle\Entity\UserApplicationRole $applicationRoles
      */
-    public function removeApplicationRole(\CanalTP\SamCoreBundle\Entity\ApplicationRole $applicationRoles)
+    public function removeApplicationRole(\CanalTP\SamCoreBundle\Entity\UserApplicationRole $applicationRoles)
     {
         $this->applicationRoles->removeElement($applicationRoles);
     }
@@ -220,10 +220,10 @@ class User extends AbstractUser
     /**
      * Add roleGroupByApplication
      *
-     * @param \CanalTP\SamCoreBundle\Entity\ApplicationRole $roleParent
+     * @param \CanalTP\SamCoreBundle\Entity\UserApplicationRole $roleParent
      * @return Role
      */
-    public function addRoleGroupByApplication(\CanalTP\SamCoreBundle\Entity\ApplicationRole $roleGroupByApplication)
+    public function addRoleGroupByApplication(\CanalTP\SamCoreBundle\Entity\UserApplicationRole $roleGroupByApplication)
     {
         $this->roleGroupByApplications[] = $roleGroupByApplication;
 
@@ -235,7 +235,7 @@ class User extends AbstractUser
      *
      * @param \CanalTP\SamCoreBundle\Entity\Application $roleParent
      */
-    public function removeRoleGroupByApplication(\CanalTP\SamCoreBundle\Entity\ApplicationRole $roleGroupByApplication)
+    public function removeRoleGroupByApplication(\CanalTP\SamCoreBundle\Entity\UserApplicationRole $roleGroupByApplication)
     {
         $this->roleGroupByApplications->removeElement($roleGroupByApplication);
     }
@@ -272,7 +272,7 @@ class User extends AbstractUser
     {
         $aRoles = array();
         foreach ($this->getApplicationRoles() as $applicationRole) {
-            $aRoles[] = $applicationRole->getCanonicalRole();
+            $aRoles[] = $applicationRole->getRole()->getCanonicalName();
         }
         $this->setRoles($aRoles);
     }
