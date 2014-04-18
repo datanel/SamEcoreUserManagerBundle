@@ -83,7 +83,7 @@ class RegistrationSuscriber implements EventSubscriberInterface
         $applications = $this->em->getRepository('CanalTPSamCoreBundle:Application')->findAll();
 
         foreach ($applications as $application) {
-            $applicationRole = new ApplicationRole();
+            $applicationRole = new UserApplicationRole();
             $applicationRole->setApplication($application);
             $applicationRole->setCurrentRole(null);
             $data->addRoleGroupByApplication($applicationRole);
