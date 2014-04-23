@@ -82,8 +82,8 @@ class RegistrationController extends BaseRegistrationController
             );
         }
 
-        $form = $this->container->get('sam_user.confirmation.form');
-        $formHandler = $this->container->get('sam_user.confirmation.form.handler.default');
+        $form = $this->container->get('canaltp_user.confirmation.form');
+        $formHandler = $this->container->get('canaltp_user.confirmation.form.handler.default');
         $process = $formHandler->process($user);
 
         if ($process) {

@@ -61,6 +61,6 @@ class ConfirmationFormType extends AbstractType
 
     public function getName()
     {
-        return 'sam_user_confirmation';
+        return 'canaltp_user_confirmation';
     }
 }
