@@ -136,8 +136,8 @@ class UserManager extends BaseUserManager
     {
         $query = $this->repository->createQueryBuilder('u')
             ->select('count(u.id)')
-            ->where('u.roles NOT LIKE :role')
-            ->setParameter('role', '%'.$role.'%')
+            // ->where('u.roles NOT LIKE :role')
+            // ->setParameter('role', '%'.$role.'%')
             ->getQuery();
 
         return $query->getSingleScalarResult();

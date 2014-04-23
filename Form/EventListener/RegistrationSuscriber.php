@@ -16,12 +16,11 @@ use CanalTP\SamCoreBundle\Entity\UserApplicationRole;
 
 class RegistrationSuscriber implements EventSubscriberInterface
 {
-    protected $securityContext;
     protected $em;
 
-    public function __construct(SecurityContext $securityContext, EntityManager $em)
+    public function __construct(EntityManager $em)
     {
-        $this->securityContext = $securityContext;
+
         $this->em = $em;
     }
 
@@ -34,7 +33,7 @@ class RegistrationSuscriber implements EventSubscriberInterface
     {
         return array(
             FormEvents::PRE_SET_DATA  => 'preSetData',
-            FormEvents::POST_SET_DATA => 'postSetData',
+            //FormEvents::POST_SET_DATA => 'postSetData',
             FormEvents::SUBMIT => 'submit',
         );
     }
@@ -47,19 +46,32 @@ class RegistrationSuscriber implements EventSubscriberInterface
     public function preSetData(FormEvent $event)
     {
         // grab the user, do a quick sanity check that one exists
-        $user = $this->securityContext->getToken()->getUser();
-        if( !$this->securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED') ) {
-            throw new \LogicException(
-                'Current User is not an authenticated user!'
-            );
-        }
+
 
         $form = $event->getForm();
-        $data = $event->getData();
-        if ($data instanceof User) {
-            $this->AddApplicationForm($data, $form);
-        }
-        $event->setData($data);
+        // $data = $event->getData();
+        // if ($data instanceof User) {
+        //     $this->AddApplicationForm($data, $form);
+        // }
+        // $event->setData($data);
+
+        // $data = $event->getData();
+        // $form = $event->getForm();
+
+        $applications = $this->em->getRepository('CanalTPSamCoreBundle:Application')->findAllOrderedByName();
+        //$data->rolesByApplication = $applications;
+
+        $form->add(
+            'applications',
+            'choice',
+            array(
+                'label'       => 'role.field.application',
+                'multiple'    => true,
+                'expanded'    => true,
+                'required'    => false,
+                'choice_list' => new ObjectChoiceList($applications, 'name')
+            )
+        );
     }
 
 
@@ -72,12 +84,6 @@ class RegistrationSuscriber implements EventSubscriberInterface
      */
     protected function AddApplicationForm(&$data, &$form)
     {
-        $user = $this->securityContext->getToken()->getUser();
-        if( !$this->securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED') ) {
-            throw new \LogicException(
-                'Current User is not an authenticated user!'
-            );
-        }
 
         // Récupération de l'objet Mode d'id $oCommercialMode->id
         $applications = $this->em->getRepository('CanalTPSamCoreBundle:Application')->findAll();
@@ -85,7 +91,7 @@ class RegistrationSuscriber implements EventSubscriberInterface
         foreach ($applications as $application) {
             $applicationRole = new UserApplicationRole();
             $applicationRole->setApplication($application);
-            $applicationRole->setCurrentRole(null);
+            //$applicationRole->setCurrentRole(null);
             $data->addRoleGroupByApplication($applicationRole);
         }
 

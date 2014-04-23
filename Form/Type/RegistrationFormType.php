@@ -26,11 +26,11 @@ class RegistrationFormType extends BaseRegistrationFormType
     /**
      * @inherit
      */
-    public function __construct($class, $groupClass, $aFormRegistrationConfig, $registrationListener)
+    public function __construct($groupClass, $registrationListener)
     {
-        $this->class = $class;
+
         $this->groupClass = $groupClass;
-        $this->aFormRegistrationConfig = $aFormRegistrationConfig;
+
         $this->registrationListener = $registrationListener;
     }
 
@@ -39,13 +39,9 @@ class RegistrationFormType extends BaseRegistrationFormType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder->add('user', 'sam_user');
 
-        // Ajoute les champs au formulaire de mise à jour des données d'un utilisateur
-        foreach ($this->aFormRegistrationConfig as $sFieldName => $aFieldDefinition) {
-            $builder->add($sFieldName, $aFieldDefinition['type'], $aFieldDefinition['options']);
-        }
-
-        $this->addGroup($builder);
+        // $this->addGroup($builder);
         $builder->addEventSubscriber($this->registrationListener);
     }
 
@@ -77,7 +73,7 @@ class RegistrationFormType extends BaseRegistrationFormType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => $this->class,
+                'data_class' => 'CanalTP\SamEcoreUserManagerBundle\Form\Model\UserRegistration',
                 'intention'  => 'admin_registration',
             )
         );

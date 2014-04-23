@@ -7,7 +7,7 @@
     <parameters>
         <parameter key="canaltp_user.confirmation.form.name">canaltp_user_confirmation_form</parameter>
         <parameter key="canaltp_user.confirmation.form.type">canaltp_user_confirmation</parameter>
-        <parameter key="sam_user.type.class">CanalTP\SamEcoreUserManagerBundle\Form\Type\RegistrationFormType</parameter>
+        <parameter key="sam_user_registration.type.class">CanalTP\SamEcoreUserManagerBundle\Form\Type\RegistrationFormType</parameter>
         <parameter key="sam_user.registration.form.listener.class">CanalTP\SamEcoreUserManagerBundle\Form\EventListener\RegistrationSuscriber</parameter>
     </parameters>
 
@@ -16,23 +16,26 @@
             <argument type="service" id="fos_user.user_manager" />
         </service>
 
-        <service id="sam_user.form.type" class="%sam_user.type.class%">
+        <service id="sam_user_registration.form.type" class="%sam_user_registration.type.class%">
             <tag name="form.type" alias="sam_user_registration" />
-            <argument>%fos_user.model.user.class%</argument>
             <argument>%fos_user.model.group.class%</argument>
-            <argument>%sam_user.form.registration%</argument>
             <argument type="service" id="sam_user.registration.form.listener" />
         </service>
 
         <service id="sam_user.registration.form.listener" class="%sam_user.registration.form.listener.class%">
-            <argument type="service" id="security.context" />
             <argument type="service" id="doctrine.orm.entity_manager" />
         </service>
 
         <service id="fos_user.registration.form.type" class="CanalTP\SamEcoreUserManagerBundle\Form\Type\UserType">
-            <tag name="form.type" alias="sam_user_form" />
+            <tag name="form.type" alias="sam_user" />
             <argument>%fos_user.model.user.class%</argument>
-            <argument>%sam_user.form.user%</argument>
+            <argument>%sam_user.form.registration%</argument>
+        </service>
+
+        <service id="fos_user.profile.form.type" class="CanalTP\SamEcoreUserManagerBundle\Form\Type\UserType">
+            <tag name="form.type" alias="sam_user_profile" />
+            <argument>%fos_user.model.user.class%</argument>
+            <argument>%sam_user.form.registration%</argument>
         </service>
 
         <service id="fos_user.registration.form" factory-method="createNamed" factory-service="form.factory" class="Symfony\Component\Form\Form">
