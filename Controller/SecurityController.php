@@ -47,6 +47,11 @@ class SecurityController extends ContainerAware
 
         $csrfToken = $this->container->get('form.csrf_provider')->generateCsrfToken('authenticate');
 
+        if (true === $this->container->get('security.context')->isGranted('ROLE_USER')) {
+            $handler = $this->container->get('sam.component.authentication.handler.login_success_handler');
+            return ($handler->onAuthenticationSuccess($request, $this->container->get('security.context')->getToken()));
+        }
+
         return $this->renderLogin(
             array(
                 'last_username' => $lastUsername,
