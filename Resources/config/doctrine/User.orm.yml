@@ -72,12 +72,16 @@ CanalTP\SamEcoreUserManagerBundle\Entity\User:
             column: usr_credentials_expire_at
             type: datetime
             nullable: true
-    oneToMany:
-        applicationRoles:
-            targetEntity: CanalTP\SamCoreBundle\Entity\UserApplicationRole
-            cascade:
-              - persist
-            mappedBy: user
-    lifecycleCallbacks:
-        postLoad:
-            - onPostLoad
+    manyToMany:
+        userRoles:
+            targetEntity: CanalTP\SamCoreBundle\Entity\Role
+            inversedBy: users
+            joinTable:
+                name: tj_user_role_ur
+                joinColumns:
+                    usr_id:
+                        referencedColumnName: usr_id
+                inverseJoinColumns:
+                    rol_id:
+                        referencedColumnName: rol_id
+

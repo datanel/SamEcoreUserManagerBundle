@@ -2,6 +2,7 @@
 
 namespace CanalTP\SamEcoreUserManagerBundle\Entity;
 
+use CanalTP\SamCoreBundle\Entity\Role;
 use FOS\UserBundle\Model\User as AbstractUser;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -115,7 +116,7 @@ class User extends AbstractUser
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $applicationRoles;
+    protected $userRoles;
 
     /**
      * Constructor
@@ -123,7 +124,7 @@ class User extends AbstractUser
     public function __construct()
     {
         parent::__construct();
-        $this->applicationRoles = new ArrayCollection();
+        $this->userRoles = new ArrayCollection();
     }
 
     /**
@@ -173,36 +174,36 @@ class User extends AbstractUser
     }
 
     /**
-     * Add applicationRoles
+     * Add roles
      *
-     * @param \CanalTP\SamCoreBundle\Entity\UserApplicationRole $applicationRoles
+     * @param Role $role
      * @return User
      */
-    public function addApplicationRole(\CanalTP\SamCoreBundle\Entity\UserApplicationRole $applicationRoles)
+    public function addUserRole(Role $role)
     {
-        $this->applicationRoles[] = $applicationRoles;
+        $this->userRoles[] = $role;
 
         return $this;
     }
 
     /**
-     * Remove applicationRoles
+     * Remove roles
      *
-     * @param \CanalTP\SamCoreBundle\Entity\UserApplicationRole $applicationRoles
+     * @param Role $role
      */
-    public function removeApplicationRole(\CanalTP\SamCoreBundle\Entity\UserApplicationRole $applicationRoles)
-    {
-        $this->applicationRoles->removeElement($applicationRoles);
-    }
+    // public function removeRole(Role $role)
+    // {
+    //     $this->roles->removeElement($role);
+    // }
 
     /**
-     * Get applicationRoles
+     * Get roles
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getApplicationRoles()
+    public function getUserRoles()
     {
-        return $this->applicationRoles;
+        return $this->userRoles;
     }
 
     /**
@@ -210,20 +211,20 @@ class User extends AbstractUser
      *
      * @return Role
      */
-    public function setApplicationRoles($applicationRoles)
+    public function setUserRoles($roles)
     {
-        $this->applicationRoles = $applicationRoles;
+        $this->userRoles = $roles;
 
-        return ($this);
+        return $this;
     }
 
     /**
      * Add roleGroupByApplication
      *
-     * @param \CanalTP\SamCoreBundle\Entity\UserApplicationRole $roleParent
+     * @param Role $roleParent
      * @return Role
      */
-    public function addRoleGroupByApplication(\CanalTP\SamCoreBundle\Entity\UserApplicationRole $roleGroupByApplication)
+    public function addRoleGroupByApplication(Role $roleGroupByApplication)
     {
         $this->roleGroupByApplications[] = $roleGroupByApplication;
 
@@ -235,7 +236,7 @@ class User extends AbstractUser
      *
      * @param \CanalTP\SamCoreBundle\Entity\Application $roleParent
      */
-    public function removeRoleGroupByApplication(\CanalTP\SamCoreBundle\Entity\UserApplicationRole $roleGroupByApplication)
+    public function removeRoleGroupByApplication(Role $roleGroupByApplication)
     {
         $this->roleGroupByApplications->removeElement($roleGroupByApplication);
     }
@@ -271,8 +272,9 @@ class User extends AbstractUser
     public function onPostLoad()
     {
         $aRoles = array();
-        foreach ($this->getApplicationRoles() as $applicationRole) {
-            $aRoles[] = $applicationRole->getRole()->getCanonicalName();
+
+        foreach ($this->getRoles() as $role) {
+            $aRoles[] = $role->getCanonicalName();
         }
         $this->setRoles($aRoles);
     }
