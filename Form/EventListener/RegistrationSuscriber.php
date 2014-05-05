@@ -2,17 +2,18 @@
 
 namespace CanalTP\SamEcoreUserManagerBundle\Form\EventListener;
 
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Component\Security\Core\Role\RoleHierarchy;
-use Symfony\Component\Security\Core\Role\Role;
-use Symfony\Component\Form\FormFactoryInterface;
-use CanalTP\SamEcoreUserManagerBundle\Form\DataTransformer\RoleToRolesTransformer;
-use CanalTP\SamEcoreUserManagerBundle\Entity\User;
-use Doctrine\ORM\EntityManager;
 use CanalTP\SamCoreBundle\Entity\UserApplicationRole;
+use CanalTP\SamEcoreUserManagerBundle\Entity\User;
+use CanalTP\SamEcoreUserManagerBundle\Form\DataTransformer\RoleToRolesTransformer;
+use Doctrine\ORM\EntityManager;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Form\Extension\Core\ChoiceList\ObjectChoiceList;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Security\Core\Role\Role;
+use Symfony\Component\Security\Core\Role\RoleHierarchy;
+use Symfony\Component\Security\Core\SecurityContext;
 
 class RegistrationSuscriber implements EventSubscriberInterface
 {
@@ -45,11 +46,9 @@ class RegistrationSuscriber implements EventSubscriberInterface
      */
     public function preSetData(FormEvent $event)
     {
-        // grab the user, do a quick sanity check that one exists
-
-
         $form = $event->getForm();
-        // $data = $event->getData();
+        $data = $event->getData();
+        var_dump($data);die;
         // if ($data instanceof User) {
         //     $this->AddApplicationForm($data, $form);
         // }
@@ -59,7 +58,7 @@ class RegistrationSuscriber implements EventSubscriberInterface
         // $form = $event->getForm();
 
         $applications = $this->em->getRepository('CanalTPSamCoreBundle:Application')->findAllOrderedByName();
-        //$data->rolesByApplication = $applications;
+        //$data->rolesAndPerimetersByApplication = $applications;
 
         $form->add(
             'applications',
@@ -72,6 +71,40 @@ class RegistrationSuscriber implements EventSubscriberInterface
                 'choice_list' => new ObjectChoiceList($applications, 'name')
             )
         );
+
+        $form->add(
+            'rolesAndPerimetersByApplication',
+            'collection',
+            array(
+                'label' => 'role.field.parent.label',
+                'type' => 'sam_role_by_application',
+                'allow_add'    => false,
+                'allow_delete' => false,
+                'by_reference' => false,
+                'options'      => array(
+                    'required'       => true,
+                    'error_bubbling' => false,
+                    'attr'           => array('class' => 'application-role-box')
+                ),
+            )
+        );
+
+        // $form->add(
+        //     'rolesByApplication',
+        //     'collection',
+        //     array(
+        //         'label'        => 'role.field.parent.label',
+        //         'type'         => 'sam_copy_role_by_application',
+        //         'allow_add'    => false,
+        //         'allow_delete' => false,
+        //         'by_reference' => false,
+        //         'options'      => array(
+        //             'required'       => true,
+        //             'error_bubbling' => false,
+        //             'attr'           => array('class' => 'application-role-box')
+        //         ),
+        //     )
+        // );
     }
 
 
@@ -82,32 +115,21 @@ class RegistrationSuscriber implements EventSubscriberInterface
      * @param  type $form
      * @return type
      */
-    protected function AddApplicationForm(&$data, &$form)
-    {
+    // protected function AddApplicationForm(&$data, &$form)
+    // {
 
-        // Récupération de l'objet Mode d'id $oCommercialMode->id
-        $applications = $this->em->getRepository('CanalTPSamCoreBundle:Application')->findAll();
+    //     // Récupération de l'objet Mode d'id $oCommercialMode->id
+    //     $applications = $this->em->getRepository('CanalTPSamCoreBundle:Application')->findAll();
 
-        foreach ($applications as $application) {
-            $applicationRole = new UserApplicationRole();
-            $applicationRole->setApplication($application);
-            //$applicationRole->setCurrentRole(null);
-            $data->addRoleGroupByApplication($applicationRole);
-        }
+    //     foreach ($applications as $application) {
+    //         $applicationRole = new UserApplicationRole();
+    //         $applicationRole->setApplication($application);
+    //         //$applicationRole->setCurrentRole(null);
+    //         $data->addRoleGroupByApplication($applicationRole);
+    //     }
 
-        $form->add('roleGroupByApplications', 'collection', array(
-            'label' => 'role.field.parent.label',
-            'type' => 'sam_role_by_application',
-            'allow_add' => false,
-            'allow_delete' => false,
-            'by_reference' => false,
-            'options' => array(
-                'required' => true,
-                'error_bubbling' => false,
-                'attr' => array('class' => 'application-role-box')
-            ),
-        ));
-    }
+
+    // }
 
     /**
      * @param \Symfony\Component\Form\FormEvent $event
