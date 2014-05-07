@@ -1,20 +1,11 @@
 <?php
 
-/*
- * This file is part of the FOSUserBundle package.
- *
- * (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace CanalTP\SamEcoreUserManagerBundle\Form\Handler;
 
 use CanalTP\SamEcoreApplicationManagerBundle\Exception\OutOfBoundsException;
 use CanalTP\SamEcoreApplicationManagerBundle\Security\BusinessComponentRegistry;
+use CanalTP\SamEcoreUserManagerBundle\Form\Model\UserRegistration;
 use FOS\UserBundle\Form\Handler\RegistrationFormHandler as BaseRegistrationFormHandler;
-use FOS\UserBundle\Model\UserInterface;
 
 class RegistrationFormHandler extends BaseRegistrationFormHandler
 {
@@ -25,14 +16,15 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
      */
     public function process($confirmation = false)
     {
-        $user = new \CanalTP\SamEcoreUserManagerBundle\Form\Model\UserRegistration;
-        $this->form->setData($user);
+        $userRegistration = new UserRegistration;
+        $userRegistration->user = $this->createUser();
+        $this->form->setData($userRegistration);
 
         if ('POST' === $this->request->getMethod()) {
             $this->form->bind($this->request);
 
             if ($this->form->isValid()) {
-                $this->onSuccess($user, $confirmation);
+                $this->save($userRegistration, $confirmation);
 
                 return true;
             }
@@ -44,8 +36,9 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
     /**
      * @param boolean $confirmation
      */
-    protected function onSuccess(UserInterface $user, $confirmation)
+    protected function save(UserRegistration $userRegistration, $confirmation)
     {
+        $user = $userRegistration->user;
         if ($confirmation) {
             $user->setEnabled(false);
             if (null === $user->getConfirmationToken()) {
@@ -57,19 +50,27 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
             $user->setEnabled(true);
         }
 
-        $this->userManager->updateUser($user);
-
         $selectedApps = array();
-        foreach ($user->getGroups() as $selectedApp) {
+        foreach ($userRegistration->applications as $selectedApp) {
             $selectedApps[] = $selectedApp->getId();
         }
 
+        foreach ($userRegistration->rolesAndPerimetersByApplication as $app) {
+            if (in_array($app->getId(), $selectedApps)) {
+                foreach ($app->getRoles() as $role) {
+                    $user->addUserRole($role);
+                }
+            }
+        }
+
+        $this->userManager->updateUser($user);
+
         // Add Perimeters to the user
-        foreach ($user->getRoleGroupByApplications() as $app) {
-            if (in_array($app->getApplication()->getId(), $selectedApps)) {
+        foreach ($userRegistration->rolesAndPerimetersByApplication as $app) {
+            if (in_array($app->getId(), $selectedApps)) {
                 try {
                     $businessPerimeterManager = $this->businessRegistry
-                        ->getBusinessComponent($app->getApplication()->getCanonicalName())
+                        ->getBusinessComponent($app->getCanonicalName())
                         ->getPerimetersManager();
 
                     foreach ($app->getPerimeters() as $perimeter) {
@@ -77,6 +78,7 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
                     }
                 } catch (OutOfBoundsException $e) {
                     // If no business component found, we do not break anything
+                } catch (\Exception $e) {
                 }
             }
         }

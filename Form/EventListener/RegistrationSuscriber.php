@@ -3,17 +3,13 @@
 namespace CanalTP\SamEcoreUserManagerBundle\Form\EventListener;
 
 use CanalTP\SamCoreBundle\Entity\UserApplicationRole;
-use CanalTP\SamEcoreUserManagerBundle\Entity\User;
-use CanalTP\SamEcoreUserManagerBundle\Form\DataTransformer\RoleToRolesTransformer;
+use CanalTP\SamEcoreUserManagerBundle\Form\Model\UserRegistration;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Extension\Core\ChoiceList\ObjectChoiceList;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Security\Core\Role\Role;
-use Symfony\Component\Security\Core\Role\RoleHierarchy;
-use Symfony\Component\Security\Core\SecurityContext;
 
 class RegistrationSuscriber implements EventSubscriberInterface
 {
@@ -21,7 +17,6 @@ class RegistrationSuscriber implements EventSubscriberInterface
 
     public function __construct(EntityManager $em)
     {
-
         $this->em = $em;
     }
 
@@ -34,8 +29,8 @@ class RegistrationSuscriber implements EventSubscriberInterface
     {
         return array(
             FormEvents::PRE_SET_DATA  => 'preSetData',
-            //FormEvents::POST_SET_DATA => 'postSetData',
-            FormEvents::SUBMIT => 'submit',
+            FormEvents::POST_SET_DATA => 'postSetData',
+            //FormEvents::SUBMIT => 'submit',
         );
     }
 
@@ -48,63 +43,40 @@ class RegistrationSuscriber implements EventSubscriberInterface
     {
         $form = $event->getForm();
         $data = $event->getData();
-        var_dump($data);die;
-        // if ($data instanceof User) {
-        //     $this->AddApplicationForm($data, $form);
-        // }
-        // $event->setData($data);
 
-        // $data = $event->getData();
-        // $form = $event->getForm();
+        if ($data instanceof UserRegistration) {
+            $applications = $this->em->getRepository('CanalTPSamCoreBundle:Application')->findAllOrderedByName();
+            $data->rolesAndPerimetersByApplication = $applications;
 
-        $applications = $this->em->getRepository('CanalTPSamCoreBundle:Application')->findAllOrderedByName();
-        //$data->rolesAndPerimetersByApplication = $applications;
+            $form->add(
+                'applications',
+                'choice',
+                array(
+                    'label'       => 'role.field.application',
+                    'multiple'    => true,
+                    'expanded'    => true,
+                    'required'    => false,
+                    'choice_list' => new ObjectChoiceList($applications, 'name')
+                )
+            );
 
-        $form->add(
-            'applications',
-            'choice',
-            array(
-                'label'       => 'role.field.application',
-                'multiple'    => true,
-                'expanded'    => true,
-                'required'    => false,
-                'choice_list' => new ObjectChoiceList($applications, 'name')
-            )
-        );
-
-        $form->add(
-            'rolesAndPerimetersByApplication',
-            'collection',
-            array(
-                'label' => 'role.field.parent.label',
-                'type' => 'sam_role_by_application',
-                'allow_add'    => false,
-                'allow_delete' => false,
-                'by_reference' => false,
-                'options'      => array(
-                    'required'       => true,
-                    'error_bubbling' => false,
-                    'attr'           => array('class' => 'application-role-box')
-                ),
-            )
-        );
-
-        // $form->add(
-        //     'rolesByApplication',
-        //     'collection',
-        //     array(
-        //         'label'        => 'role.field.parent.label',
-        //         'type'         => 'sam_copy_role_by_application',
-        //         'allow_add'    => false,
-        //         'allow_delete' => false,
-        //         'by_reference' => false,
-        //         'options'      => array(
-        //             'required'       => true,
-        //             'error_bubbling' => false,
-        //             'attr'           => array('class' => 'application-role-box')
-        //         ),
-        //     )
-        // );
+            $form->add(
+                'rolesAndPerimetersByApplication',
+                'collection',
+                array(
+                    'label' => 'role.field.parent.label',
+                    'type' => 'sam_role_by_application',
+                    'allow_add'    => false,
+                    'allow_delete' => false,
+                    'by_reference' => false,
+                    'options'      => array(
+                        'required'       => true,
+                        'error_bubbling' => false,
+                        'attr'           => array('class' => 'application-role-box')
+                    ),
+                )
+            );
+        }
     }
 
 
@@ -148,7 +120,7 @@ class RegistrationSuscriber implements EventSubscriberInterface
         }
 
         foreach ($selectedApplications as $selectedApplication) {
-            foreach($aUserRoles[$selectedApplication->getId()] as $applicationRole) {
+            foreach ($aUserRoles[$selectedApplication->getId()] as $applicationRole) {
                 $data->addApplicationRole($applicationRole);
             }
         }
@@ -163,7 +135,9 @@ class RegistrationSuscriber implements EventSubscriberInterface
      */
     public function postSetData(FormEvent $event)
     {
-        $this->addPasswordField($event);
+        if ($event->getData() instanceof UserRegistration) {
+            $this->addPasswordField($event);
+        }
     }
 
     /**
@@ -182,11 +156,11 @@ class RegistrationSuscriber implements EventSubscriberInterface
         // setData is called with an actual Entity object in it (whether new
         // or fetched with Doctrine). This if statement lets you skip right
         // over the null condition.
-        if (null === $data) {
+        if (null === $data->user) {
             return;
         }
 
-        $data->setPlainPassword(md5(time()));
+        $data->user->setPlainPassword(md5(time()));
         $event->setData($data);
     }
 
