@@ -1,4 +1,4 @@
-sam_user:
+sam_user_manager:
     resource: "@CanalTPSamEcoreUserManagerBundle/Resources/config/routing/user.yml"
     prefix:   /user
 
@@ -20,4 +20,3 @@ fos_user_resetting:
 fos_user_change_password:
     resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
     prefix: /profile
-
