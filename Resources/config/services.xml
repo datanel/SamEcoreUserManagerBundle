@@ -32,20 +32,15 @@
             <argument>%sam_user.form.registration%</argument>
         </service>
 
-        <service id="fos_user.profile.form.type" class="CanalTP\SamEcoreUserManagerBundle\Form\Type\UserType">
-            <tag name="form.type" alias="sam_user_profile" />
-            <argument>%fos_user.model.user.class%</argument>
-            <argument>%sam_user.form.registration%</argument>
-        </service>
 
-        <service id="fos_user.registration.form" factory-method="createNamed" factory-service="form.factory" class="Symfony\Component\Form\Form">
+        <!-- <service id="fos_user.registration.form" factory-method="createNamed" factory-service="form.factory" class="Symfony\Component\Form\Form">
             <argument>%fos_user.registration.form.name%</argument>
             <argument>%fos_user.registration.form.type%</argument>
             <argument>null</argument>
             <argument type="collection">
                 <argument key="validation_groups">AdminRegistration</argument>
             </argument>
-        </service>
+        </service> -->
 
         <service id="canaltp_user.confirmation.form.type" class="CanalTP\SamEcoreUserManagerBundle\Form\Type\ConfirmationFormType">
             <tag name="form.type" alias="canaltp_user_confirmation" />
@@ -91,6 +86,12 @@
             <argument type="service" id="fos_user.mailer" />
             <argument type="service" id="fos_user.util.token_generator" />
             <argument type="service" id="fos_user.util.token_generator" />
+        </service>
+
+        <service id="sam_user.profile.form.handler.default" class="CanalTP\SamEcoreUserManagerBundle\Form\Handler\ProfileFormHandler" scope="request" public="false">
+            <argument type="service" id="fos_user.profile.form" />
+            <argument type="service" id="request" />
+            <argument type="service" id="fos_user.user_manager" />
         </service>
     </services>
 

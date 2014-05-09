@@ -142,4 +142,18 @@ class UserManager extends BaseUserManager
 
         return $query->getSingleScalarResult();
     }
+
+    public function findUser($user)
+    {
+        $query = $this->repository->createQueryBuilder('u')
+            ->addSelect('r')
+            ->addSelect('a')
+            ->leftJoin('u.userRoles', 'r')
+            ->leftJoin('r.application', 'a')
+            ->where('u.id = :user')
+            ->setParameter('user', $user)
+            ->getQuery();
+
+        return $query->getOneOrNullResult();
+    }
 }

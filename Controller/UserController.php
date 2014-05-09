@@ -46,20 +46,23 @@ class UserController extends Controller
      */
     public function editAction($id)
     {
-        $userManager = $this->container->get('fos_user.user_manager');
-        $entity = $userManager->findUserBy(array('id' => $id));
+        $userFormModel = $this->getUserFormModel($id);
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find User entity.');
+        $form = $this->container->get('fos_user.profile.form');
+        $formHandler = $this->container->get('fos_user.profile.form.handler');
+
+        $process = $formHandler->processUser($userFormModel);
+        if ($process) {
+            $this->setFlash('fos_user_success', 'profile.flash.updated');
+
+            return new RedirectResponse($this->getRedirectionUrl($user));
         }
-
-        $editForm = $this->createForm('sam_user_form', $entity);
 
         return $this->render(
             'CanalTPSamEcoreUserManagerBundle:User:edit.html.twig',
             array(
-                'entity'    => $entity,
-                'edit_form' => $editForm->createView(),
+                'user'    => $userFormModel->user,
+                'form' => $form->createView(),
             )
         );
     }
@@ -148,5 +151,37 @@ class UserController extends Controller
         return $this->createFormBuilder(array('id' => $id))
             ->add('id', 'hidden')
             ->getForm();
+    }
+
+    private function getUserFormModel($id)
+    {
+        $userManager = $this->get('fos_user.user_manager');
+        $user = $userManager->findUser($id);
+
+        if (!$user) {
+            throw $this->createNotFoundException('Unable to find User entity.');
+        }
+
+        $apps = [];
+        foreach ($user->getUserRoles() as $role) {
+            $application = $role->getApplication();
+            if (!isset($apps[$application->getId()])) {
+                $apps[$application->getId()] = $role->getApplication();
+                $apps[$application->getId()]->getRoles()->clear();
+
+                $userPerimeters = $this->get('sam.business_component')->getBusinessComponent($application->getCanonicalName())->getPerimetersManager()->getUserPerimeters($user);
+                $apps[$application->getId()]->setPerimeters($userPerimeters);
+            }
+            $apps[$application->getId()]->addRole($role);
+        }
+
+        $apps = array_values($apps);
+
+        $userFormModel = new \CanalTP\SamEcoreUserManagerBundle\Form\Model\UserRegistration;
+        $userFormModel->user = $user;
+        $userFormModel->applications = $apps;
+        $userFormModel->rolesAndPerimetersByApplication = $apps;
+
+        return $userFormModel;
     }
 }
