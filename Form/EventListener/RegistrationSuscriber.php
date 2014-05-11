@@ -5,6 +5,7 @@ namespace CanalTP\SamEcoreUserManagerBundle\Form\EventListener;
 use CanalTP\SamCoreBundle\Entity\UserApplicationRole;
 use CanalTP\SamEcoreUserManagerBundle\Form\Model\UserRegistration;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Extension\Core\ChoiceList\ObjectChoiceList;
 use Symfony\Component\Form\FormEvent;
@@ -30,7 +31,6 @@ class RegistrationSuscriber implements EventSubscriberInterface
         return array(
             FormEvents::PRE_SET_DATA  => 'preSetData',
             FormEvents::POST_SET_DATA => 'postSetData',
-            //FormEvents::SUBMIT => 'submit',
         );
     }
 
@@ -48,17 +48,29 @@ class RegistrationSuscriber implements EventSubscriberInterface
             $applications = $this->em->getRepository('CanalTPSamCoreBundle:Application')->findAllOrderedByName();
             $data->rolesAndPerimetersByApplication = $applications;
 
-            $form->add(
-                'applications',
-                'choice',
-                array(
-                    'label'       => 'role.field.application',
-                    'multiple'    => true,
-                    'expanded'    => true,
-                    'required'    => false,
-                    'choice_list' => new ObjectChoiceList($applications, 'name')
-                )
-            );
+            // $form->add(
+            //     'applications',
+            //     'choice',
+            //     array(
+            //         'label'       => 'role.field.application',
+            //         'multiple'    => true,
+            //         'expanded'    => true,
+            //         'required'    => false,
+            //         'choice_list' => new ObjectChoiceList($applications, 'name')
+            //     )
+            // );
+            $form->add('applications', 'entity', array(
+                'label'         => 'role.field.application',/*$this->translator->trans('role.field.copyRole.label') . ' ' . $data->getName(),*/
+                'multiple'      => true,
+                'expanded'      => true,
+                'class'         => 'CanalTPSamCoreBundle:Application',
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('a')
+                        ->orderBy('a.name');
+                },
+                'translation_domain' => 'messages',
+                'property' => 'name'
+            ));
 
             $form->add(
                 'rolesAndPerimetersByApplication',
@@ -77,55 +89,6 @@ class RegistrationSuscriber implements EventSubscriberInterface
                 )
             );
         }
-    }
-
-
-    /**
-     * Ajoute le formulaire de sélection des applications
-     *
-     * @param  type $data
-     * @param  type $form
-     * @return type
-     */
-    // protected function AddApplicationForm(&$data, &$form)
-    // {
-
-    //     // Récupération de l'objet Mode d'id $oCommercialMode->id
-    //     $applications = $this->em->getRepository('CanalTPSamCoreBundle:Application')->findAll();
-
-    //     foreach ($applications as $application) {
-    //         $applicationRole = new UserApplicationRole();
-    //         $applicationRole->setApplication($application);
-    //         //$applicationRole->setCurrentRole(null);
-    //         $data->addRoleGroupByApplication($applicationRole);
-    //     }
-
-
-    // }
-
-    /**
-     * @param \Symfony\Component\Form\FormEvent $event
-     */
-    public function submit(FormEvent $event)
-    {
-        $data = $event->getData();
-
-        $selectedApplications = $data->getGroups();
-
-        $aUserRoles = array();
-        $roleGroupByApplications = $data->getRoleGroupByApplications();
-
-        foreach ($roleGroupByApplications as $roleGroupByApplication) {
-            $aUserRoles[$roleGroupByApplication->getApplication()->getId()] = $roleGroupByApplication->getParents();
-        }
-
-        foreach ($selectedApplications as $selectedApplication) {
-            foreach ($aUserRoles[$selectedApplication->getId()] as $applicationRole) {
-                $data->addApplicationRole($applicationRole);
-            }
-        }
-
-        $event->setData($data);
     }
 
     /**

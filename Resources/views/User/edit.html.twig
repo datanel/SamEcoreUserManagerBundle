@@ -52,7 +52,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <h4>Rôles</h4>
-                                {% if  application.vars.value.roles|length %}
+                                {% if  application.roles.vars.choices|length %}
                                 {{ form_widget(application.roles) }}
                                 {% else %}
                                     <div class="alert alert-info">{{ application.vars.value.name }} n'a pas de rôle</div>
