@@ -10,7 +10,7 @@ use CanalTP\SamEcoreUserManagerBundle\Entity\User;
 
 class FixturesUser extends AbstractFixture implements OrderedFixtureInterface
 {
-    private function createUser(objectManager $em, $data)
+    private function createUser($data)
     {
         $user = new User();
         $user->setUsername($data['username']);
@@ -19,30 +19,25 @@ class FixturesUser extends AbstractFixture implements OrderedFixtureInterface
         $user->setEnabled(true);
         $user->setEmail($data['email']);
         $user->setPlainPassword($data['password']);
-        $user->setRoles($data['roles']);
-        $em->persist($user);
 
-        return ($user);
+        if (isset($data['roles'])) {
+            foreach ($data['roles'] as $role) {
+                $user->addUserRole($this->getReference($role));
+            }
+        }
+
+        return $user;
     }
 
     public function load(ObjectManager $em)
     {
         $users = array(
             array(
-                'username'  => 'akambi',
-                'firstname' => 'Akambi',
-                'lastname'  => 'Fagbohoun',
-                'email'     => 'akambi-fagbohoun@canaltp.fr',
-                'password'  => 'akambi',
-                'roles'     => array('ROLE_ADMIN')
-            ),
-            array(
                 'username'  => 'remy',
-                'firstname' => 'Remy',
-                'lastname'  => 'Abi',
+                'firstname' => 'Rémy',
+                'lastname'  => 'Abi Khalil',
                 'email'     => 'remy@canaltp.fr',
                 'password'  => 'remy',
-                'roles'     => array('ROLE_ADMIN')
             ),
             array(
                 'username'  => 'david',
@@ -50,24 +45,38 @@ class FixturesUser extends AbstractFixture implements OrderedFixtureInterface
                 'lastname'  => 'Quintanel',
                 'email'     => 'david.quintanel@canaltp.fr',
                 'password'  => 'david',
-                'roles'     => array('ROLE_ADMIN')
             ),
             array(
-                'username'  => 'Maître du monde',
+                'username'  => 'Maître de son quartier et encore',
                 'firstname' => 'Kévin',
                 'lastname'  => 'ZIEMIANSKI',
                 'email'     => 'kevin.ziemianski@canaltp.fr',
                 'password'  => 'kevin',
-                'roles'     => array('SO_USELESSS')
             ),
+            array(
+                'username'  => 'matrix_admin',
+                'firstname' => 'matrix',
+                'lastname'  => 'admin',
+                'email'     => 'matrix_admin@canaltp.fr',
+                'password'  => 'matrix_admin',
+                'roles' => array('role-admin-matrix')
+            ),
+           array(
+                'username'  => 'matrix_voyage',
+                'firstname' => 'matrix',
+                'lastname'  => 'voyage',
+                'email'     => 'matrix_voyage@canaltp.fr',
+                'password'  => 'matrix_voyage',
+                'roles' => array('role-user-matrix')
+           ),
         );
 
-        // $sim = $this->initSim($em);
         foreach ($users as $user) {
-            $this->createUser(
-                $em,
-                $user
-            );
+            $entity = $this->createUser($user);
+
+            $em->persist($entity);
+
+            $this->addReference('user-'.$user['username'], $entity);
         }
 
         $em->flush();
@@ -78,6 +87,6 @@ class FixturesUser extends AbstractFixture implements OrderedFixtureInterface
     */
     public function getOrder()
     {
-        return 2;
+        return 3;
     }
 }

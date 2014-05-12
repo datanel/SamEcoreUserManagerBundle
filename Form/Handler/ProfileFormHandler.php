@@ -2,32 +2,38 @@
 
 namespace CanalTP\SamEcoreUserManagerBundle\Form\Handler;
 
-use CanalTP\SamEcoreApplicationManagerBundle\Exception\OutOfBoundsException;
+use FOS\UserBundle\Model\UserInterface;
+use FOS\UserBundle\Model\UserManagerInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Request;
+
 use CanalTP\SamEcoreApplicationManagerBundle\Security\BusinessComponentRegistry;
 use CanalTP\SamEcoreUserManagerBundle\Form\Model\UserRegistration;
-use FOS\UserBundle\Form\Handler\RegistrationFormHandler as BaseRegistrationFormHandler;
+use CanalTP\SamEcoreApplicationManagerBundle\Exception\OutOfBoundsException;
 
-class RegistrationFormHandler extends BaseRegistrationFormHandler
+use FOS\UserBundle\Form\Handler\ProfileFormHandler as BaseProfileFormHandler;
+
+class ProfileFormHandler extends BaseProfileFormHandler
 {
     private $businessRegistry;
 
-    /**
-     * @param boolean $confirmation
-     */
-    public function process($confirmation = false)
+    public function processUser(UserRegistration $userRegistration)
     {
-        $userRegistration = new UserRegistration;
-        $userRegistration->user = $this->createUser();
         $this->form->setData($userRegistration);
 
         if ('POST' === $this->request->getMethod()) {
             $this->form->bind($this->request);
 
             if ($this->form->isValid()) {
-                $this->save($userRegistration, $confirmation);
+                $this->save($userRegistration);
 
                 return true;
             }
+
+            // Reloads the user to reset its username. This is needed when the
+            // username or password have been changed to avoid issues with the
+            // security layer.
+            $this->userManager->reloadUser($userRegistration->user);
         }
 
         return false;
@@ -36,19 +42,9 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
     /**
      * @param boolean $confirmation
      */
-    protected function save(UserRegistration $userRegistration, $confirmation)
+    protected function save(UserRegistration $userRegistration)
     {
         $user = $userRegistration->user;
-        if ($confirmation) {
-            $user->setEnabled(false);
-            if (null === $user->getConfirmationToken()) {
-                $user->setConfirmationToken($this->tokenGenerator->generateToken());
-            }
-
-            $this->mailer->sendConfirmationEmailMessage($user);
-        } else {
-            $user->setEnabled(true);
-        }
 
         $selectedApps = array();
         foreach ($userRegistration->applications as $selectedApp) {
@@ -57,6 +53,7 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
 
         foreach ($userRegistration->rolesAndPerimetersByApplication as $app) {
             if (in_array($app->getId(), $selectedApps)) {
+                $user->getUserRoles()->clear();
                 foreach ($app->getRoles() as $role) {
                     $user->addUserRole($role);
                 }
@@ -73,6 +70,7 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
                         ->getBusinessComponent($app->getCanonicalName())
                         ->getPerimetersManager();
 
+                    $businessPerimeterManager->deleteUserPerimeters($user);
                     foreach ($app->getPerimeters() as $perimeter) {
                         $businessPerimeterManager->addUserToPerimeter($user, $perimeter);
                     }

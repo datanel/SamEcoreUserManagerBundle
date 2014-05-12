@@ -2,31 +2,111 @@
 
 namespace CanalTP\SamEcoreUserManagerBundle\Entity;
 
-use FOS\UserBundle\Entity\User as BaseUser;
+use CanalTP\SamCoreBundle\Entity\Role;
+use FOS\UserBundle\Model\User as AbstractUser;
+use Doctrine\Common\Collections\ArrayCollection;
 
-class User extends BaseUser
+class User extends AbstractUser
 {
     const ROLE_ADMIN = 'ROLE_ADMIN';
 
-    /**
-     * @var integer
-     */
     protected $id;
 
     /**
      * @var string
      */
-    protected $firstname;
+    protected $username;
 
     /**
      * @var string
      */
-    protected $lastname;
+    protected $usernameCanonical;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var string
      */
-    protected $groups;
+    private $firstName;
+
+    /**
+     * @var string
+     */
+    private $lastName;
+
+    /**
+     * @var string
+     */
+    protected $email;
+
+    /**
+     * @var string
+     */
+    protected $emailCanonical;
+
+    /**
+     * @var boolean
+     */
+    protected $enabled;
+
+    /**
+     * The salt to use for hashing
+     *
+     * @var string
+     */
+    protected $salt;
+
+    /**
+     * Encrypted password. Must be persisted.
+     *
+     * @var string
+     */
+    protected $password;
+
+    /**
+     * @var \DateTime
+     */
+    protected $lastLogin;
+
+    /**
+     * Random string sent to the user email address in order to verify it
+     *
+     * @var string
+     */
+    protected $confirmationToken;
+
+    /**
+     * @var \DateTime
+     */
+    protected $passwordRequestedAt;
+
+    /**
+     * @var boolean
+     */
+    protected $locked;
+
+    /**
+     * @var boolean
+     */
+    protected $expired;
+
+    /**
+     * @var \DateTime
+     */
+    protected $expiresAt;
+
+    /**
+     * @var array
+     */
+    protected $role;
+
+    /**
+     * @var boolean
+     */
+    protected $credentialsExpired;
+
+    /**
+     * @var \DateTime
+     */
+    protected $credentialsExpireAt;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -36,7 +116,7 @@ class User extends BaseUser
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $applicationRoles;
+    protected $userRoles;
 
     /**
      * Constructor
@@ -44,96 +124,86 @@ class User extends BaseUser
     public function __construct()
     {
         parent::__construct();
-        $this->applicationRoles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->userRoles = new ArrayCollection();
     }
 
     /**
-     * Get id
+     * Set firstName
      *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set firstname
-     *
-     * @param  string $firstname
+     * @param  string $firstName
      * @return User
      */
-    public function setFirstname($firstname)
+    public function setFirstname($firstName)
     {
-        $this->firstname = $firstname;
+        $this->firstName = $firstName;
 
         return $this;
     }
 
     /**
-     * Get firstname
+     * Get firstName
      *
      * @return string
      */
     public function getFirstname()
     {
-        return $this->firstname;
+        return $this->firstName;
     }
 
     /**
-     * Set lastname
+     * Set lastName
      *
-     * @param  string $lastname
+     * @param  string $lastName
      * @return User
      */
-    public function setLastname($lastname)
+    public function setLastname($lastName)
     {
-        $this->lastname = $lastname;
+        $this->lastName = $lastName;
 
         return $this;
     }
 
     /**
-     * Get lastname
+     * Get lastName
      *
      * @return string
      */
     public function getLastname()
     {
-        return $this->lastname;
+        return $this->lastName;
     }
 
     /**
-     * Add applicationRoles
+     * Add roles
      *
-     * @param \CanalTP\SamCoreBundle\Entity\ApplicationRole $applicationRoles
+     * @param Role $role
      * @return User
      */
-    public function addApplicationRole(\CanalTP\SamCoreBundle\Entity\ApplicationRole $applicationRoles)
+    public function addUserRole(Role $role)
     {
-        $this->applicationRoles[] = $applicationRoles;
+        $this->userRoles[] = $role;
 
         return $this;
     }
 
     /**
-     * Remove applicationRoles
+     * Remove roles
      *
-     * @param \CanalTP\SamCoreBundle\Entity\ApplicationRole $applicationRoles
+     * @param Role $role
      */
-    public function removeApplicationRole(\CanalTP\SamCoreBundle\Entity\ApplicationRole $applicationRoles)
-    {
-        $this->applicationRoles->removeElement($applicationRoles);
-    }
+    // public function removeRole(Role $role)
+    // {
+    //     $this->roles->removeElement($role);
+    // }
 
     /**
-     * Get applicationRoles
+     * Get roles
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getApplicationRoles()
+    public function getUserRoles()
     {
-        return $this->applicationRoles;
+        return $this->userRoles;
     }
 
     /**
@@ -141,20 +211,20 @@ class User extends BaseUser
      *
      * @return Role
      */
-    public function setApplicationRoles($applicationRoles)
+    public function setUserRoles($roles)
     {
-        $this->applicationRoles = $applicationRoles;
+        $this->userRoles = $roles;
 
-        return ($this);
+        return $this;
     }
 
     /**
      * Add roleGroupByApplication
      *
-     * @param \CanalTP\SamCoreBundle\Entity\ApplicationRole $roleParent
+     * @param Role $roleParent
      * @return Role
      */
-    public function addRoleGroupByApplication(\CanalTP\SamCoreBundle\Entity\ApplicationRole $roleGroupByApplication)
+    public function addRoleGroupByApplication(Role $roleGroupByApplication)
     {
         $this->roleGroupByApplications[] = $roleGroupByApplication;
 
@@ -166,7 +236,7 @@ class User extends BaseUser
      *
      * @param \CanalTP\SamCoreBundle\Entity\Application $roleParent
      */
-    public function removeRoleGroupByApplication(\CanalTP\SamCoreBundle\Entity\ApplicationRole $roleGroupByApplication)
+    public function removeRoleGroupByApplication(Role $roleGroupByApplication)
     {
         $this->roleGroupByApplications->removeElement($roleGroupByApplication);
     }
@@ -202,8 +272,9 @@ class User extends BaseUser
     public function onPostLoad()
     {
         $aRoles = array();
-        foreach ($this->getApplicationRoles() as $applicationRole) {
-            $aRoles[] = $applicationRole->getCanonicalRole();
+
+        foreach ($this->getRoles() as $role) {
+            $aRoles[] = $role->getCanonicalName();
         }
         $this->setRoles($aRoles);
     }
