@@ -20,6 +20,12 @@ class FixturesUser extends AbstractFixture implements OrderedFixtureInterface
         $user->setEmail($data['email']);
         $user->setPlainPassword($data['password']);
 
+        if (isset($data['roles'])) {
+            foreach ($data['roles'] as $role) {
+                $user->addUserRole($this->getReference($role));
+            }
+        }
+
         return $user;
     }
 
@@ -47,6 +53,22 @@ class FixturesUser extends AbstractFixture implements OrderedFixtureInterface
                 'email'     => 'kevin.ziemianski@canaltp.fr',
                 'password'  => 'kevin',
             ),
+            array(
+                'username'  => 'matrix_admin',
+                'firstname' => 'matrix',
+                'lastname'  => 'admin',
+                'email'     => 'matrix_admin@canaltp.fr',
+                'password'  => 'matrix_admin',
+                'roles' => array('role-admin-matrix')
+            ),
+           array(
+                'username'  => 'matrix_voyage',
+                'firstname' => 'matrix',
+                'lastname'  => 'voyage',
+                'email'     => 'matrix_voyage@canaltp.fr',
+                'password'  => 'matrix_voyage',
+                'roles' => array('role-user-matrix')
+           ),
         );
 
         foreach ($users as $user) {
