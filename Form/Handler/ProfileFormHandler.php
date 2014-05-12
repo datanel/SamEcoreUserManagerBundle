@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 use CanalTP\SamEcoreApplicationManagerBundle\Security\BusinessComponentRegistry;
 use CanalTP\SamEcoreUserManagerBundle\Form\Model\UserRegistration;
+use CanalTP\SamEcoreApplicationManagerBundle\Exception\OutOfBoundsException;
 
 use FOS\UserBundle\Form\Handler\ProfileFormHandler as BaseProfileFormHandler;
 
@@ -69,6 +70,7 @@ class ProfileFormHandler extends BaseProfileFormHandler
                         ->getBusinessComponent($app->getCanonicalName())
                         ->getPerimetersManager();
 
+                    $businessPerimeterManager->deleteUserPerimeters($user);
                     foreach ($app->getPerimeters() as $perimeter) {
                         $businessPerimeterManager->addUserToPerimeter($user, $perimeter);
                     }

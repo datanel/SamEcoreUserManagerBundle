@@ -4,6 +4,7 @@ namespace CanalTP\SamEcoreUserManagerBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use CanalTP\SamEcoreApplicationManagerBundle\Exception\OutOfBoundsException;
 
 class UserController extends Controller
 {
@@ -54,10 +55,11 @@ class UserController extends Controller
         $process = $formHandler->processUser($userFormModel);
         if ($process) {
             $this->get('session')->getFlashBag()->add(
-                'fos_user_success',
+                'success',
                 'profile.flash.updated'
             );
             $url = $this->generateUrl('sam_user_list');
+
             return $this->redirect($url);
         }
 
@@ -179,6 +181,24 @@ class UserController extends Controller
         }
 
         $apps = array_values($apps);
+
+        // A user may not have roles but perimeters so we have to check this (for the checkboxes Applications) I don't like it
+        if (empty($apps)) {
+            $applications = $this->get('doctrine')->getRepository('CanalTPSamCoreBundle:Application')->findAll();
+            foreach ($applications as $application) {
+                try {
+                    $userPerimeters = $this->get('sam.business_component')->getBusinessComponent($application->getCanonicalName())->getPerimetersManager()->getUserPerimeters($user);
+                    if (count($userPerimeters)) {
+                        $application->setPerimeters($userPerimeters);
+                        $application->setRoles(array());
+                        $apps[] = $application;
+                    }
+                } catch (OutOfBoundsException $e) {
+                    // If no business component found, we do not break anything
+                } catch (\Exception $e) {
+                }
+            }
+        }
 
         $userFormModel = new \CanalTP\SamEcoreUserManagerBundle\Form\Model\UserRegistration;
         $userFormModel->user = $user;
