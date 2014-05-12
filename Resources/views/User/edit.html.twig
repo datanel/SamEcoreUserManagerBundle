@@ -34,7 +34,7 @@
 {% block main_content -%}
     <h1>{{'ctp_user.user.edit._title'|trans}}</h1>
     <hr/>
-    {{ form_start(form, { action: url('fos_user_registration_register'), attr: {class: 'fos_user_registration_register custom' } }) }}
+    {{ form_start(form, { action: url('sam_user_edit', { 'id': user.id }), attr: {class: 'fos_user_registration_register custom' } }) }}
         {{ bootstrap_set_style('horizontal') }}
 
         {{ form_row(form.user.username) }}

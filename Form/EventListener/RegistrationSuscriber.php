@@ -2,7 +2,6 @@
 
 namespace CanalTP\SamEcoreUserManagerBundle\Form\EventListener;
 
-use CanalTP\SamCoreBundle\Entity\UserApplicationRole;
 use CanalTP\SamEcoreUserManagerBundle\Form\Model\UserRegistration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
@@ -64,7 +63,7 @@ class RegistrationSuscriber implements EventSubscriberInterface
                 'multiple'      => true,
                 'expanded'      => true,
                 'class'         => 'CanalTPSamCoreBundle:Application',
-                'query_builder' => function(EntityRepository $er) {
+                'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('a')
                         ->orderBy('a.name');
                 },

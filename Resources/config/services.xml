@@ -18,7 +18,6 @@
 
         <service id="sam_user_registration.form.type" class="%sam_user_registration.type.class%">
             <tag name="form.type" alias="sam_user_registration" />
-            <argument>%fos_user.model.group.class%</argument>
             <argument type="service" id="sam_user.registration.form.listener" />
         </service>
 
@@ -31,16 +30,6 @@
             <argument>%fos_user.model.user.class%</argument>
             <argument>%sam_user.form.registration%</argument>
         </service>
-
-
-        <!-- <service id="fos_user.registration.form" factory-method="createNamed" factory-service="form.factory" class="Symfony\Component\Form\Form">
-            <argument>%fos_user.registration.form.name%</argument>
-            <argument>%fos_user.registration.form.type%</argument>
-            <argument>null</argument>
-            <argument type="collection">
-                <argument key="validation_groups">AdminRegistration</argument>
-            </argument>
-        </service> -->
 
         <service id="canaltp_user.confirmation.form.type" class="CanalTP\SamEcoreUserManagerBundle\Form\Type\ConfirmationFormType">
             <tag name="form.type" alias="canaltp_user_confirmation" />

@@ -53,9 +53,12 @@ class UserController extends Controller
 
         $process = $formHandler->processUser($userFormModel);
         if ($process) {
-            $this->setFlash('fos_user_success', 'profile.flash.updated');
-
-            return new RedirectResponse($this->getRedirectionUrl($user));
+            $this->get('session')->getFlashBag()->add(
+                'fos_user_success',
+                'profile.flash.updated'
+            );
+            $url = $this->generateUrl('sam_user_list');
+            return $this->redirect($url);
         }
 
         return $this->render(
