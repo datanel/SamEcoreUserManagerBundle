@@ -167,7 +167,7 @@ class UserController extends Controller
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
-        $apps = [];
+        $apps = array();
         foreach ($user->getUserRoles() as $role) {
             $application = $role->getApplication();
             if (!isset($apps[$application->getId()])) {
