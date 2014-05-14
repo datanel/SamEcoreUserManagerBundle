@@ -61,14 +61,30 @@ class FixturesUser extends AbstractFixture implements OrderedFixtureInterface
                 'password'  => 'matrix_admin',
                 'roles' => array('role-admin-matrix')
             ),
-           array(
+            array(
                 'username'  => 'matrix_voyage',
                 'firstname' => 'matrix',
                 'lastname'  => 'voyage',
                 'email'     => 'matrix_voyage@canaltp.fr',
                 'password'  => 'matrix_voyage',
                 'roles' => array('role-user-matrix')
-           ),
+            ),
+            array(
+                'username'  => 'rt_user',
+                'firstname' => 'realtime',
+                'lastname'  => 'user',
+                'email'     => 'real_time_user@canaltp.fr',
+                'password'  => 'realtime_user',
+                'roles' => array('role-user-realtime')
+            ),
+            array(
+                'username'  => 'rt_admin',
+                'firstname' => 'realtime',
+                'lastname'  => 'admin',
+                'email'     => 'real_time_admin@canaltp.fr',
+                'password'  => 'realtime_admin',
+                'roles' => array('role-admin-realtime')
+            ),
         );
 
         foreach ($users as $user) {
