@@ -130,7 +130,8 @@ class UserController extends Controller
             $form->bind($request);
 
             if ($form->isValid()) {
-                $userManager = $this->container->get('fos_user.user_manager');
+                //Use sam user manager ;)
+                $userManager = $this->container->get('sam_user.user_manager');
                 $entity = $userManager->findUserBy(array('id' => $id));
 
                 if (!$entity) {
@@ -171,11 +172,14 @@ class UserController extends Controller
         foreach ($user->getUserRoles() as $role) {
             $application = $role->getApplication();
             if (!isset($apps[$application->getId()])) {
-                $apps[$application->getId()] = $role->getApplication();
-                $apps[$application->getId()]->getRoles()->clear();
-
-                $userPerimeters = $this->get('sam.business_component')->getBusinessComponent($application->getCanonicalName())->getPerimetersManager()->getUserPerimeters($user);
-                $apps[$application->getId()]->setPerimeters($userPerimeters);
+                try{
+                    $apps[$application->getId()] = $role->getApplication();
+                    $apps[$application->getId()]->getRoles()->clear();
+                    
+                    $userPerimeters = $this->get('sam.business_component')->getBusinessComponent($application->getCanonicalName())->getPerimetersManager()->getUserPerimeters($user);
+                    $apps[$application->getId()]->setPerimeters($userPerimeters);
+                } catch (\Exception $e) {
+                }
             }
             $apps[$application->getId()]->addRole($role);
         }

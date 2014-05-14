@@ -76,7 +76,6 @@ CanalTP\SamEcoreUserManagerBundle\Entity\User:
         userRoles:
             targetEntity: CanalTP\SamCoreBundle\Entity\Role
             inversedBy: users
-            cascade: ["all"]
             joinTable:
                 name: tj_user_role_ur
                 joinColumns:
