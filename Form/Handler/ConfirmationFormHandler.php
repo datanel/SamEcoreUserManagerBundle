@@ -11,7 +11,7 @@
 
 namespace CanalTP\SamEcoreUserManagerBundle\Form\Handler;
 
-use FOS\UserBundle\Entity\User;
+use FOS\UserBundle\Model\User;
 use FOS\UserBundle\Model\UserManagerInterface;
 use CanalTP\SamEcoreUserManagerBundle\Form\Model\ConfirmUser;
 use Symfony\Component\Form\FormInterface;
