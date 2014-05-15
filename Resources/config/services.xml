@@ -9,6 +9,7 @@
         <parameter key="canaltp_user.confirmation.form.type">canaltp_user_confirmation</parameter>
         <parameter key="sam_user_registration.type.class">CanalTP\SamEcoreUserManagerBundle\Form\Type\RegistrationFormType</parameter>
         <parameter key="sam_user.registration.form.listener.class">CanalTP\SamEcoreUserManagerBundle\Form\EventListener\RegistrationSuscriber</parameter>
+        <parameter key="sam_role_by_application.type.class">CanalTP\SamEcoreUserManagerBundle\Form\Type\RoleByApplicationType</parameter>
     </parameters>
 
     <services>
@@ -87,6 +88,12 @@
             <argument type="service" id="request" />
             <argument type="service" id="fos_user.user_manager" />
         </service>
+        
+        <service id="sam_role_by_application.type" class="%sam_role_by_application.type.class%">
+            <argument type="service" id="canal_tp_sam.perimeter.form.listener" />
+            <argument type="service" id="security.context" />
+            <tag name="form.type" alias="sam_role_by_application" />
+        </service>
+        
     </services>
-
 </container>

@@ -82,17 +82,31 @@ class RegistrationController extends BaseRegistrationController
             );
         }
 
-        $user->setEnabled(true);
-        $user->setConfirmationToken(null);
-        $user->setLastLogin(new \DateTime());
+        $form = $this->container->get('canaltp_user.confirmation.form');
+        $formHandler = $this->container->get('canaltp_user.confirmation.form.handler.default');
+        $process = $formHandler->process($user);
 
-        $response = new RedirectResponse(
-            $this->container->get('router')->generate('fos_user_registration_confirmed')
+        if ($process) {
+            $user->setEnabled(true);
+            $user->setConfirmationToken(null);
+            $user->setLastLogin(new \DateTime());
+
+            $response = new RedirectResponse(
+                $this->container->get('router')->generate('fos_user_registration_confirmed')
+            );
+            $this->container->get('fos_user.user_manager')->updateUser($user);
+            $this->authenticateUser($user, $response);
+
+            return $response;
+        }
+
+        return $this->container->get('templating')->renderResponse(
+            'CanalTPSamEcoreUserManagerBundle:Registration:confirm.html.'.$this->getEngine(),
+            array(
+                'token' => $token,
+                'form' => $form->createView(),
+            )
         );
-        $this->container->get('fos_user.user_manager')->updateUser($user);
-        $this->authenticateUser($user, $response);
-
-        return $response;
 
     }
 

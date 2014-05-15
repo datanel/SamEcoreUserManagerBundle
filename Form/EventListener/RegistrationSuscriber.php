@@ -97,7 +97,7 @@ class RegistrationSuscriber implements EventSubscriberInterface
      */
     public function postSetData(FormEvent $event)
     {
-        if ($event->getData() instanceof UserRegistration) {
+        if ($event->getData() instanceof UserRegistration && is_null($event->getData()->user->getId())) {
             $this->addPasswordField($event);
         }
     }

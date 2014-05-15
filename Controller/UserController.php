@@ -2,17 +2,19 @@
 
 namespace CanalTP\SamEcoreUserManagerBundle\Controller;
 
+use CanalTP\SamCoreBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use CanalTP\SamEcoreApplicationManagerBundle\Exception\OutOfBoundsException;
 
-class UserController extends Controller
+class UserController extends AbstractController
 {
     /**
      * Lists all User entities.
      */
     public function indexAction($page)
     {
+        $this->isAllow('BUSINESS_VIEW_USER');
+        
         $userListProcessor = $this->container->get('canaltp.role.processor');
         $entities          = $userListProcessor->getVisibleUsers($page);
 
@@ -176,7 +178,11 @@ class UserController extends Controller
                     $apps[$application->getId()] = $role->getApplication();
                     $apps[$application->getId()]->getRoles()->clear();
                     
-                    $userPerimeters = $this->get('sam.business_component')->getBusinessComponent($application->getCanonicalName())->getPerimetersManager()->getUserPerimeters($user);
+                    $userPerimeters = $this->get('sam.business_component')
+                        ->getBusinessComponent($application->getCanonicalName())
+                        ->getPerimetersManager()
+                        ->getUserPerimeters($user);
+                    
                     $apps[$application->getId()]->setPerimeters($userPerimeters);
                 } catch (\Exception $e) {
                 }
@@ -191,7 +197,11 @@ class UserController extends Controller
             $applications = $this->get('doctrine')->getRepository('CanalTPSamCoreBundle:Application')->findAll();
             foreach ($applications as $application) {
                 try {
-                    $userPerimeters = $this->get('sam.business_component')->getBusinessComponent($application->getCanonicalName())->getPerimetersManager()->getUserPerimeters($user);
+                    $userPerimeters = $this->get('sam.business_component')
+                        ->getBusinessComponent($application->getCanonicalName())
+                        ->getPerimetersManager()
+                        ->getUserPerimeters($user);
+                    
                     if (count($userPerimeters)) {
                         $application->setPerimeters($userPerimeters);
                         $application->setRoles(array());

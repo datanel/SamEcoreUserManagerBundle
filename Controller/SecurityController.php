@@ -11,10 +11,11 @@
 
 namespace CanalTP\SamEcoreUserManagerBundle\Controller;
 
+use CanalTP\SamCoreBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Security\Core\SecurityContext;
 
-class SecurityController extends ContainerAware
+class SecurityController extends AbstractController
 {
     public function loginAction()
     {
