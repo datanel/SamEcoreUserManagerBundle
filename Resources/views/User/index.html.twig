@@ -23,7 +23,9 @@
     <th>{{'ctp_user.user.list.last_login'|trans}}</th>
     <th>{{'ctp_user.user.list.enabled'|trans}}</th>
     <th>{{'ctp_user.user.list.locked'|trans}}</th>
-    <th>{{'ctp_user.user.list.actions'|trans}}</th>
+    {% if is_granted('BUSINESS_MANAGE_USER') %}
+        <th>{{'ctp_user.user.list.actions'|trans}}</th>
+    {% endif %}
 {% endblock %}
 
 {% block table_body -%}
@@ -53,31 +55,33 @@
             <td>{% if entity.lastLogin %}{{ entity.lastLogin|date() }}{% endif %}</td>
             <td class="text-center">{{ macros.display_bool(entity.enabled) }}</td>
             <td class="text-center">{{ macros.display_bool(entity.locked) }}</td>
-            <td class="action">
-                {% if is_granted('ROLE_SUPER_ADMIN') or 'ROLE_ADMIN' not in entity.roles %}
-                    <div class="btn-group">
-                        <a href="{{ path('sam_user_edit', { 'id': entity.id }) }}" class="btn btn-default">
-                            <span class="glyphicon glyphicon-edit"></span> {{'ctp_user.user.actions.edit.short'|trans}}
-                        </a>
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                            <span class="caret"></span>
-                            <span class="sr-only">{{'ctp_core.toggle_menu'|trans}}</span>
-                        </button>
-                        <ul class="dropdown-menu pull-right" role="menu">
-                            <li>
-                                <a class="danger" href="{{ path('ctp_user_resetting_admin_reset', { 'email': entity.email }) }}">
-                                    <span class="glyphicon glyphicon-refresh"></span> {{'ctp_user.user.actions.reset_password'|trans}}
-                                </a>
-                            </li>
-                            <li>
-                                <a class="danger" href="{{ path('sam_user_delete', { 'id': entity.id }) }}">
-                                    <span class="glyphicon glyphicon-trash"></span> {{'ctp_user.user.actions.delete.short'|trans}}
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                {% endif %}
-            </td>
+            {% if is_granted('BUSINESS_MANAGE_USER') %}
+                <td class="action">
+                    {% if is_granted('ROLE_SUPER_ADMIN') or 'ROLE_ADMIN' not in entity.roles %}
+                        <div class="btn-group">
+                            <a href="{{ path('sam_user_edit', { 'id': entity.id }) }}" class="btn btn-default">
+                                <span class="glyphicon glyphicon-edit"></span> {{'ctp_user.user.actions.edit.short'|trans}}
+                            </a>
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only">{{'ctp_core.toggle_menu'|trans}}</span>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li>
+                                    <a class="danger" href="{{ path('ctp_user_resetting_admin_reset', { 'email': entity.email }) }}">
+                                        <span class="glyphicon glyphicon-refresh"></span> {{'ctp_user.user.actions.reset_password'|trans}}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="danger" href="{{ path('sam_user_delete', { 'id': entity.id }) }}">
+                                        <span class="glyphicon glyphicon-trash"></span> {{'ctp_user.user.actions.delete.short'|trans}}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    {% endif %}
+                </td>
+            {% endif %}
         </tr>
     {% endfor %}
 

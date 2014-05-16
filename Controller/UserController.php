@@ -49,6 +49,8 @@ class UserController extends AbstractController
      */
     public function editAction($id)
     {
+        $this->isAllow('BUSINESS_MANAGE_USER');
+        
         $userFormModel = $this->getUserFormModel($id);
 
         $form = $this->container->get('fos_user.profile.form');
@@ -79,6 +81,8 @@ class UserController extends AbstractController
      */
     public function updateAction(Request $request, $id)
     {
+        $this->isAllow('BUSINESS_MANAGE_USER');
+        
         $userManager = $this->container->get('fos_user.user_manager');
         $entity = $userManager->findUserBy(array('id' => $id));
 
@@ -111,6 +115,8 @@ class UserController extends AbstractController
      */
     public function deleteAction(Request $request, $id)
     {
+        $this->isAllow('BUSINESS_MANAGE_USER');
+        
         $form = $this->createDeleteForm($id);
 
         if ($request->getMethod() == 'GET') {
