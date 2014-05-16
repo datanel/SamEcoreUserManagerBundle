@@ -44,6 +44,14 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
             if (null === $user->getConfirmationToken()) {
                 $user->setConfirmationToken($this->tokenGenerator->generateToken());
             }
+            
+            try {
+                $this->userManager->updateUser($user);
+            } catch (\Exception $e) {
+                var_dump($e->getMessage());
+                var_dump("Echec de la création de l'utilisateur. Possible qu'un élément soit en doublon.");
+                die(__CLASS__ . ' : ' . __LINE__);
+            }
 
             $this->mailer->sendConfirmationEmailMessage($user);
         } else {
