@@ -14,7 +14,7 @@ class UserController extends AbstractController
     public function indexAction($page)
     {
         $this->isAllow('BUSINESS_VIEW_USER');
-        
+
         $userListProcessor = $this->container->get('canaltp.role.processor');
         $entities          = $userListProcessor->getVisibleUsers($page);
 
@@ -50,7 +50,7 @@ class UserController extends AbstractController
     public function editAction($id)
     {
         $this->isAllow('BUSINESS_MANAGE_USER');
-        
+
         $userFormModel = $this->getUserFormModel($id);
 
         $form = $this->container->get('fos_user.profile.form');
@@ -82,7 +82,7 @@ class UserController extends AbstractController
     public function updateAction(Request $request, $id)
     {
         $this->isAllow('BUSINESS_MANAGE_USER');
-        
+
         $userManager = $this->container->get('fos_user.user_manager');
         $entity = $userManager->findUserBy(array('id' => $id));
 
@@ -116,7 +116,7 @@ class UserController extends AbstractController
     public function deleteAction(Request $request, $id)
     {
         $this->isAllow('BUSINESS_MANAGE_USER');
-        
+
         $form = $this->createDeleteForm($id);
 
         if ($request->getMethod() == 'GET') {
@@ -183,12 +183,12 @@ class UserController extends AbstractController
                 try{
                     $apps[$application->getId()] = $role->getApplication();
                     $apps[$application->getId()]->getRoles()->clear();
-                    
+
                     $userPerimeters = $this->get('sam.business_component')
                         ->getBusinessComponent($application->getCanonicalName())
                         ->getPerimetersManager()
                         ->getUserPerimeters($user);
-                    
+
                     $apps[$application->getId()]->setPerimeters($userPerimeters);
                 } catch (\Exception $e) {
                 }
@@ -207,7 +207,7 @@ class UserController extends AbstractController
                         ->getBusinessComponent($application->getCanonicalName())
                         ->getPerimetersManager()
                         ->getUserPerimeters($user);
-                    
+
                     if (count($userPerimeters)) {
                         $application->setPerimeters($userPerimeters);
                         $application->setRoles(array());
@@ -226,5 +226,12 @@ class UserController extends AbstractController
         $userFormModel->rolesAndPerimetersByApplication = $apps;
 
         return $userFormModel;
+    }
+
+    public function toolbarAction()
+    {
+        return $this->render(
+            'CanalTPSamEcoreUserManagerBundle:User:toolbar.html.twig'
+        );
     }
 }
