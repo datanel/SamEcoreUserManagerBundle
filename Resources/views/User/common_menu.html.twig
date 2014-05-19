@@ -6,8 +6,10 @@
 {% endif %}
 
 {% if (link_add_user is not defined) or (link_add_user != false) -%}
-    <a class="btn btn-primary" href="{{ path('fos_user_registration_register') }}">
-        <span class="glyphicon glyphicon-plus"></span> 
-        {{'ctp_user.user.actions.add.full'|trans}}
-    </a>
+    {% if is_granted('BUSINESS_MANAGE_USER') %}
+        <a class="btn btn-primary" href="{{ path('fos_user_registration_register') }}">
+            <span class="glyphicon glyphicon-plus"></span> 
+            {{'ctp_user.user.actions.add.full'|trans}}
+        </a>
+    {% endif %}
 {% endif %}
