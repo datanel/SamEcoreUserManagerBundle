@@ -6,6 +6,11 @@
     </a>
     <ul class="dropdown-menu pull-right" role="menu">
         <li class="">
+            <a class="btn" href="{{ path('sam_user_edit_profil') }}">
+                <span class="glyphicon glyphicon-wrench"></span> {{ 'ctp_user.profil._menu'|trans() }}
+            </a>
+        </li>
+        <li class="">
             <a class="btn" href="{{ path('fos_user_security_logout') }}">
                 <span class="glyphicon glyphicon-off"></span> {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
             </a>

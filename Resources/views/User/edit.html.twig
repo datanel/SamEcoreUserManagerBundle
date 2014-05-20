@@ -71,7 +71,7 @@
                     </div>
                 </div>
             </div>
-            {% if (loop.index - 1) % 2 == 1  %}</div>{% endif %}
+            {% if (loop.index - 1) % 2 == 1  or loop.index == form.rolesAndPerimetersByApplication|length %}</div>{% endif %}
         {% endfor %}
 
         <button class="btn btn-success" type="submit">

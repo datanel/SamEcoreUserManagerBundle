@@ -33,27 +33,6 @@ class FixturesUser extends AbstractFixture implements OrderedFixtureInterface
     {
         $users = array(
             array(
-                'username'  => 'remy',
-                'firstname' => 'Rémy',
-                'lastname'  => 'Abi Khalil',
-                'email'     => 'remy@canaltp.fr',
-                'password'  => 'remy',
-            ),
-            array(
-                'username'  => 'david',
-                'firstname' => 'David',
-                'lastname'  => 'Quintanel',
-                'email'     => 'david.quintanel@canaltp.fr',
-                'password'  => 'david',
-            ),
-            array(
-                'username'  => 'Maître de son quartier et encore',
-                'firstname' => 'Kévin',
-                'lastname'  => 'ZIEMIANSKI',
-                'email'     => 'kevin.ziemianski@canaltp.fr',
-                'password'  => 'kevin',
-            ),
-            array(
                 'username'  => 'matrix_admin',
                 'firstname' => 'matrix',
                 'lastname'  => 'admin',
