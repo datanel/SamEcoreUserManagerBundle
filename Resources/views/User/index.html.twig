@@ -72,11 +72,13 @@
                                         <span class="glyphicon glyphicon-refresh"></span> {{'ctp_user.user.actions.reset_password'|trans}}
                                     </a>
                                 </li>
-                                <li>
-                                    <a class="danger" href="{{ path('sam_user_delete', { 'id': entity.id }) }}">
-                                        <span class="glyphicon glyphicon-trash"></span> {{'ctp_user.user.actions.delete.short'|trans}}
-                                    </a>
-                                </li>
+                                {% if app.user.id != entity.id %}
+                                    <li>
+                                        <a class="danger" href="{{ path('sam_user_delete', { 'id': entity.id }) }}">
+                                            <span class="glyphicon glyphicon-trash"></span> {{'ctp_user.user.actions.delete.short'|trans}}
+                                        </a>
+                                    </li>
+                                {% endif %}
                             </ul>
                         </div>
                     {% endif %}

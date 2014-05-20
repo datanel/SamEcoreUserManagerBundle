@@ -140,6 +140,10 @@ class UserController extends AbstractController
             $form->bind($request);
 
             if ($form->isValid()) {
+                if ($this->getUser()->getId() == $id) {
+                    throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException('Seriously, you shouldn\'t delete your account.');
+                }
+                
                 //Use sam user manager ;)
                 $userManager = $this->container->get('sam_user.user_manager');
                 $entity = $userManager->findUserBy(array('id' => $id));
