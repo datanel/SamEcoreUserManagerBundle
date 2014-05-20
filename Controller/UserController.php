@@ -57,7 +57,7 @@ class UserController extends AbstractController
 
         $form = $this->container->get('fos_user.profile.form');
         $formHandler = $this->container->get('fos_user.profile.form.handler');
-
+        
         $process = $formHandler->processUser($userFormModel);
         if ($process) {
             $this->get('session')->getFlashBag()->add(

@@ -51,15 +51,15 @@ class ProfileFormHandler extends BaseProfileFormHandler
             $selectedApps[] = $selectedApp->getId();
         }
 
+        $user->getUserRoles()->clear();
         foreach ($userRegistration->rolesAndPerimetersByApplication as $app) {
             if (in_array($app->getId(), $selectedApps)) {
-                $user->getUserRoles()->clear();
                 foreach ($app->getRoles() as $role) {
                     $user->addUserRole($role);
                 }
             }
-        }
-
+        }        
+        
         $this->userManager->updateUser($user);
 
         // Add Perimeters to the user
