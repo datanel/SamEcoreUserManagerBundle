@@ -13,7 +13,7 @@ class UserController extends AbstractController
      */
     public function indexAction($page)
     {
-        $this->isAllow('BUSINESS_VIEW_USER');
+        $this->isAllowed('BUSINESS_VIEW_USER');
 
         $userListProcessor = $this->container->get('canaltp.role.processor');
         $entities          = $userListProcessor->getVisibleUsers($page);
@@ -49,7 +49,7 @@ class UserController extends AbstractController
      */
     public function editAction($id)
     {
-        $this->isAllow('BUSINESS_MANAGE_USER');
+        $this->isAllowed('BUSINESS_MANAGE_USER');
 
         $userFormModel = $this->getUserFormModel($id);
 
@@ -81,7 +81,7 @@ class UserController extends AbstractController
      */
     public function updateAction(Request $request, $id)
     {
-        $this->isAllow('BUSINESS_MANAGE_USER');
+        $this->isAllowed('BUSINESS_MANAGE_USER');
 
         $userManager = $this->container->get('fos_user.user_manager');
         $entity = $userManager->findUserBy(array('id' => $id));
@@ -115,7 +115,7 @@ class UserController extends AbstractController
      */
     public function deleteAction(Request $request, $id)
     {
-        $this->isAllow('BUSINESS_MANAGE_USER');
+        $this->isAllowed('BUSINESS_MANAGE_USER');
 
         $form = $this->createDeleteForm($id);
 
