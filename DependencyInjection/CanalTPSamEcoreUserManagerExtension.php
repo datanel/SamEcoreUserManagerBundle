@@ -28,8 +28,6 @@ class CanalTPSamEcoreUserManagerExtension extends Extension
         );
         $loader->load('services.xml');
 
-        $container->setParameter('sam_user.form.user', $config['form']['user']);
-        $container->setParameter('sam_user.form.registration', $config['form']['registration']);
         $container->setParameter('sam_user.list.users_by_page', $config['users_by_page']);
     }
 
