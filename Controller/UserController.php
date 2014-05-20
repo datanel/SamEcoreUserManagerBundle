@@ -5,6 +5,8 @@ namespace CanalTP\SamEcoreUserManagerBundle\Controller;
 use CanalTP\SamCoreBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use CanalTP\SamEcoreApplicationManagerBundle\Exception\OutOfBoundsException;
+use CanalTP\SamEcoreUserManagerBundle\Form\Type\ProfilFormType;
+use Symfony\Component\Form\Form;
 
 class UserController extends AbstractController
 {
@@ -226,6 +228,38 @@ class UserController extends AbstractController
         $userFormModel->rolesAndPerimetersByApplication = $apps;
 
         return $userFormModel;
+    }
+
+    public function editProfilProcessForm($user)
+    {
+        $this->get('sam_user.user_manager')->save($user);
+        $this->get('session')->getFlashBag()->add(
+            'success',
+            $this->get('translator')->trans('ctp_user.profil.edit.validate')
+        );
+    }
+
+    /**
+     * Displays a form to edit profil of current user.
+     */
+    public function editProfilAction()
+    {
+        $id = $this->get('security.context')->getToken()->getUser()->getId();
+        $userManager = $this->container->get('fos_user.user_manager');
+        $user = $userManager->findUserBy(array('id' => $id));
+        $form = $this->createForm(
+            new ProfilFormType(),
+            $user
+        );
+
+        $form->handleRequest($this->getRequest());
+        if ($form->isValid()) {
+            $this->editProfilProcessForm($user);
+        }
+        return $this->render(
+            'CanalTPSamEcoreUserManagerBundle:User:profil.html.twig',
+            array('form' => $form->createView())
+        );
     }
 
     public function toolbarAction()

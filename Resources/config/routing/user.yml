@@ -16,3 +16,7 @@ sam_user_update:
 sam_user_delete:
     pattern:  /{id}/delete
     defaults: { _controller: "CanalTPSamEcoreUserManagerBundle:User:delete" }
+
+sam_user_edit_profil:
+    pattern:  /profil
+    defaults: { _controller: "CanalTPSamEcoreUserManagerBundle:User:editProfil" }
