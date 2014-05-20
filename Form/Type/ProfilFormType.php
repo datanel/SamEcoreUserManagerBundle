@@ -51,6 +51,6 @@ class ProfilFormType extends BaseRegistrationFormType
      */
     public function getName()
     {
-        return 'mtt_season';
+        return 'edit_user_profil';
     }
 }
