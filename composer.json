@@ -9,6 +9,10 @@
         {
             "name": "David Quintanel",
             "email": "david.quintanel@canaltp.fr"
+        },
+        {
+            "name": "Kévin ZIEMIANSKI",
+            "email": "kevin.ziemianski@canaltp.fr"
         }
     ],
     "minimum-stability": "dev",
