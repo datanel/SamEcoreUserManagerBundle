@@ -35,7 +35,7 @@ class RegistrationFormType extends BaseRegistrationFormType
         $resolver->setDefaults(
             array(
                 'data_class' => 'CanalTP\SamEcoreUserManagerBundle\Form\Model\UserRegistration',
-                'intention'  => 'admin_registration',
+                'csrf_protection' => false,
             )
         );
     }

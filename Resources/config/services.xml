@@ -17,12 +17,6 @@
             <argument type="service" id="fos_user.user_manager" />
         </service>
 
-        <service id="sam_user.user_manager" class="CanalTP\SamEcoreUserManagerBundle\Service\UserManager">
-            <argument type="service" id="doctrine.orm.entity_manager" />
-            <argument type="service" id="fos_user.user_manager" />
-            <argument type="service" id="sam.business_component" />
-        </service>
-
         <service id="sam_user_registration.form.type" class="%sam_user_registration.type.class%">
             <tag name="form.type" alias="sam_user_registration" />
             <argument type="service" id="sam_user.registration.form.listener" />
@@ -56,7 +50,7 @@
             <argument type="service" id="fos_user.user_manager" />
         </service>
 
-        <service id="fos_user.user_manager" class="CanalTP\SamEcoreUserManagerBundle\Doctrine\UserManager">
+        <service id="sam_user.user_manager" class="CanalTP\SamEcoreUserManagerBundle\Service\UserManager">
             <argument type="service" id="security.encoder_factory" />
             <argument type="service" id="fos_user.util.username_canonicalizer" />
             <argument type="service" id="fos_user.util.email_canonicalizer" />
@@ -64,6 +58,9 @@
             <argument>%fos_user.model.user.class%</argument>
             <call method="setUsersLimit">
                 <argument>%sam_user.list.users_by_page%</argument>
+            </call>
+            <call method="setBusinessRegistry">
+                <argument type="service" id="sam.business_component" />
             </call>
         </service>
 
