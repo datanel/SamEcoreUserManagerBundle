@@ -40,7 +40,7 @@ class RoleByApplicationType extends AbstractType
                 $data = $event->getData();
 
                 $disabledAllRoles = !$this->securityContext->isGranted('BUSINESS_MANAGE_USER_ROLE');
-                
+
                 $form->add('roles', 'entity', array(
                     'label'         => 'Rôles',
                     'multiple'      => true,

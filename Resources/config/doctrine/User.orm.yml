@@ -72,6 +72,10 @@ CanalTP\SamEcoreUserManagerBundle\Entity\User:
             column: usr_credentials_expire_at
             type: datetime
             nullable: true
+        isSuperAdmin:
+            column: usr_is_super_admin
+            type: boolean
+            nullable: false
     manyToMany:
         userRoles:
             targetEntity: CanalTP\SamCoreBundle\Entity\Role
