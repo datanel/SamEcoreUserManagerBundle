@@ -6,7 +6,7 @@
 
 {% block breadcrumb %}
     {{ parent() }}
-    <li class="current"><a href="{{ path('sam_user_list') }}">{{'ctp_user.user.list._breadcrumb'|trans}}</a></li>
+    <li class="current" ><a href="{{ path('sam_user_list') }}">{{'ctp_user.user._breadcrumb'|trans}}</a></li>
 {% endblock %}
 
 {% block link_back_to_list -%}{% endblock %}

@@ -4,7 +4,7 @@
     {% include 'CanalTPSamEcoreUserManagerBundle:User:common_menu.html.twig' %}
 {% endblock %}
 
-{% block user_breadcrumb %}
+{% block breadcrumb %}
     {{ parent() }}
     <li class="current"><a href="{{ path('sam_user_delete', { 'id': entity.id }) }}">{{'ctp_user.user.delete._breadcrumb'|trans}}</a></li>
 {% endblock %}

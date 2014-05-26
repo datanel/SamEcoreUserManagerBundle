@@ -1,6 +1,6 @@
-{% extends "FOSUserBundle::layout.html.twig" %}
+{% extends "::base.html.twig" %}
 
-{% form_theme form _self %}
+{#% form_theme form _self %}
 
 {% block choice_widget_expanded %}
 {% spaceless %}
@@ -22,30 +22,69 @@
     {{ label }}
 </label>
 {% endspaceless %}
-{% endblock checkbox_widget %}
+{% endblock checkbox_widget %#}
 
 {% block breadcrumb %}
     {{ parent() }}
-    <li class="active"><a href="{{ path('fos_user_registration_register') }}">{{'ctp_user.user.add._breadcrumb'|trans}}</a></li>
+    <li><a href="{{ path('sam_user_list') }}">{{'ctp_user.user._breadcrumb'|trans}}</a></li>
+    <li class="current"><a href="{{ path('fos_user_registration_register') }}">{{'ctp_user.user.add._breadcrumb'|trans}}</a></li>
 {% endblock %}
 
 {% block main_content -%}
     <h1>{{'ctp_user.user.add._title'|trans}}</h1>
     <hr/>
-    <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register custom">
-        {{ form_row(form.username) }}
-        {{ form_row(form.email) }}
-        {{ form_rest(form) }}
-        <div>
-            <input class="btn btn-success" type="submit" value="{{'ctp_user.user.actions.add.short'|trans}}" />
-        </div>
-    </form>
+    {{ form_start(form, { action: url('fos_user_registration_register'), attr: {class: 'fos_user_registration_register custom' } }) }}
+        {{ bootstrap_set_style('horizontal') }}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('sam_user_list') }}">
-            {{'ctp_user.user.actions.back.list'|trans}}
-        </a>
-    </li>
-</ul>
+        {{ form_row(form.user.username) }}
+        {{ form_row(form.user.firstname) }}
+        {{ form_row(form.user.lastname) }}
+        {{ form_row(form.user.email) }}
+        {{ form_row(form.applications) }}
+
+        {% for application in form.rolesAndPerimetersByApplication %}
+            {% if ((loop.index - 1) % 2) == 0 %}<div class="row">{% endif %}
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><h3 class="panel-title">{{ application.vars.value.name }}</h3></div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4>Rôles</h4>
+                                {% if  application.roles.vars.choices|length %}
+                                {{ form_widget(application.roles) }}
+                                {% else %}
+                                    <div class="alert alert-info">{{ application.vars.value.name }} n'a pas de rôle</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-xd-12 col-md-6">
+                                <h4>Périmètres</h4>
+                                {% if application.perimeters.vars.choices|length %}
+                                {{ form_widget(application.perimeters) }}
+                                {% else %}
+                                    <div class="alert alert-info">{{ application.vars.value.name }} n'a pas de périmètre</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% if (loop.index - 1) % 2 == 1  or loop.index == form.rolesAndPerimetersByApplication|length %}</div>{% endif %}
+        {% endfor %}
+
+        <p>
+            <button class="btn btn-success" type="submit">
+                <span class="glyphicon glyphicon-plus"></span> {{'ctp_user.user.actions.add.short'|trans}}
+            </button>
+        </p>
+
+    {{ form_end(form, {'render_rest': false}) }}
+{% endblock %}
+
+{% block left_menu -%}
+    <a class="btn btn-default" href="{{ path('sam_user_list') }}">
+        <span class="glyphicon glyphicon-arrow-left"></span>
+        {{'ctp_user.user.actions.back.list'|trans}}
+    </a>
 {% endblock %}
