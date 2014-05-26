@@ -118,6 +118,8 @@ class User extends AbstractUser
      */
     protected $userRoles;
 
+    protected $isSuperAdmin;
+
     /**
      * Constructor
      */
@@ -277,5 +279,17 @@ class User extends AbstractUser
             $aRoles[] = $role->getCanonicalName();
         }
         $this->setRoles($aRoles);
+    }
+
+    public function isSuperAdmin()
+    {
+        return $this->isSuperAdmin;
+    }
+
+    public function setIsSuperAdmin($bool)
+    {
+        $this->isSuperAdmin = (boolean) $bool;
+
+        return $this;
     }
 }
