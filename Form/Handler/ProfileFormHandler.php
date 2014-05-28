@@ -58,8 +58,8 @@ class ProfileFormHandler extends BaseProfileFormHandler
                     $user->addUserRole($role);
                 }
             }
-        }        
-        
+        }
+
         $this->userManager->updateUser($user);
 
         // Add Perimeters to the user

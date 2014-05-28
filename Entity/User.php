@@ -253,43 +253,17 @@ class User extends AbstractUser
         return $this->roleGroupByApplications;
     }
 
-    /**
-     * Returns the user roles
-     *
-     * @return array The roles
-     */
     public function getRoles()
     {
-        $roles = $this->roles;
+        $roles = array();
+
+        foreach ($this->getUserRoles() as $role) {
+            $roles[] = $role->getCanonicalName();
+        }
 
         // we need to make sure to have at least one role
         $roles[] = static::ROLE_DEFAULT;
 
         return array_unique($roles);
-    }
-
-    /**
-     * Appeler avant la mise à jour d'un objet en base de donnée
-     */
-    public function onPostLoad()
-    {
-        $aRoles = array();
-
-        foreach ($this->getRoles() as $role) {
-            $aRoles[] = $role->getCanonicalName();
-        }
-        $this->setRoles($aRoles);
-    }
-
-    public function isSuperAdmin()
-    {
-        return $this->isSuperAdmin;
-    }
-
-    public function setIsSuperAdmin($bool)
-    {
-        $this->isSuperAdmin = (boolean) $bool;
-
-        return $this;
     }
 }
