@@ -42,7 +42,7 @@ class ProfileFormHandler extends BaseProfileFormHandler
         $result = true;
 
         if (count($applications) == 0) {
-            $this->form->get('applications')->addError(new FormError('user.field.application.not_blank'));
+            $this->form->get('applications')->addError(new FormError('ctp_user.form.error.field.application.not_blank'));
 
             return (false);
         }
@@ -51,11 +51,11 @@ class ProfileFormHandler extends BaseProfileFormHandler
 
             if ($this->checkElementError($appBoxForm, 'roles') && count($application->getRoles()) == 0)
             {
-                $appBoxForm->get('roles')->addError(new FormError('user.field.roles.not_blank'));
+                $appBoxForm->get('roles')->addError(new FormError('ctp_user.form.error.field.roles.not_blank'));
                 $result = false;
             }
             if ($this->checkElementError($appBoxForm, 'perimeters') && count($application->getPerimeters()) == 0) {
-                $appBoxForm->get('perimeters')->addError(new FormError('user.field.perimeters.not_blank'));
+                $appBoxForm->get('perimeters')->addError(new FormError('ctp_user.form.error.field.perimeters.not_blank'));
                 $result = false;
             }
         }
