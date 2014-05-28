@@ -12,10 +12,56 @@ use CanalTP\SamEcoreUserManagerBundle\Form\Model\UserRegistration;
 use CanalTP\SamEcoreApplicationManagerBundle\Exception\OutOfBoundsException;
 
 use FOS\UserBundle\Form\Handler\ProfileFormHandler as BaseProfileFormHandler;
+use Symfony\Component\Form\FormError;
 
 class ProfileFormHandler extends BaseProfileFormHandler
 {
     private $businessRegistry;
+
+    private function checkElementError($appBoxForm, $name)
+    {
+        return ($appBoxForm->has($name) && count($appBoxForm->get($name)->getViewData()) > 0);
+    }
+
+    private function getRolesAndPerimetersFormByAppId($appId)
+    {
+        $applications = $this->form->get('rolesAndPerimetersByApplication');
+
+        foreach ($applications as $appBoxForm) {
+            if ($appBoxForm->getData()->getId() == $appId) {
+                return ($appBoxForm);
+            }
+        }
+        return (null);
+    }
+
+
+    private function checkApplicationsValidation()
+    {
+        $applications = $this->form->get('applications')->getData();
+        $result = true;
+
+        if (count($applications) == 0) {
+            $this->form->get('applications')->addError(new FormError('ctp_user.form.error.field.applications.not_blank'));
+
+            return (false);
+        }
+        foreach ($applications as $application) {
+            $appBoxForm = $this->getRolesAndPerimetersFormByAppId($application->getId());
+
+            if ($this->checkElementError($appBoxForm, 'roles') && count($application->getRoles()) == 0)
+            {
+                $appBoxForm->get('roles')->addError(new FormError('ctp_user.form.error.field.roles.not_blank'));
+                $result = false;
+            }
+            if ($this->checkElementError($appBoxForm, 'perimeters') && count($application->getPerimeters()) == 0) {
+                $appBoxForm->get('perimeters')->addError(new FormError('ctp_user.form.error.field.perimeters.not_blank'));
+                $result = false;
+            }
+        }
+
+        return ($result);
+    }
 
     public function processUser(UserRegistration $userRegistration)
     {
@@ -24,7 +70,7 @@ class ProfileFormHandler extends BaseProfileFormHandler
         if ('POST' === $this->request->getMethod()) {
             $this->form->bind($this->request);
 
-            if ($this->form->isValid()) {
+            if ($this->form->isValid() && $this->checkApplicationsValidation()) {
                 $this->save($userRegistration);
 
                 return true;
@@ -58,8 +104,8 @@ class ProfileFormHandler extends BaseProfileFormHandler
                     $user->addUserRole($role);
                 }
             }
-        }        
-        
+        }
+
         $this->userManager->updateUser($user);
 
         // Add Perimeters to the user

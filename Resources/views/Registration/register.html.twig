@@ -52,7 +52,8 @@
                             <div class="col-md-6">
                                 <h4>Rôles</h4>
                                 {% if  application.roles.vars.choices|length %}
-                                {{ form_widget(application.roles) }}
+                                    {{ form_errors(application.roles) }}
+                                    {{ form_widget(application.roles) }}
                                 {% else %}
                                     <div class="alert alert-info">{{ application.vars.value.name }} n'a pas de rôle</div>
                                 {% endif %}
@@ -61,7 +62,8 @@
                             <div class="col-xd-12 col-md-6">
                                 <h4>Périmètres</h4>
                                 {% if application.perimeters.vars.choices|length %}
-                                {{ form_widget(application.perimeters) }}
+                                    {{ form_errors(application.perimeters) }}
+                                    {{ form_widget(application.perimeters) }}
                                 {% else %}
                                     <div class="alert alert-info">{{ application.vars.value.name }} n'a pas de périmètre</div>
                                 {% endif %}

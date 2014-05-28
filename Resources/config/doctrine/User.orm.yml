@@ -76,6 +76,11 @@ CanalTP\SamEcoreUserManagerBundle\Entity\User:
             column: usr_is_super_admin
             type: boolean
             nullable: false
+    uniqueConstraints:
+        username_idx:
+            columns: [ usr_username, usr_username_canonical ]
+        email_idx:
+            columns: [ usr_email, usr_email_canonical ]
     manyToMany:
         userRoles:
             targetEntity: CanalTP\SamCoreBundle\Entity\Role

@@ -72,7 +72,7 @@ class UserController extends AbstractController
         return $this->render(
             'CanalTPSamEcoreUserManagerBundle:User:edit.html.twig',
             array(
-                'user'    => $userFormModel->user,
+                'user' => $userFormModel->user,
                 'form' => $form->createView(),
             )
         );
@@ -143,7 +143,7 @@ class UserController extends AbstractController
                 if ($this->getUser()->getId() == $id) {
                     throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException('Seriously, you shouldn\'t delete your account.');
                 }
-                
+
                 //Use sam user manager ;)
                 $userManager = $this->container->get('sam_user.user_manager');
                 $entity = $userManager->findUserBy(array('id' => $id));

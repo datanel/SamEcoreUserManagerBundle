@@ -11,6 +11,9 @@ namespace CanalTP\SamEcoreUserManagerBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Email;
 
 class UserType extends AbstractType
 {
@@ -36,7 +39,11 @@ class UserType extends AbstractType
                     'class' => 'col-md-4',
                     'placeholder' => 'enter username'
                 ),
-                'translation_domain' => 'FOSUserBundle'
+                'translation_domain' => 'FOSUserBundle',
+                'constraints' => array(
+                        new NotBlank(),
+                        new Length(array('min' => 3, 'max' => 255))
+                )
             )
         );
 
@@ -49,7 +56,11 @@ class UserType extends AbstractType
                     'class' => 'col-md-4',
                     'placeholder' => 'enter firstname'
                 ),
-                'translation_domain' => 'FOSUserBundle'
+                'translation_domain' => 'FOSUserBundle',
+                'constraints' => array(
+                        new NotBlank(),
+                        new Length(array('min' => 3, 'max' => 255))
+                )
             )
         );
 
@@ -62,7 +73,11 @@ class UserType extends AbstractType
                     'class' => 'col-md-4',
                     'placeholder' => 'enter lastname'
                 ),
-                'translation_domain' => 'FOSUserBundle'
+                'translation_domain' => 'FOSUserBundle',
+                'constraints' => array(
+                        new NotBlank(),
+                        new Length(array('min' => 3, 'max' => 255))
+                )
             )
         );
 
@@ -75,7 +90,11 @@ class UserType extends AbstractType
                     'class' => 'col-md-4',
                     'placeholder' => 'enter email'
                 ),
-                'translation_domain' => 'FOSUserBundle'
+                'translation_domain' => 'FOSUserBundle',
+                'constraints' => array(
+                        new NotBlank(),
+                        new Email(array('checkMX' => true))
+                )
             )
         );
     }
