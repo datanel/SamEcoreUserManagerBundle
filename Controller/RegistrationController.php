@@ -20,7 +20,7 @@ class RegistrationController extends BaseRegistrationController
         if ($this->container->get('security.context')->isGranted('BUSINESS_MANAGE_USER') === false) {
             throw new AccessDeniedException($this->container->get('translator')->trans('forbidden'));
         }
-        
+
         $form = $this->container->get('fos_user.registration.form');
         $formHandler = $this->container->get('fos_user.registration.form.handler');
         $confirmationEnabled = true;

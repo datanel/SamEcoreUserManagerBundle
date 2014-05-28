@@ -36,7 +36,7 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
         $result = true;
 
         if (count($applications) == 0) {
-            $this->form->get('applications')->addError(new FormError('ctp_user.form.error.field.application.not_blank'));
+            $this->form->get('applications')->addError(new FormError('ctp_user.form.error.field.applications.not_blank'));
 
             return (false);
         }
