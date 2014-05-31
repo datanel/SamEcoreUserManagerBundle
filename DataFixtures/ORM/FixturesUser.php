@@ -19,7 +19,7 @@ class FixturesUser extends AbstractFixture implements OrderedFixtureInterface
         $user->setEnabled(true);
         $user->setEmail($data['email']);
         $user->setPlainPassword($data['password']);
-        $user->setIsSuperAdmin(false);
+        $user->setIsSuperAdmin(true);
 
         if (isset($data['roles'])) {
             foreach ($data['roles'] as $role) {
@@ -34,20 +34,12 @@ class FixturesUser extends AbstractFixture implements OrderedFixtureInterface
     {
         $users = array(
             array(
-                'username'  => 'rt_user',
-                'firstname' => 'realtime',
-                'lastname'  => 'user',
-                'email'     => 'real_time_user@canaltp.fr',
-                'password'  => 'realtime_user',
-                'roles' => array('role-user-realtime')
-            ),
-            array(
-                'username'  => 'rt_admin',
-                'firstname' => 'realtime',
-                'lastname'  => 'admin',
-                'email'     => 'real_time_admin@canaltp.fr',
-                'password'  => 'realtime_admin',
-                'roles' => array('role-admin-realtime')
+                'username'  => 'Sam',
+                'firstname' => 'Samuel',
+                'lastname'  => 'Dictator',
+                'email'     => 'sam@canaltp.fr',
+                'password'  => 'sam',
+                'roles'     => array('role-super-admin-sam')
             ),
         );
 
