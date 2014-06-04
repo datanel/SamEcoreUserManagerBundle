@@ -1,10 +1,13 @@
 {% extends "CanalTPSamEcoreUserManagerBundle:User:common_breadcrumb.html.twig" %}
 
-{% block breadcrumb %}
-    {{ parent() }}
-    <li class="active">
-        <a href="{{ path('sam_user_edit_profil') }}">{{'ctp_user.profil._breadcrumb'|trans}}</a>
-    </li>
+{% block root_breadcrumb %}
+    <ol class="breadcrumb">
+        <li><a href="{{ app.request.getSchemeAndHttpHost() ~ defaultAppHomeUrl }}">{{'ctp_core._breadcrumb'|trans}}</a></li>
+        <li class="active">
+            <a href="{{ path('sam_user_edit_profil') }}">{{'ctp_user.profil._breadcrumb'|trans}}</a>
+        </li>
+    </ol>
+
 {% endblock %}
 
 {% block main_content -%}
