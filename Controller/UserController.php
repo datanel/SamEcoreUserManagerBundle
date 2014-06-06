@@ -72,7 +72,7 @@ class UserController extends AbstractController
         return $this->render(
             'CanalTPSamEcoreUserManagerBundle:User:edit.html.twig',
             array(
-                'user'    => $userFormModel->user,
+                'user' => $userFormModel->user,
                 'form' => $form->createView(),
             )
         );
@@ -143,7 +143,7 @@ class UserController extends AbstractController
                 if ($this->getUser()->getId() == $id) {
                     throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException('Seriously, you shouldn\'t delete your account.');
                 }
-                
+
                 //Use sam user manager ;)
                 $userManager = $this->container->get('sam_user.user_manager');
                 $entity = $userManager->findUserBy(array('id' => $id));
@@ -248,6 +248,7 @@ class UserController extends AbstractController
      */
     public function editProfilAction()
     {
+        $app = $this->get('canal_tp_sam.application.finder')->getCurrentApp();
         $id = $this->get('security.context')->getToken()->getUser()->getId();
         $userManager = $this->container->get('fos_user.user_manager');
         $user = $userManager->findUserBy(array('id' => $id));
@@ -262,14 +263,20 @@ class UserController extends AbstractController
         }
         return $this->render(
             'CanalTPSamEcoreUserManagerBundle:User:profil.html.twig',
-            array('form' => $form->createView())
+            array(
+                'form' => $form->createView(),
+                'defaultAppHomeUrl' => $app->getDefaultRoute()
+            )
         );
     }
 
     public function toolbarAction()
     {
+        $appCanonicalName = $this->get('canal_tp_sam.application.finder')->getCurrentApp()->getCanonicalName();
+
         return $this->render(
-            'CanalTPSamEcoreUserManagerBundle:User:toolbar.html.twig'
+            'CanalTPSamEcoreUserManagerBundle:User:toolbar.html.twig',
+            array('currentAppName' => $appCanonicalName)
         );
     }
 }

@@ -72,6 +72,11 @@ CanalTP\SamEcoreUserManagerBundle\Entity\User:
             column: usr_credentials_expire_at
             type: datetime
             nullable: true
+    uniqueConstraints:
+        username_idx:
+            columns: [ usr_username, usr_username_canonical ]
+        email_idx:
+            columns: [ usr_email, usr_email_canonical ]
     manyToMany:
         userRoles:
             targetEntity: CanalTP\SamCoreBundle\Entity\Role

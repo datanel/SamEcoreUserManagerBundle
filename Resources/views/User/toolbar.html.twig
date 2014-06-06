@@ -2,11 +2,10 @@
     <a class="dropdown-toggle" href="#" data-toggle="dropdown">
         <span class="glyphicon glyphicon-user"></span>
         {{ app.user.username }}
-        <span class="caret"></span>
     </a>
     <ul class="dropdown-menu pull-right" role="menu">
         <li class="">
-            <a class="btn" href="{{ path('sam_user_edit_profil') }}">
+            <a class="btn" href="{{ path('sam_user_edit_profil', {'app': currentAppName }) }}">
                 <span class="glyphicon glyphicon-wrench"></span> {{ 'ctp_user.profil._menu'|trans() }}
             </a>
         </li>

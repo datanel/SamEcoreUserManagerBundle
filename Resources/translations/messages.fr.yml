@@ -82,3 +82,12 @@ ctp_user:
             _title: Modification de mes informations
             validate: Vos modifications ont bien été pris en compte
             actions: Enregistrer
+    form:
+        error:
+            field:
+                applications:
+                    not_blank: Merci de préciser au moins une application
+                roles:
+                    not_blank: Merci de préciser au moins un rôle
+                perimeters:
+                    not_blank: Merci de préciser au moins un périmètre

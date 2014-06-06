@@ -32,14 +32,16 @@ class RoleByApplicationType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $sc = $this->securityContext;
+        
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
-            function (FormEvent $event) {
+            function (FormEvent $event) use ($sc){
 
                 $form = $event->getForm();
                 $data = $event->getData();
 
-                $disabledAllRoles = !$this->securityContext->isGranted('BUSINESS_MANAGE_USER_ROLE');
+                $disabledAllRoles = !$sc->isGranted('BUSINESS_MANAGE_USER_ROLE');
 
                 $form->add('roles', 'entity', array(
                     'label'         => 'Rôles',
@@ -50,6 +52,7 @@ class RoleByApplicationType extends AbstractType
                     'query_builder' => function (EntityRepository $er) use ($data) {
                         $qb = $er->createQueryBuilder('r')
                             ->where('r.application = :application')
+                            ->andWhere('r.isEditable = true')
                             ->setParameter('application', $data->getId())
                             ->orderBy('r.name', 'ASC');
 
@@ -58,7 +61,13 @@ class RoleByApplicationType extends AbstractType
                     'translation_domain' => 'messages',
                     'property' => 'name'
                 ));
-
+                    
+                $form->add('superAdmin', 'checkbox', array(
+                    'label' => 'Admin ?',
+                    'value' => 'superAdmin',
+                    'required' => false
+                ));
+                    
                 if (!$form->getParent()->getParent()->getData()->user->getId()) {
                     $data->setRoles(array());
                 } else {
@@ -87,7 +96,8 @@ class RoleByApplicationType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'CanalTP\SamCoreBundle\Entity\Application',
+//            'data_class' => 'CanalTP\SamCoreBundle\Entity\Application',
+            'data_class' => 'CanalTP\SamEcoreApplicationManagerBundle\Form\Model\ApplicationRolesPerimeters',
         ));
     }
 

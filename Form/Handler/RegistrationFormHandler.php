@@ -6,10 +6,62 @@ use CanalTP\SamEcoreApplicationManagerBundle\Exception\OutOfBoundsException;
 use CanalTP\SamEcoreApplicationManagerBundle\Security\BusinessComponentRegistry;
 use CanalTP\SamEcoreUserManagerBundle\Form\Model\UserRegistration;
 use FOS\UserBundle\Form\Handler\RegistrationFormHandler as BaseRegistrationFormHandler;
+use Symfony\Component\Form\FormError;
 
 class RegistrationFormHandler extends BaseRegistrationFormHandler
 {
     private $businessRegistry;
+    private $objectManager;
+
+    private function checkElementError($appBoxForm, $name)
+    {
+        return ($appBoxForm->has($name) && count($appBoxForm->get($name)->getViewData()) > 0);
+    }
+
+    private function getRolesAndPerimetersFormByAppId($appId)
+    {
+        $applications = $this->form->get('rolesAndPerimetersByApplication');
+
+        foreach ($applications as $appBoxForm) {
+            if ($appBoxForm->getData()->getId() == $appId) {
+                return ($appBoxForm);
+            }
+        }
+        return (null);
+    }
+    
+    public function setObjectManager($om)
+    {
+        $this->objectManager = $om;
+    }
+
+    private function checkApplicationsValidation()
+    {
+        $applications = $this->form->get('applications')->getData();
+        $result = true;
+
+        if (count($applications) == 0) {
+            $this->form->get('applications')->addError(new FormError('ctp_user.form.error.field.applications.not_blank'));
+
+            return (false);
+        }
+        foreach ($applications as $application) {
+            $appBoxForm = $this->getRolesAndPerimetersFormByAppId($application->getId());
+            
+            if (!$appBoxForm->get('superAdmin')->getData()) {
+                if ($this->checkElementError($appBoxForm, 'roles') && count($application->getRoles()) == 0) {
+                    $appBoxForm->get('roles')->addError(new FormError('ctp_user.form.error.field.roles.not_blank'));
+                    $result = false;
+                }
+                if ($this->checkElementError($appBoxForm, 'perimeters') && count($application->getPerimeters()) == 0) {
+                    $appBoxForm->get('perimeters')->addError(new FormError('ctp_user.form.error.field.perimeters.not_blank'));
+                    $result = false;
+                }
+            }
+        }
+
+        return ($result);
+    }
 
     /**
      * @param boolean $confirmation
@@ -23,7 +75,7 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
         if ('POST' === $this->request->getMethod()) {
             $this->form->bind($this->request);
 
-            if ($this->form->isValid()) {
+            if ($this->form->isValid() && $this->checkApplicationsValidation()) {
                 $this->save($userRegistration, $confirmation);
 
                 return true;
@@ -45,15 +97,7 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
                 $user->setConfirmationToken($this->tokenGenerator->generateToken());
             }
 
-            try {
-                $this->userManager->updateUser($user);
-            } catch (\Exception $e) {
-                //@todo remove
-                var_dump($e->getMessage());
-                var_dump("Echec de la création de l'utilisateur. Possible qu'un élément soit en doublon.");
-                die(__CLASS__ . ' : ' . __LINE__);
-            }
-
+            $this->userManager->updateUser($user);
             $this->mailer->sendConfirmationEmailMessage($user);
         } else {
             $user->setEnabled(true);
@@ -66,8 +110,21 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
 
         foreach ($userRegistration->rolesAndPerimetersByApplication as $app) {
             if (in_array($app->getId(), $selectedApps)) {
-                foreach ($app->getRoles() as $role) {
-                    $user->addUserRole($role);
+                if ($app->superAdmin) {
+                    $superRole = $this->objectManager
+                        ->getRepository('CanalTPSamCoreBundle:Role')
+                        ->findOneBy(array(
+                            'application' => $app->application,
+                            'isEditable' => false
+                        ));
+                    
+                    if (!is_null($superRole)) {
+                        $user->addUserRole($superRole);
+                    }
+                } else {
+                    foreach ($app->getRoles() as $role) {
+                        $user->addUserRole($role);
+                    }
                 }
             }
         }
@@ -81,8 +138,15 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
                     $businessPerimeterManager = $this->businessRegistry
                         ->getBusinessComponent($app->getCanonicalName())
                         ->getPerimetersManager();
-
-                    foreach ($app->getPerimeters() as $perimeter) {
+                    
+                    $perimetersToAdd = array();
+                    if ($app->superAdmin) {
+                        $perimetersToAdd = $businessPerimeterManager->getPerimeters();
+                    } else {
+                        $perimetersToAdd = $app->getPerimeters();
+                    }
+                    
+                    foreach ($perimetersToAdd as $perimeter) {
                         $businessPerimeterManager->addUserToPerimeter($user, $perimeter);
                     }
                 } catch (OutOfBoundsException $e) {

@@ -45,21 +45,19 @@ class RegistrationSuscriber implements EventSubscriberInterface
 
         if ($data instanceof UserRegistration) {
             $applications = $this->em->getRepository('CanalTPSamCoreBundle:Application')->findAllOrderedByName();
-            $data->rolesAndPerimetersByApplication = $applications;
+            
+            $appsRolesPerims = array();
+            foreach ($applications as $application) {
+                $appRolePerim = new \CanalTP\SamEcoreApplicationManagerBundle\Form\Model\ApplicationRolesPerimeters();
+                $appRolePerim->application = $application;
+                $appRolePerim->superAdmin = false;
+                $appsRolesPerims[] = $appRolePerim;
+            }
+            
+            $data->rolesAndPerimetersByApplication = $appsRolesPerims;
 
-            // $form->add(
-            //     'applications',
-            //     'choice',
-            //     array(
-            //         'label'       => 'role.field.application',
-            //         'multiple'    => true,
-            //         'expanded'    => true,
-            //         'required'    => false,
-            //         'choice_list' => new ObjectChoiceList($applications, 'name')
-            //     )
-            // );
             $form->add('applications', 'entity', array(
-                'label'         => 'role.field.application',/*$this->translator->trans('role.field.copyRole.label') . ' ' . $data->getName(),*/
+                'label'         => 'role.field.application',
                 'multiple'      => true,
                 'expanded'      => true,
                 'class'         => 'CanalTPSamCoreBundle:Application',
