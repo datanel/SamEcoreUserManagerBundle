@@ -78,6 +78,9 @@
             <argument type="service" id="fos_user.mailer" />
             <argument type="service" id="fos_user.util.token_generator" />
             <argument type="service" id="fos_user.util.token_generator" />
+            <call method="setObjectManager">
+                <argument type="service" id="doctrine.orm.entity_manager" />
+            </call>
         </service>
 
         <service id="sam_user.profile.form.handler.default" class="CanalTP\SamEcoreUserManagerBundle\Form\Handler\ProfileFormHandler" scope="request" public="false">

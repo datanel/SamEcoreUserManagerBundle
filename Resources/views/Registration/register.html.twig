@@ -13,7 +13,7 @@
     {% endfor %}
     </div>
 {% endspaceless %}
-{% endblock choice_widget_expanded %}
+{% endblock choice_widget_expanded %#}
 
 {% block checkbox_widget %}
 {% spaceless %}
@@ -22,7 +22,7 @@
     {{ label }}
 </label>
 {% endspaceless %}
-{% endblock checkbox_widget %#}
+{% endblock checkbox_widget %}
 
 {% block breadcrumb %}
     {{ parent() }}
@@ -46,17 +46,18 @@
             {% if ((loop.index - 1) % 2) == 0 %}<div class="row">{% endif %}
             <div class="col-md-6">
                 <div class="panel panel-primary">
-                    <div class="panel-heading"><h3 class="panel-title">{{ application.vars.value.name }}</h3></div>
+                    <div class="panel-heading"><h3 class="panel-title">{{ application.vars.value.application.name }}</h3></div>
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-6">
                                 <h4>Rôles</h4>
-                                {% if  application.roles.vars.choices|length %}
+                                {% if application.roles.vars.choices|length %}
                                     {{ form_errors(application.roles) }}
                                     {{ form_widget(application.roles) }}
                                 {% else %}
                                     <div class="alert alert-info">{{ application.vars.value.name }} n'a pas de rôle</div>
                                 {% endif %}
+                                {{ form_widget(application.superAdmin) }}
                             </div>
 
                             <div class="col-xd-12 col-md-6">
