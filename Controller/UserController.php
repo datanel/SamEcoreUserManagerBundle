@@ -183,23 +183,32 @@ class UserController extends AbstractController
         }
 
         $apps = array();
+        $appsPA = array();
         foreach ($user->getUserRoles() as $role) {
             $application = $role->getApplication();
             if (!isset($apps[$application->getId()])) {
-                try{
+                try {
+                    $appRolesPerims = new \CanalTP\SamEcoreApplicationManagerBundle\Form\Model\ApplicationRolesPerimeters();
+                    $appRolesPerims->application = $application;
+                    $appsPA[$application->getId()] = $appRolesPerims;
+                    $appsPA[$application->getId()]->getRoles()->clear();
                     $apps[$application->getId()] = $role->getApplication();
-                    $apps[$application->getId()]->getRoles()->clear();
 
                     $userPerimeters = $this->get('sam.business_component')
                         ->getBusinessComponent($application->getCanonicalName())
                         ->getPerimetersManager()
                         ->getUserPerimeters($user);
 
-                    $apps[$application->getId()]->setPerimeters($userPerimeters);
+                    $appsPA[$application->getId()]->setPerimeters($userPerimeters);
                 } catch (\Exception $e) {
                 }
             }
+            $appsPA[$application->getId()]->addRole($role);
             $apps[$application->getId()]->addRole($role);
+            
+            if ($role->getCanonicalName() == 'ROLE_SUPER_ADMIN') {
+                $appsPA[$application->getId()]->superAdmin = true;
+            }
         }
 
         $apps = array_values($apps);
@@ -217,6 +226,9 @@ class UserController extends AbstractController
                     if (count($userPerimeters)) {
                         $application->setPerimeters($userPerimeters);
                         $application->setRoles(array());
+                        $appRolesPerims = new \CanalTP\SamEcoreApplicationManagerBundle\Form\Model\ApplicationRolesPerimeters();
+                        $appRolesPerims->application = $application;
+                        $appsPA[] = $appRolesPerims;
                         $apps[] = $application;
                     }
                 } catch (OutOfBoundsException $e) {
@@ -229,7 +241,7 @@ class UserController extends AbstractController
         $userFormModel = new \CanalTP\SamEcoreUserManagerBundle\Form\Model\UserRegistration;
         $userFormModel->user = $user;
         $userFormModel->applications = $apps;
-        $userFormModel->rolesAndPerimetersByApplication = $apps;
+        $userFormModel->rolesAndPerimetersByApplication = array_values($appsPA);
 
         return $userFormModel;
     }

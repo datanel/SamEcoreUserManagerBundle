@@ -55,7 +55,7 @@ class RegistrationSuscriber implements EventSubscriberInterface
             }
             
             $data->rolesAndPerimetersByApplication = $appsRolesPerims;
-
+            
             $form->add('applications', 'entity', array(
                 'label'         => 'role.field.application',
                 'multiple'      => true,

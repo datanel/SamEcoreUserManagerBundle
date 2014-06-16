@@ -57,7 +57,9 @@
                                 {% else %}
                                     <div class="alert alert-info">{{ application.vars.value.name }} n'a pas de rôle</div>
                                 {% endif %}
-                                {{ form_widget(application.superAdmin) }}
+                                <h5>Super Admin</h5>
+                                {{ form_errors(application.superAdmin) }}
+                                {{ form_row(application.superAdmin) }}
                             </div>
 
                             <div class="col-xd-12 col-md-6">
