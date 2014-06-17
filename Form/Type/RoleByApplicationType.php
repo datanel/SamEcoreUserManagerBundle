@@ -43,7 +43,7 @@ class RoleByApplicationType extends AbstractType
                 ));
                     
                 if (!$form->getParent()->getParent()->getData()->user->getId()) {
-                    $data->setRoles(array());
+                    $data->application->setRoles(array());
                 } else {
                     $apps = $form->getParent()->getParent()->getData()->applications;
                     $exists = false;
@@ -51,7 +51,7 @@ class RoleByApplicationType extends AbstractType
                         
                         $userRoles = $form->getParent()->getParent()->getData()->user->getUserRoles();
                         foreach ($userRoles as $userRole) {
-                            if ($userRole->getApplication()->getId() == $app->getId()
+                            if ($userRole->getApplication()->getId() == $data->application->getId()
                                 && $userRole->getCanonicalName() == self::ROLE_SUPER_ADMIN)
                             {
                                 //Check or not superAdmin

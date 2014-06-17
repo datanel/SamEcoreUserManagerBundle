@@ -88,6 +88,9 @@
             <argument type="service" id="fos_user.profile.form" />
             <argument type="service" id="request" />
             <argument type="service" id="fos_user.user_manager" />
+            <call method="setObjectManager">
+                <argument type="service" id="doctrine.orm.entity_manager" />
+            </call>
         </service>
 
         <service id="sam_role_by_application.type" class="%sam_role_by_application.type.class%">

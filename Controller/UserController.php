@@ -59,6 +59,7 @@ class UserController extends AbstractController
         $formHandler = $this->container->get('fos_user.profile.form.handler');
 
         $process = $formHandler->processUser($userFormModel);
+        
         if ($process) {
             $this->get('session')->getFlashBag()->add(
                 'success',
@@ -191,26 +192,25 @@ class UserController extends AbstractController
                     $appRolesPerims = new \CanalTP\SamEcoreApplicationManagerBundle\Form\Model\ApplicationRolesPerimeters();
                     $appRolesPerims->application = $application;
                     $appsPA[$application->getId()] = $appRolesPerims;
-                    $appsPA[$application->getId()]->getRoles()->clear();
-                    $apps[$application->getId()] = $role->getApplication();
+                    $appsPA[$application->getId()]->application->getRoles()->clear();
+                    $apps[$application->getId()] = $application;
 
                     $userPerimeters = $this->get('sam.business_component')
                         ->getBusinessComponent($application->getCanonicalName())
                         ->getPerimetersManager()
                         ->getUserPerimeters($user);
 
-                    $appsPA[$application->getId()]->setPerimeters($userPerimeters);
+                    $appsPA[$application->getId()]->application->setPerimeters($userPerimeters);
                 } catch (\Exception $e) {
                 }
             }
-            $appsPA[$application->getId()]->addRole($role);
-            $apps[$application->getId()]->addRole($role);
+            $appsPA[$application->getId()]->application->addRole($role);
             
             if ($role->getCanonicalName() == 'ROLE_SUPER_ADMIN') {
                 $appsPA[$application->getId()]->superAdmin = true;
             }
         }
-
+        
         $apps = array_values($apps);
 
         // A user may not have roles but perimeters so we have to check this (for the checkboxes Applications) I don't like it

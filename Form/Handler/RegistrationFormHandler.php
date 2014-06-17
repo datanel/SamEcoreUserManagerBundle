@@ -23,7 +23,7 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
         $applications = $this->form->get('rolesAndPerimetersByApplication');
 
         foreach ($applications as $appBoxForm) {
-            if ($appBoxForm->getData()->getId() == $appId) {
+            if ($appBoxForm->getData()->application->getId() == $appId) {
                 return ($appBoxForm);
             }
         }
@@ -109,7 +109,7 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
         }
 
         foreach ($userRegistration->rolesAndPerimetersByApplication as $app) {
-            if (in_array($app->getId(), $selectedApps)) {
+            if (in_array($app->application->getId(), $selectedApps)) {
                 if ($app->superAdmin) {
                     $superRole = $this->objectManager
                         ->getRepository('CanalTPSamCoreBundle:Role')
@@ -122,7 +122,7 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
                         $user->addUserRole($superRole);
                     }
                 } else {
-                    foreach ($app->getRoles() as $role) {
+                    foreach ($app->application->getRoles() as $role) {
                         $user->addUserRole($role);
                     }
                 }
@@ -133,17 +133,17 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
 
         // Add Perimeters to the user
         foreach ($userRegistration->rolesAndPerimetersByApplication as $app) {
-            if (in_array($app->getId(), $selectedApps)) {
+            if (in_array($app->application->getId(), $selectedApps)) {
                 try {
                     $businessPerimeterManager = $this->businessRegistry
-                        ->getBusinessComponent($app->getCanonicalName())
+                        ->getBusinessComponent($app->application->getCanonicalName())
                         ->getPerimetersManager();
                     
                     $perimetersToAdd = array();
                     if ($app->superAdmin) {
                         $perimetersToAdd = $businessPerimeterManager->getPerimeters();
                     } else {
-                        $perimetersToAdd = $app->getPerimeters();
+                        $perimetersToAdd = $app->application->getPerimeters();
                     }
                     
                     foreach ($perimetersToAdd as $perimeter) {

@@ -17,6 +17,7 @@ use Symfony\Component\Form\FormError;
 class ProfileFormHandler extends BaseProfileFormHandler
 {
     private $businessRegistry;
+    protected $objectManager;
 
     private function checkElementError($appBoxForm, $name)
     {
@@ -28,14 +29,18 @@ class ProfileFormHandler extends BaseProfileFormHandler
         $applications = $this->form->get('rolesAndPerimetersByApplication');
 
         foreach ($applications as $appBoxForm) {
-            if ($appBoxForm->getData()->getId() == $appId) {
+            if ($appBoxForm->getData()->application->getId() == $appId) {
                 return ($appBoxForm);
             }
         }
         return (null);
     }
 
-
+    public function setObjectManager($om)
+    {
+        $this->objectManager = $om;
+    }
+    
     private function checkApplicationsValidation()
     {
         $applications = $this->form->get('applications')->getData();
@@ -96,12 +101,26 @@ class ProfileFormHandler extends BaseProfileFormHandler
         foreach ($userRegistration->applications as $selectedApp) {
             $selectedApps[] = $selectedApp->getId();
         }
-
+        
         $user->getUserRoles()->clear();
+        
         foreach ($userRegistration->rolesAndPerimetersByApplication as $app) {
-            if (in_array($app->getId(), $selectedApps)) {
-                foreach ($app->getRoles() as $role) {
-                    $user->addUserRole($role);
+            if (in_array($app->application->getId(), $selectedApps)) {
+                if ($app->superAdmin) {
+                    $superRole = $this->objectManager
+                        ->getRepository('CanalTPSamCoreBundle:Role')
+                        ->findOneBy(array(
+                            'application' => $app->application,
+                            'isEditable' => false
+                        ));
+                    
+                    if (!is_null($superRole)) {
+                        $user->addUserRole($superRole);
+                    }
+                } else {
+                    foreach ($app->application->getRoles() as $role) {
+                        $user->addUserRole($role);
+                    }
                 }
             }
         }
@@ -110,14 +129,21 @@ class ProfileFormHandler extends BaseProfileFormHandler
 
         // Add Perimeters to the user
         foreach ($userRegistration->rolesAndPerimetersByApplication as $app) {
-            if (in_array($app->getId(), $selectedApps)) {
+            if (in_array($app->application->getId(), $selectedApps)) {
                 try {
                     $businessPerimeterManager = $this->businessRegistry
-                        ->getBusinessComponent($app->getCanonicalName())
+                        ->getBusinessComponent($app->application->getCanonicalName())
                         ->getPerimetersManager();
 
                     $businessPerimeterManager->deleteUserPerimeters($user);
-                    foreach ($app->getPerimeters() as $perimeter) {
+                    $perimetersToAdd = array();
+                    if ($app->superAdmin) {
+                        $perimetersToAdd = $businessPerimeterManager->getPerimeters();
+                    } else {
+                        $perimetersToAdd = $app->application->getPerimeters();
+                    }
+                    
+                    foreach ($perimetersToAdd as $perimeter) {
                         $businessPerimeterManager->addUserToPerimeter($user, $perimeter);
                     }
                 } catch (OutOfBoundsException $e) {
