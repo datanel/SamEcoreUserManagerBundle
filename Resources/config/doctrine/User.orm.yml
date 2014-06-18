@@ -72,10 +72,6 @@ CanalTP\SamEcoreUserManagerBundle\Entity\User:
             column: usr_credentials_expire_at
             type: datetime
             nullable: true
-        isSuperAdmin:
-            column: usr_is_super_admin
-            type: boolean
-            nullable: false
     uniqueConstraints:
         username_idx:
             columns: [ usr_username, usr_username_canonical ]
