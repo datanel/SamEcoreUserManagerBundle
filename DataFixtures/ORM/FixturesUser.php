@@ -19,7 +19,6 @@ class FixturesUser extends AbstractFixture implements OrderedFixtureInterface
         $user->setEnabled(true);
         $user->setEmail($data['email']);
         $user->setPlainPassword($data['password']);
-        $user->setIsSuperAdmin(true);
 
         if (isset($data['roles'])) {
             foreach ($data['roles'] as $role) {
