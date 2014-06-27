@@ -118,8 +118,6 @@ class User extends AbstractUser
      */
     protected $userRoles;
 
-    protected $isSuperAdmin;
-
     /**
      * Constructor
      */
@@ -265,5 +263,18 @@ class User extends AbstractUser
         $roles[] = static::ROLE_DEFAULT;
 
         return array_unique($roles);
+    }
+
+    /**
+     * Appeler avant la mise à jour d'un objet en base de donnée
+     */
+    public function onPostLoad()
+    {
+        $aRoles = array();
+
+        foreach ($this->getRoles() as $role) {
+            $aRoles[] = $role->getCanonicalName();
+        }
+        $this->setRoles($aRoles);
     }
 }

@@ -192,12 +192,6 @@ class UserManager extends BaseUserManager
         parent::deleteUser($user);
     }
 
-    public function save(UserInterface $user)
-    {
-        $this->objectManager->persist($user);
-        $this->objectManager->flush();
-    }
-
     public function setBusinessRegistry(BusinessComponentRegistry $businessRegistry)
     {
         $this->businessRegistry = $businessRegistry;

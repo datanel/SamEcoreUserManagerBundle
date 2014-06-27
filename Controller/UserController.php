@@ -248,7 +248,7 @@ class UserController extends AbstractController
 
     public function editProfilProcessForm($user)
     {
-        $this->get('sam_user.user_manager')->save($user);
+        $this->get('sam_user.user_manager')->updateUser($user);
         $this->get('session')->getFlashBag()->add(
             'success',
             $this->get('translator')->trans('ctp_user.profil.edit.validate')
