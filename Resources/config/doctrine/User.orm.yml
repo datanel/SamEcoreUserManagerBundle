@@ -1,6 +1,6 @@
 CanalTP\SamEcoreUserManagerBundle\Entity\User:
     type: entity
-    table: t_user_usr
+    table: public.t_user_usr
     fields:
         id:
             column: usr_id
@@ -82,7 +82,7 @@ CanalTP\SamEcoreUserManagerBundle\Entity\User:
             targetEntity: CanalTP\SamCoreBundle\Entity\Role
             inversedBy: users
             joinTable:
-                name: tj_user_role_ur
+                name: public.tj_user_role_ur
                 joinColumns:
                     usr_id:
                         referencedColumnName: usr_id
