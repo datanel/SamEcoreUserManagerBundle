@@ -3,7 +3,7 @@
 namespace CanalTP\SamEcoreUserManagerBundle\Form\Handler;
 
 use CanalTP\SamEcoreApplicationManagerBundle\Exception\OutOfBoundsException;
-use CanalTP\SamEcoreApplicationManagerBundle\Security\BusinessComponentRegistry;
+use CanalTP\SamEcoreApplicationManagerBundle\Component\BusinessComponentRegistry;
 use CanalTP\SamEcoreUserManagerBundle\Form\Model\UserRegistration;
 use FOS\UserBundle\Form\Handler\RegistrationFormHandler as BaseRegistrationFormHandler;
 use Symfony\Component\Form\FormError;

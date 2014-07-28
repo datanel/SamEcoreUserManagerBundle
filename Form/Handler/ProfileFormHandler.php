@@ -2,12 +2,7 @@
 
 namespace CanalTP\SamEcoreUserManagerBundle\Form\Handler;
 
-use FOS\UserBundle\Model\UserInterface;
-use FOS\UserBundle\Model\UserManagerInterface;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\Request;
-
-use CanalTP\SamEcoreApplicationManagerBundle\Security\BusinessComponentRegistry;
+use CanalTP\SamEcoreApplicationManagerBundle\Component\BusinessComponentRegistry;
 use CanalTP\SamEcoreUserManagerBundle\Form\Model\UserRegistration;
 use CanalTP\SamEcoreApplicationManagerBundle\Exception\OutOfBoundsException;
 

@@ -2,7 +2,7 @@
 
 namespace CanalTP\SamEcoreUserManagerBundle\Service;
 
-use CanalTP\SamEcoreApplicationManagerBundle\Security\BusinessComponentRegistry;
+use CanalTP\SamEcoreApplicationManagerBundle\Component\BusinessComponentRegistry;
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Doctrine\UserManager as BaseUserManager;
 
