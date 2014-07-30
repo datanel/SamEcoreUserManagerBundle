@@ -1,0 +1,39 @@
+{% extends "CanalTPNmpAdminBundle:Sim:base.html.twig" %}
+
+{% block affiliate_breadcrumb %}
+    <li class="current"><a href="{{ path('fos_user_group_list') }}">{{'ctp_user.sim.list._breadcrumb'|trans}}</a></li>
+{% endblock %}
+
+{% block fos_user_content -%}
+    <h1>{{'ctp_user.sim.list._title'|trans}}</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>{{'ctp_user.sim.list.name'|trans}}</th>
+                <th>{{'ctp_user.sim.list.url'|trans}}</th>
+                <th>{{'ctp_user.sim.list.actions'|trans}}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in groups %}
+            <tr>
+                <td>{{ entity.name }}</td>
+                <td>{{ entity.url }}</td>
+                <td class="action">
+                    <a class="tiny button" href="{{ path('canal_tp_sam_sim_edit', { 'groupname': entity.name }) }}">{{'ctp_user.sim.actions.edit.short'|trans}}</a>
+                    <a class="tiny button" href="{{ path('canal_tp_sam_sim_configuration', { 'id': entity.id }) }}">{{'ctp_user.sim.actions.configuration.short'|trans}}</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a class="button" href="{{ path('canal_tp_sam_sim_new') }}">
+                {{'ctp_user.sim.actions.add.full'|trans}}
+            </a>
+        </li>
+    </ul>
+{% endblock %}
