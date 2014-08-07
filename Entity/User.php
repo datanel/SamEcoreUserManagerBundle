@@ -117,6 +117,8 @@ class User extends AbstractUser
      * @var \Doctrine\Common\Collections\Collection
      */
     protected $userRoles;
+    
+    protected $client;
 
     /**
      * Constructor
@@ -276,5 +278,17 @@ class User extends AbstractUser
             $aRoles[] = $role->getCanonicalName();
         }
         $this->setRoles($aRoles);
+    }
+    
+    public function setClient($client)
+    {
+        $this->client = $client;
+
+        return $this;
+    }
+
+    public function getClient()
+    {
+        return $this->client;
     }
 }
