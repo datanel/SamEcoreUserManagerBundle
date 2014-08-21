@@ -50,6 +50,9 @@ CanalTP\SamEcoreUserManagerBundle\Entity\User:
             column: usr_last_login
             type: datetime
             nullable: true
+        status:
+            column: usr_status
+            type: integer
         expired:
             column: usr_expired
             type: boolean
@@ -77,6 +80,15 @@ CanalTP\SamEcoreUserManagerBundle\Entity\User:
             columns: [ usr_username, usr_username_canonical ]
         email_idx:
             columns: [ usr_email, usr_email_canonical ]
+    # TODO: Refs #IUS-268: BNeed to discuss about relation between User un client
+    # manyToOne:
+    #     client:
+    #         targetEntity: CanalTP\SamCoreBundle\Entity\Client
+    #         inversedBy: applications
+    #         nullable: true
+    #         joinColumn:
+    #             name: usr_id
+    #             referencedColumnName: cli_id
     manyToMany:
         userRoles:
             targetEntity: CanalTP\SamCoreBundle\Entity\Role
@@ -89,10 +101,3 @@ CanalTP\SamEcoreUserManagerBundle\Entity\User:
                 inverseJoinColumns:
                     rol_id:
                         referencedColumnName: rol_id
-    manyToOne:
-        client:
-            targetEntity: CanalTP\SamCoreBundle\Entity\Client
-            inversedBy: users
-            joinColumn:
-                name: cli_id
-                referencedColumnName: cli_id
