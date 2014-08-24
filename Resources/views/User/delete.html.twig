@@ -1,24 +1,22 @@
-{% extends "CanalTPSamEcoreUserManagerBundle:User:common_breadcrumb.html.twig" %}
+{% extends "::modal.html.twig" %}
 
-{% block left_menu -%}
-    {% include 'CanalTPSamEcoreUserManagerBundle:User:common_menu.html.twig' %}
+{% block modal_title %}
+    {{'ctp_user.user.delete._title'|trans}}
 {% endblock %}
 
-{% block breadcrumb %}
-    {{ parent() }}
-    <li class="current"><a href="{{ path('sam_user_delete', { 'id': entity.id }) }}">{{'ctp_user.user.delete._breadcrumb'|trans}}</a></li>
-{% endblock %}
-
-{% block main_content -%}
-    <h1>{{'ctp_user.user.delete._title'|trans}}</h1>
-
+{% block modal_body %}
     <p>{{'ctp_user.user.delete.confirm'|trans}}</p>
+{% endblock %}
+
+{% block open_form %}
     <form action="{{ path('sam_user_delete', { 'id': entity.id }) }}" method="post">
         <input type="hidden" name="_method" value="DELETE" />
+{% endblock %}
+
+{% block modal_actions %}
         {{ form_widget(delete_form) }}
         <button class="btn btn-danger" type="submit">
             <span class="glyphicon glyphicon-trash"></span> {{'ctp_user.user.actions.delete.short'|trans}}
         </button>
-        <a href="{{ path('sam_user_list') }}" class="btn btn-default">{{'ctp_user.user.actions.cancel.short'|trans}}</a>
     </form>
 {% endblock %}

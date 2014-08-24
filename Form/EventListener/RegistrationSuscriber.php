@@ -13,6 +13,7 @@ use Symfony\Component\Security\Core\Role\Role;
 
 class RegistrationSuscriber implements EventSubscriberInterface
 {
+    private $customers = null;
     protected $em;
 
     public function __construct(EntityManager $em)
@@ -33,6 +34,31 @@ class RegistrationSuscriber implements EventSubscriberInterface
         );
     }
 
+    private function initCustomerField(FormEvent $event)
+    {
+        $data = $event->getData();
+        $form = $event->getForm();
+        $repository = $this->em->getRepository('CanalTPSamCoreBundle:Customer');
+        $isSuperAdmin = $data->user->hasRole('ROLE_SUPER_ADMINISTRATEUR');
+
+        if ($isSuperAdmin) {
+            $choices = $repository->findAllForCustomerChoices();
+        } else {
+            $choices = $repository->findByForCustomerChoices(array(
+                'id' => $data->user->getCustomer()
+            ));
+        }
+
+        $form->add('customer', 'choice', array(
+            'label' => 'role.field.customer',
+            'expanded' => false,
+            'choices' => $choices,
+            'empty_value' => ($isSuperAdmin ? 'global.please_choose' : false),
+            'disabled' => ($isSuperAdmin ? false : true),
+            'translation_domain' => 'messages'
+        ));
+    }
+
     /**
      * Fonction appelée lors de l'evenement FormEvents::PRE_SET_DATA
      *
@@ -45,7 +71,7 @@ class RegistrationSuscriber implements EventSubscriberInterface
 
         if ($data instanceof UserRegistration) {
             $applications = $this->em->getRepository('CanalTPSamCoreBundle:Application')->findAllOrderedByName();
-            
+
             $appsRolesPerims = array();
             foreach ($applications as $application) {
                 $appRolePerim = new \CanalTP\SamEcoreApplicationManagerBundle\Form\Model\ApplicationRolesPerimeters();
@@ -53,38 +79,10 @@ class RegistrationSuscriber implements EventSubscriberInterface
                 $appRolePerim->superAdmin = false;
                 $appsRolesPerims[] = $appRolePerim;
             }
-            
-            $data->rolesAndPerimetersByApplication = $appsRolesPerims;
-            
-            $form->add('applications', 'entity', array(
-                'label'         => 'role.field.application',
-                'multiple'      => true,
-                'expanded'      => true,
-                'class'         => 'CanalTPSamCoreBundle:Application',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('a')
-                        ->orderBy('a.name');
-                },
-                'translation_domain' => 'messages',
-                'property' => 'name'
-            ));
 
-            $form->add(
-                'rolesAndPerimetersByApplication',
-                'collection',
-                array(
-                    'label' => 'role.field.parent.label',
-                    'type' => 'sam_role_by_application',
-                    'allow_add'    => false,
-                    'allow_delete' => false,
-                    'by_reference' => false,
-                    'options'      => array(
-                        'required'       => true,
-                        'error_bubbling' => false,
-                        'attr'           => array('class' => 'application-role-box')
-                    ),
-                )
-            );
+            $data->rolesAndPerimetersByApplication = $appsRolesPerims;
+
+            $this->initCustomerField($event);
         }
     }
 

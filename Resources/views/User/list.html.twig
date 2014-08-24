@@ -74,7 +74,7 @@
                                 </li>
                                 {% if app.user.id != entity.id %}
                                     <li>
-                                        <a class="danger" href="{{ path('sam_user_delete', { 'id': entity.id }) }}">
+                                        <a class="danger" href="{{ path('sam_user_delete', { 'id': entity.id }) }}" data-toggle="modal" data-target="#base-modal">
                                             <span class="glyphicon glyphicon-trash"></span> {{'ctp_user.user.actions.delete.short'|trans}}
                                         </a>
                                     </li>

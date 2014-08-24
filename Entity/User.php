@@ -126,7 +126,7 @@ class User extends AbstractUser
      */
     protected $userRoles;
 
-    protected $client;
+    protected $customer;
 
     /**
      * Constructor
@@ -311,15 +311,20 @@ class User extends AbstractUser
         $this->setRoles($aRoles);
     }
 
-    public function setClient($client)
+    public function setCustomer($customer)
     {
-        $this->client = $client;
+        $this->customer = $customer;
 
         return $this;
     }
 
-    public function getClient()
+    public function getCustomer()
     {
-        return $this->client;
+        return $this->customer;
+    }
+
+    public function hasRole($role)
+    {
+        return (in_array($role, $this->getRoles()));
     }
 }

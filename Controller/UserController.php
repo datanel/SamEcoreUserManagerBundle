@@ -10,15 +10,17 @@ use Symfony\Component\Form\Form;
 
 class UserController extends AbstractController
 {
+    private $userManager = null;
+
+
     /**
      * Lists all User entities.
      */
-    public function indexAction($page)
+    public function listAction()
     {
         $this->isAllowed('BUSINESS_VIEW_USER');
 
-        $userListProcessor = $this->container->get('canaltp.role.processor');
-        $entities          = $userListProcessor->getVisibleUsers($page);
+        $entities = $this->container->get('sam_user.user_manager')->findUsers();
 
         $deleteFormViews = array();
         foreach ($entities as $entitie) {
@@ -27,90 +29,50 @@ class UserController extends AbstractController
             $deleteFormViews[$id] = $deleteForm->createView();
         }
 
-        $params = array(
-            'entities'     => $entities,
-            'delete_forms' => $deleteFormViews,
-        );
-
-        $pagination = $userListProcessor->getPagination();
-        if ($pagination > 1) {
-            $params['pagination'] = array(
-                'current' => $page,
-                'total'   => $pagination,
-            );
-        }
-
         return $this->render(
-            'CanalTPSamEcoreUserManagerBundle:User:index.html.twig',
-            $params
+            'CanalTPSamEcoreUserManagerBundle:User:list.html.twig',
+            array(
+                'entities'     => $entities,
+                'delete_forms' => $deleteFormViews,
+            )
         );
     }
 
-    /**
-     * Displays a form to edit an existing User entity.
-     */
-    public function editAction($id)
+    private function processForm(Request $request, $userFormModel)
     {
-        $this->isAllowed('BUSINESS_MANAGE_USER');
-
-        $userFormModel = $this->getUserFormModel($id);
-
-        $form = $this->container->get('fos_user.profile.form');
         $formHandler = $this->container->get('fos_user.profile.form.handler');
 
-        $process = $formHandler->processUser($userFormModel);
-        
-        if ($process) {
+        if ($formHandler->processUser($userFormModel)) {
             $this->get('session')->getFlashBag()->add(
                 'success',
                 'profile.flash.updated'
             );
-            $url = $this->generateUrl('sam_user_list');
 
-            return $this->redirect($url);
+            return $this->redirect($this->generateUrl('sam_user_list'));
         }
 
-        return $this->render(
-            'CanalTPSamEcoreUserManagerBundle:User:edit.html.twig',
-            array(
-                'user' => $userFormModel->user,
-                'form' => $form->createView(),
-            )
-        );
+        return (null);
     }
 
-    /**
-     * Edits an existing User entity.
-     */
-    public function updateAction(Request $request, $id)
+    public function editAction(Request $request, $id)
     {
-        $this->isAllowed('BUSINESS_MANAGE_USER');
+        $this->isGranted('BUSINESS_MANAGE_USER');
 
-        $userManager = $this->container->get('fos_user.user_manager');
-        $entity = $userManager->findUserBy(array('id' => $id));
+        $this->userManager = $this->get('sam_user.user_manager');
+        $form = $this->container->get('fos_user.profile.form');
+        $userFormModel = $this->getUserFormModel($id);
+        $render = $this->processForm($request, $userFormModel);
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find User entity.');
-        }
-
-        $editForm = $this->createForm('sam_user_form', $entity);
-        $editForm->bind($request);
-
-        if ($editForm->isValid()) {
-            $userManager->updateUser($entity);
-
-            return $this->redirect(
-                $this->generateUrl('sam_user_list', array('id' => $id))
+        if (!$render) {
+            return $this->render(
+                'CanalTPSamEcoreUserManagerBundle:User:edit.html.twig',
+                array(
+                    'user' => $userFormModel->user,
+                    'form' => $form->createView(),
+                )
             );
         }
-
-        return $this->render(
-            'CanalTPSamEcoreUserManagerBundle:User:edit.html.twig',
-            array(
-                'entity'    => $entity,
-                'edit_form' => $editForm->createView(),
-            )
-        );
+        return ($render);
     }
 
     /**
@@ -177,7 +139,7 @@ class UserController extends AbstractController
     private function getUserFormModel($id)
     {
         $userManager = $this->get('fos_user.user_manager');
-        $user = $userManager->findUser($id);
+        $user = $userManager->find($id);
 
         if (!$user) {
             throw $this->createNotFoundException('Unable to find User entity.');
@@ -205,12 +167,12 @@ class UserController extends AbstractController
                 }
             }
             $appsPA[$application->getId()]->application->addRole($role);
-            
+
             if ($role->getCanonicalName() == 'ROLE_SUPER_ADMIN') {
                 $appsPA[$application->getId()]->superAdmin = true;
             }
         }
-        
+
         $apps = array_values($apps);
 
         // A user may not have roles but perimeters so we have to check this (for the checkboxes Applications) I don't like it
@@ -248,7 +210,7 @@ class UserController extends AbstractController
 
     public function editProfilProcessForm($user)
     {
-        $this->get('sam_user.user_manager')->updateUser($user);
+        $this->get('sam.user_manager')->updateUser($user);
         $this->get('session')->getFlashBag()->add(
             'success',
             $this->get('translator')->trans('ctp_user.profil.edit.validate')
