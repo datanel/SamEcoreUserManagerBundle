@@ -58,7 +58,7 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
             $user->setEnabled(true);
         }
 
-        $user->setCustomer($userRegistration->user->customer);
+        $user->setCustomer($userRegistration->customer);
         $this->userManager->updateUser($user);
     }
 

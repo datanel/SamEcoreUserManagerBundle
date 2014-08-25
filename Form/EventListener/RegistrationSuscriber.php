@@ -43,7 +43,7 @@ class RegistrationSuscriber implements EventSubscriberInterface
         $form = $event->getForm();
         $repository = $this->em->getRepository('CanalTPSamCoreBundle:Customer');
         $isSuperAdmin = $this->context->getToken()->getUser()->hasRole('ROLE_SUPER_ADMIN');
-
+        $data->customer = $data->user->getCustomer();
         if ($isSuperAdmin) {
             $choices = $repository->findAllToArray();
         } else {
