@@ -1,4 +1,4 @@
-{% extends "CanalTPSamEcoreUserManagerBundle::generic_list.html.twig" %}
+{% extends "CanalTPSamCoreBundle::generic_list.html.twig" %}
 
 {% block left_menu -%}
     {% include 'CanalTPSamEcoreUserManagerBundle:User:common_menu.html.twig' with {'link_back_to_list': false} %}
@@ -16,22 +16,27 @@
 {% endblock %}
 
 {% block table_head -%}
-    <th>{{'ctp_user.user.list.profil'|trans}}</th>
-    <th>{{'ctp_user.user.list.groups'|trans}}</th>
+    <th>{{'ctp_user.user.list.customer'|trans}}</th>
+    <th>{{'ctp_user.user.list.username'|trans}}</th>
     <th>{{'ctp_user.user.list.name'|trans}}</th>
     <th>{{'ctp_user.user.list.email'|trans}}</th>
-    <th>{{'ctp_user.user.list.last_login'|trans}}</th>
+    <th>{{'ctp_user.user.list.profil'|trans}}</th>
+    <th>{{'ctp_user.user.list.groups'|trans}}</th>
     <th>{{'ctp_user.user.list.enabled'|trans}}</th>
-    <th>{{'ctp_user.user.list.locked'|trans}}</th>
     {% if is_granted('BUSINESS_MANAGE_USER') %}
         <th>{{'ctp_user.user.list.actions'|trans}}</th>
     {% endif %}
 {% endblock %}
 
 {% block table_body -%}
-
     {% for entity in entities %}
         <tr>
+            {% if isSuperAdmin %}
+                <td>{{ entity.customer }}</td>
+            {% endif %}
+            <td><a href="{{ path('sam_user_edit', { 'id': entity.id }) }}">{{ entity.username }}</a></td>
+            <td>{{ entity.lastname }} {{ entity.firstname }}</td>
+            <td><a href="mailto:{{ entity.email }}">{{ entity.email }}</a></td>
             <td>
                 {% for role in entity.userRoles %}
                     <div>{{ role.name }}</div>
@@ -50,18 +55,11 @@
                     <div>{{ app }}</div>
                 {% endfor %}
             </td>
-            <td>{{ entity.lastname }} {{ entity.firstname }}</td>
-            <td><a href="mailto:{{ entity.email }}">{{ entity.email }}</a></td>
-            <td>{% if entity.lastLogin %}{{ entity.lastLogin|date() }}{% endif %}</td>
             <td class="text-center">{{ macros.display_bool(entity.enabled) }}</td>
-            <td class="text-center">{{ macros.display_bool(entity.locked) }}</td>
             {% if is_granted('BUSINESS_MANAGE_USER') %}
                 <td class="action">
                     {% if is_granted('ROLE_SUPER_ADMIN') or 'ROLE_ADMIN' not in entity.roles %}
                         <div class="btn-group">
-                            <a href="{{ path('sam_user_edit', { 'id': entity.id }) }}" class="btn btn-default">
-                                <span class="glyphicon glyphicon-edit"></span> {{'ctp_user.user.actions.edit.short'|trans}}
-                            </a>
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                 <span class="caret"></span>
                                 <span class="sr-only">{{'ctp_core.toggle_menu'|trans}}</span>
@@ -69,7 +67,7 @@
                             <ul class="dropdown-menu pull-right" role="menu">
                                 <li>
                                     <a class="danger" href="{{ path('ctp_user_resetting_admin_reset', { 'email': entity.email }) }}">
-                                        <span class="glyphicon glyphicon-refresh"></span> {{'ctp_user.user.actions.reset_password'|trans}}
+                                        <span class="glyphicon glyphicon-refresh"></span> {{'ctp_user.user.actions.reset_password.short'|trans}}
                                     </a>
                                 </li>
                                 {% if app.user.id != entity.id %}
@@ -90,40 +88,36 @@
 {% endblock %}
 
 {% block list_pagination -%}
+     <div class="pager">
+        <li><a class="prev" href="#">&laquo;</a></li>
+        <span class="pagedisplay"></span> <!-- this can be any element, including an input -->
+        <li><a class="next" href="#">&raquo;</a></li>
+    </div>
+ {% endblock %}
 
-    {% if pagination is defined %}
-        <div class="text-center">
-            <ul class="pagination">
-                {% if pagination.current > 1 %}
-                    {% set class = ' class="arrow"' %}
-                    {% set href = path('sam_user_list', {'page': pagination.current-1}) %}
-                {% else %}
-                    {% set class = ' class="arrow disabled"' %}
-                    {% set href = path('sam_user_list') %}
-                {% endif %}
-                <li{{class|raw}}><a href="{{ href }}">&laquo;</a></li>
+{% block javascripts %}
+    <script type="text/javascript">
+        require(['jquery_tablesorter_pager'], function(tableSorter) {
+            $(function() {
+                var pagerOptions = {
+                    // target the pager markup - see the HTML block below
+                    container: $(".pager"),
+                    // output string - default is '{page}/{totalPages}'; possible variables: {page}, {totalPages}, {startRow}, {endRow} and {totalRows}
+                    output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
+                    // if true, the table will remain the same height no matter how many records are displayed. The space is made up by an empty
+                    // table row set to a height to compensate; default is false
+                    fixedHeight: true,
+                    // remove rows from the table to speed up the sort of large tables.
+                    // setting this to false, only hides the non-visible rows; needed if you plan to add/remove rows with the pager enabled.
+                    removeRows: false,
+                    // go to page selector - select dropdown that sets the current page
+                    cssGoto: '.gotoPage',
+                    size: 50
+                };
 
-                {% for page in range(1, pagination.total, 1) %}
-                    {% if page == pagination.current %}
-                        {% set class = ' class="active"' %}
-                    {% else %}
-                        {% set class = '' %}
-                    {% endif %}
-                    <li{{class|raw}}>
-                        <a href="{{ path('sam_user_list', {'page': page}) }}">{{ page }}</a>
-                    </li>
-                {% endfor %}
-
-                {% if pagination.current < pagination.total %}
-                    {% set class = ' class="arrow"' %}
-                    {% set href = path('sam_user_list', {'page': pagination.current+1}) %}
-                {% else %}
-                    {% set class = ' class="arrow disabled"' %}
-                    {% set href = path('sam_user_list', {'page': pagination.total}) %}
-                {% endif %}
-                <li{{class|raw}}><a href="{{ href }}">&raquo;</a></li>
-            </ul>
-        </div>
-    {% endif %}
-
+                $("#table").tablesorter().tablesorterPager(pagerOptions);
+            });
+        });
+    </script>
 {% endblock %}
+

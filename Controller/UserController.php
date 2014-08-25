@@ -20,19 +20,32 @@ class UserController extends AbstractController
     {
         $this->isAllowed('BUSINESS_VIEW_USER');
 
-        $entities = $this->container->get('sam_user.user_manager')->findUsers();
+        $userManager = $this->container->get('fos_user.user_manager');
+        $user = $this->get('security.context')->getToken()->getUser();
+        $customers = $this->container->get('sam_core.customer')->findAllToArray();
+        $isSuperAdmin = $user->hasRole('ROLE_SUPER_ADMIN');
+        if ($isSuperAdmin) {
+            $entities = $this->container->get('sam_user.user_manager')->findUsers();
+        } else {
+            $entities = $userManager->findUsersBy(array('customer' => $user->getCustomer()));
+        }
+
 
         $deleteFormViews = array();
-        foreach ($entities as $entitie) {
-            $id                   = $entitie->getId();
+        foreach ($entities as $entity) {
+            $id                   = $entity->getId();
             $deleteForm           = $this->createDeleteForm($id);
             $deleteFormViews[$id] = $deleteForm->createView();
+            if ($entity->getCustomer()) {
+                $entity->setCustomer($customers[$entity->getCustomer()]);
+            }
         }
 
         return $this->render(
             'CanalTPSamEcoreUserManagerBundle:User:list.html.twig',
             array(
                 'entities'     => $entities,
+                'isSuperAdmin' => $isSuperAdmin,
                 'delete_forms' => $deleteFormViews,
             )
         );

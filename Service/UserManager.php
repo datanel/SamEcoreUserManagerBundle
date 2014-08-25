@@ -14,6 +14,11 @@ class UserManager extends BaseUserManager
      */
     private $businessRegistry;
 
+    public function findUsersBy(array $criteria)
+    {
+        return $this->repository->findBy($criteria);
+    }
+
     /**
      * Permet de récuperer tous les utilisateurs triés
      * par ordre de connexion antechronologique

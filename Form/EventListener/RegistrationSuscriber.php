@@ -45,9 +45,9 @@ class RegistrationSuscriber implements EventSubscriberInterface
         $isSuperAdmin = $this->context->getToken()->getUser()->hasRole('ROLE_SUPER_ADMIN');
 
         if ($isSuperAdmin) {
-            $choices = $repository->findAllForCustomerChoices();
+            $choices = $repository->findAllToArray();
         } else {
-            $choices = $repository->findByForCustomerChoices(array(
+            $choices = $repository->findByToArray(array(
                 'id' => $data->user->getCustomer()
             ));
         }
