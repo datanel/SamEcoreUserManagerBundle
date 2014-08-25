@@ -16,7 +16,9 @@
 {% endblock %}
 
 {% block table_head -%}
-    <th>{{'ctp_user.user.list.customer'|trans}}</th>
+    {% if isSuperAdmin %}
+        <th>{{'ctp_user.user.list.customer'|trans}}</th>
+    {% endif %}
     <th>{{'ctp_user.user.list.username'|trans}}</th>
     <th>{{'ctp_user.user.list.name'|trans}}</th>
     <th>{{'ctp_user.user.list.email'|trans}}</th>
