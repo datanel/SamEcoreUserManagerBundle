@@ -2,23 +2,26 @@
 
 namespace CanalTP\SamEcoreUserManagerBundle\Form\EventListener;
 
-use CanalTP\SamEcoreUserManagerBundle\Form\Model\UserRegistration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Extension\Core\ChoiceList\ObjectChoiceList;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Security\Core\Role\Role;
+use CanalTP\SamEcoreUserManagerBundle\Form\Model\UserRegistration;
 
 class RegistrationSuscriber implements EventSubscriberInterface
 {
     private $customers = null;
     protected $em;
+    protected $context;
 
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, SecurityContext $context)
     {
         $this->em = $em;
+        $this->context = $context;
     }
 
     /**
@@ -39,7 +42,7 @@ class RegistrationSuscriber implements EventSubscriberInterface
         $data = $event->getData();
         $form = $event->getForm();
         $repository = $this->em->getRepository('CanalTPSamCoreBundle:Customer');
-        $isSuperAdmin = $data->user->hasRole('ROLE_SUPER_ADMINISTRATEUR');
+        $isSuperAdmin = $this->context->getToken()->getUser()->hasRole('ROLE_SUPER_ADMIN');
 
         if ($isSuperAdmin) {
             $choices = $repository->findAllForCustomerChoices();
