@@ -9,38 +9,14 @@ use FOS\UserBundle\Doctrine\UserManager as BaseUserManager;
 class UserManager extends BaseUserManager
 {
     /**
-     * @var Integer
-     */
-    private $users_limit = 20;
-
-    /**
      * Business Registry
      * @var BusinessComponentRegistry
      */
     private $businessRegistry;
 
-    protected $applications;
-
-    /**
-     * Set users_limit
-     *
-     * @return UserManager
-     */
-    public function setUsersLimit($users_limit)
+    public function findUsersBy(array $criteria)
     {
-        $this->users_limit = $users_limit;
-
-        return $this;
-    }
-
-    /**
-     * Get users_limit
-     *
-     * @return Integer
-     */
-    public function getUsersLimit()
-    {
-        return $this->users_limit;
+        return $this->repository->findBy($criteria);
     }
 
     /**
@@ -58,110 +34,15 @@ class UserManager extends BaseUserManager
         return $query->getResult();
     }
 
-    /**
-     * Permet de récuperer tous les utilisateurs triés
-     * par ordre de connexion antechronologique
-     *
-     * @param Integer $page
-     *
-     * @return Array
-     */
-    public function findPaginateUsers($page)
-    {
-        $offset = ($page-1)*$this->users_limit;
-        $query = $this->repository->createQueryBuilder('u')
-            ->setFirstResult($offset)
-            ->setMaxResults($this->users_limit)
-            ->orderBy('u.lastLogin', 'DESC')
-            ->getQuery();
-
-        return $query->getResult();
-    }
-
-    /**
-     * Permet de récuperer le nombre d'utilisateurs
-     *
-     * @return Integer
-     */
-    public function countUsers()
-    {
-        $query = $this->repository->createQueryBuilder('u')
-            ->select('count(u.id)')
-            ->getQuery();
-
-        return $query->getSingleScalarResult();
-    }
-
-    /**
-     * Permet de récuperer les utilisateurs qui ne contiennent pas
-     * un role donné triés par ordre de connexion antechronologique
-     *
-     * @param Integer $page
-     *
-     * @return Array
-     */
-    public function findUsersExcludingRole($role)
-    {
-        $query = $this->repository->createQueryBuilder('u')
-//            ->where('u.roles NOT LIKE :role')
-            ->setParameter('role', '%'.$role.'%')
-            ->orderBy('u.lastLogin', 'DESC')
-            ->getQuery();
-
-        return $query->getResult();
-    }
-
-    /**
-     * Permet de récuperer les utilisateurs qui ne contiennent pas
-     * un role donné triés par ordre de connexion antechronologique
-     *
-     * @param String $role
-     * @param Integer $page
-     *
-     * @return Array
-     */
-    public function findPaginateUsersExcludingRole($role, $page)
-    {
-        $offset = ($page-1)*$this->users_limit;
-        $query = $this->repository->createQueryBuilder('u')
-//            ->where('u.roles NOT LIKE :role')
-            ->setFirstResult($offset)
-            ->setMaxResults($this->users_limit)
-//            ->setParameter('role', '%'.$role.'%')
-//            ->orderBy('u.lastLogin', 'DESC')
-            ->getQuery();
-
-        return $query->getResult();
-    }
-
-    /**
-     * Permet de récuperer le nombre d'utilisateurs
-     * qui ne contiennent pas un role donné
-     *
-     * @param String $role
-     *
-     * @return Integer
-     */
-    public function countUsersExcludingRole($role)
-    {
-        $query = $this->repository->createQueryBuilder('u')
-            ->select('count(u.id)')
-            // ->where('u.roles NOT LIKE :role')
-            // ->setParameter('role', '%'.$role.'%')
-            ->getQuery();
-
-        return $query->getSingleScalarResult();
-    }
-
-    public function findUser($user)
+    public function find($id)
     {
         $query = $this->repository->createQueryBuilder('u')
             ->addSelect('r')
             ->addSelect('a')
             ->leftJoin('u.userRoles', 'r')
             ->leftJoin('r.application', 'a')
-            ->where('u.id = :user')
-            ->setParameter('user', $user)
+            ->where('u.id = :id')
+            ->setParameter('id', $id)
             ->getQuery();
 
         return $query->getOneOrNullResult();
@@ -201,33 +82,4 @@ class UserManager extends BaseUserManager
     {
         return $this->businessRegistry;
     }
-
-    // public function getApplications(UserInterface $user)
-    // {
-    //     if (null === $this->applications) {
-    //         $apps = array();
-    //         foreach ($user->getUserRoles() as $role) {
-    //             $application = $role->getApplication();
-    //             if (!isset($apps[$application->getId()])) {
-    //                 try{
-    //                     $apps[$application->getId()] = $role->getApplication();
-
-    //                     $userPerimeters = $this->getBusinessRegistry()
-    //                         ->getBusinessComponent($application->getCanonicalName())
-    //                         ->getPerimetersManager()
-    //                         ->getUserPerimeters($user);
-
-    //                     $apps[$application->getId()]->setPerimeters($userPerimeters);
-    //                 } catch (\Exception $e) {
-    //                     $apps[$application->getId()]->setPerimeters(array());
-    //                 }
-    //             }
-
-    //             //$apps[$application->getId()]->addRole($role);
-    //         }
-    //         $this->applications = $apps;
-    //     }
-
-    //     return $this->applications;
-    // }
 }

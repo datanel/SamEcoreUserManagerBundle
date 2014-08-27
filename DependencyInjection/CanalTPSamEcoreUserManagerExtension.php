@@ -27,8 +27,6 @@ class CanalTPSamEcoreUserManagerExtension extends Extension
             new FileLocator(__DIR__.'/../Resources/config')
         );
         $loader->load('services.xml');
-
-        $container->setParameter('sam_user.list.users_by_page', $config['users_by_page']);
     }
 
     public function getAlias()

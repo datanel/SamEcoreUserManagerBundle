@@ -31,6 +31,9 @@ ctp_user:
                 full: Ajouter un utilisateur
             delete:
                 short: Supprimer
+            reset_password:
+                short: Réinitialiser le mot de passe
+                full: Demander un renouvellement de mot de passe
             cancel:
                 short: Annuler
             back:
@@ -39,6 +42,8 @@ ctp_user:
             _breadcrumb: Liste
             _title: Liste des utilisateurs
             profil: Rôle
+            customer: Client
+            username: Login
             groups: Applications
             name: Nom
             url: Url

@@ -19,11 +19,6 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('sam_user');
 
-        $rootNode
-            ->children()
-                ->scalarNode('users_by_page')->defaultValue(20)->end()
-            ->end();
-
         return $treeBuilder;
     }
 }

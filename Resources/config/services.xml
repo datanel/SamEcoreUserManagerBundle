@@ -25,6 +25,7 @@
 
         <service id="sam_user.registration.form.listener" class="%sam_user.registration.form.listener.class%">
             <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="security.context" />
         </service>
 
         <service id="fos_user.registration.form.type" class="CanalTP\SamEcoreUserManagerBundle\Form\Type\UserType">
@@ -57,9 +58,6 @@
             <argument type="service" id="fos_user.util.email_canonicalizer" />
             <argument type="service" id="fos_user.entity_manager" />
             <argument>%fos_user.model.user.class%</argument>
-            <call method="setUsersLimit">
-                <argument>%sam_user.list.users_by_page%</argument>
-            </call>
             <call method="setBusinessRegistry">
                 <argument type="service" id="sam.business_component" />
             </call>
@@ -96,7 +94,7 @@
         <service id="sam_role_by_application.type" class="%sam_role_by_application.type.class%">
             <tag name="form.type" alias="sam_role_by_application" />
         </service>
-        
+
         <service id="sam_role_application_perimetre_type.type" class="%sam_role_application_perimeter.type.class%">
             <argument type="service" id="canal_tp_sam.perimeter.form.listener" />
             <argument type="service" id="security.context" />

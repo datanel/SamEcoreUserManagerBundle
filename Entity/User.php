@@ -10,6 +10,9 @@ class User extends AbstractUser
 {
     const ROLE_ADMIN = 'ROLE_ADMIN';
 
+    const STATUS_STEP_1 = 0;
+    const STATUS_STEP_2 = 1;
+
     protected $id;
 
     /**
@@ -67,6 +70,11 @@ class User extends AbstractUser
     protected $lastLogin;
 
     /**
+     * @var integer
+     */
+    protected $status;
+
+    /**
      * Random string sent to the user email address in order to verify it
      *
      * @var string
@@ -117,8 +125,8 @@ class User extends AbstractUser
      * @var \Doctrine\Common\Collections\Collection
      */
     protected $userRoles;
-    
-    protected $client;
+
+    protected $customer;
 
     /**
      * Constructor
@@ -173,6 +181,29 @@ class User extends AbstractUser
     public function getLastname()
     {
         return $this->lastName;
+    }
+
+    /**
+     * Set status
+     *
+     * @param  integer $status
+     * @return User
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return integer
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 
     /**
@@ -279,16 +310,21 @@ class User extends AbstractUser
         }
         $this->setRoles($aRoles);
     }
-    
-    public function setClient($client)
+
+    public function setCustomer($customer)
     {
-        $this->client = $client;
+        $this->customer = $customer;
 
         return $this;
     }
 
-    public function getClient()
+    public function getCustomer()
     {
-        return $this->client;
+        return $this->customer;
+    }
+
+    public function hasRole($role)
+    {
+        return (in_array($role, $this->getRoles()));
     }
 }

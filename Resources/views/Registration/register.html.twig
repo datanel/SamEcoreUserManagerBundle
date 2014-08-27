@@ -1,20 +1,5 @@
 {% extends "::base.html.twig" %}
 
-{#% form_theme form _self %}
-
-{% block choice_widget_expanded %}
-{% spaceless %}
-    <div {{ block('widget_container_attributes') }}>
-    {% for child in form %}
-        {{ form_widget(child) }}
-        {% if multiple != true  %}
-            {{ form_label(child) }}
-        {% endif %}
-    {% endfor %}
-    </div>
-{% endspaceless %}
-{% endblock choice_widget_expanded %#}
-
 {% block checkbox_widget %}
 {% spaceless %}
 <label class="checkbox-inline">
@@ -40,9 +25,9 @@
         {{ form_row(form.user.firstname) }}
         {{ form_row(form.user.lastname) }}
         {{ form_row(form.user.email) }}
-        {{ form_row(form.applications) }}
+        {{ form_row(form.customer) }}
 
-        {% for application in form.rolesAndPerimetersByApplication %}
+{#         {% for application in form.rolesAndPerimetersByApplication %}
             {% if ((loop.index - 1) % 2) == 0 %}<div class="row">{% endif %}
             <div class="col-md-6">
                 <div class="panel panel-primary">
@@ -77,7 +62,7 @@
             </div>
             {% if (loop.index - 1) % 2 == 1  or loop.index == form.rolesAndPerimetersByApplication|length %}</div>{% endif %}
         {% endfor %}
-
+ #}
         <p>
             <button class="btn btn-success" type="submit">
                 <span class="glyphicon glyphicon-plus"></span> {{'ctp_user.user.actions.add.short'|trans}}

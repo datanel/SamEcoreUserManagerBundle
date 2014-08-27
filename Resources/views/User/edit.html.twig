@@ -41,43 +41,7 @@
         {{ form_row(form.user.firstname) }}
         {{ form_row(form.user.lastname) }}
         {{ form_row(form.user.email) }}
-        {{ form_row(form.applications) }}
-
-        {% for application in form.rolesAndPerimetersByApplication %}
-            {% if ((loop.index - 1) % 2) == 0 %}<div class="row">{% endif %}
-            <div class="col-md-6">
-                <div class="panel panel-primary">
-                    <div class="panel-heading"><h3 class="panel-title">{{ application.vars.value.application.name }}</h3></div>
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h4>Rôles</h4>
-                                {% if  application.application.roles.vars.choices|length %}
-                                    {{ form_errors(application.application.roles) }}
-                                    {{ form_widget(application.application.roles) }}
-                                {% else %}
-                                    <div class="alert alert-info">{{ application.vars.value.application.name }} n'a pas de rôle</div>
-                                {% endif %}
-                                <h5>Super Admin</h5>
-                                {{ form_errors(application.superAdmin) }}
-                                {{ form_row(application.superAdmin) }}
-                            </div>
-
-                            <div class="col-xd-12 col-md-6">
-                                <h4>Périmètres</h4>
-                                {% if application.application.perimeters.vars.choices|length %}
-                                    {{ form_errors(application.application.perimeters) }}
-                                    {{ form_widget(application.application.perimeters) }}
-                                {% else %}
-                                    <div class="alert alert-info">{{ application.vars.value.application.name }} n'a pas de périmètre</div>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% if (loop.index - 1) % 2 == 1  or loop.index == form.rolesAndPerimetersByApplication|length %}</div>{% endif %}
-        {% endfor %}
+        {{ form_row(form.customer) }}
 
         <button class="btn btn-success" type="submit">
             <span class="glyphicon glyphicon-plus"></span> {{'ctp_user.user.actions.edit.short'|trans}}
