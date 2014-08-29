@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <title>{% block title %}SAM default template{% endblock %}</title>
-            
+
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
@@ -12,7 +12,7 @@
                        filter='cssrewrite' output='css/full.css' %}
             <link rel="stylesheet" href="{{ asset_url }}" />
         {% endstylesheets %}
-        
+
         {% block menu %}
             <nav class="navbar navbar-default" role="navigation">
                 <div class="navbar-header">
@@ -65,8 +65,8 @@
                         {{ message|trans({}, 'FlexyDatabaseConfigBundle') }}
                     </div>
                 {% endfor %}
-            {% endfor %}    
-            
+            {% endfor %}
+
             {% block body %}
             <div class="row">
                 <div class="col-md-2">
@@ -75,14 +75,14 @@
                     {% endblock %}
                     </div>
                 </div>
-                <div class="col-md-10">            
+                <div class="col-md-10">
                     {% block main_content %}
                     {% endblock %}
                 </div>
             </div>
             {% endblock %}
         </div>
-        
+
         {% javascripts
             'js/jquery.js'
             'js/bootstrap.js' output='js/concat.js' %}

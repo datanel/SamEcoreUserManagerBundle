@@ -1,20 +1,5 @@
 {% extends "CanalTPSamEcoreUserManagerBundle:User:common_breadcrumb.html.twig" %}
 
-{# @TODO: Put checkboxes inline #}
-{#% form_theme form _self %}
-{% block choice_widget_expanded %}
-{% spaceless %}
-    <div {{ block('widget_container_attributes') }}>
-    {% for child in form %}
-        {{ form_widget(child) }}
-        {% if multiple != true  %}
-            {{ form_label(child) }}
-        {% endif %}
-    {% endfor %}
-    </div>
-{% endspaceless %}
-{% endblock choice_widget_expanded %#}
-
 {% block checkbox_widget %}
 {% spaceless %}
 <label class="checkbox-inline">
@@ -32,25 +17,27 @@
 {% endblock %}
 
 {% block main_content -%}
-    <h1>{{'ctp_user.user.edit._title'|trans}}</h1>
-
+    <h1>{{ title|trans }}</h1>
     <hr/>
-
+    {{ form_start(form, { action: url('sam_user_edit', { 'user': id }), attr: {class: 'fos_user_registration_register custom' } }) }}
+    {{ bootstrap_set_style('horizontal') }}
     {% if flow.getCurrentStepNumber() == 1 %}
-        {{ form_start(form, { action: url('sam_user_edit', { 'user': id }), attr: {class: 'fos_user_registration_register custom' } }) }}
-            {{ bootstrap_set_style('horizontal') }}
 
             {{ form_row(form.username) }}
-            {{ form_row(form.firstname) }}
-            {{ form_row(form.lastname) }}
-            {{ form_row(form.email) }}
-            {# {{ form_row(form.customer) }} #}
 
-{#             <button class="btn btn-success" type="submit">
-                <span class="glyphicon glyphicon-plus"></span> {{'ctp_user.user.actions.edit.short'|trans}}
-            </button>
- #}
+            {{ form_row(form.firstname) }}
+
+            {{ form_row(form.lastname) }}
+
+            {{ form_row(form.email) }}
+
+    {% elseif flow.getCurrentStepNumber() == 2 %}
+
+            {{ form_row(form.customer) }}
+
     {% endif %}
+
+    <input type="hidden" name="{{ flow.getFormStepKey() }}" value="{{ flow.getCurrentStepNumber() }}" />
 
     {% include 'CraueFormFlowBundle:FormFlow:buttons.html.twig' with {
         craue_formflow_button_class_last: 'btn btn-primary',

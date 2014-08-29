@@ -9,7 +9,11 @@ form:
     password_confirmation: "Vérification :"
     new_password: "Nouveau mot de passe :"
     new_password_confirmation: "Vérification :"
-
+    user:
+        step_1:
+            title: Informations
+        step_2:
+            title: Choix du client
 ctp_core:
     _breadcrumb: Accueil
     toggle_nav: Afficher la navigation

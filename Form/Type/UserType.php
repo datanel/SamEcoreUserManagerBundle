@@ -28,11 +28,7 @@ class UserType extends AbstractType
                     'class' => 'col-md-4',
                     'placeholder' => 'enter username'
                 ),
-                'translation_domain' => 'FOSUserBundle',
-                'constraints' => array(
-                        new NotBlank(),
-                        new Length(array('min' => 3, 'max' => 255))
-                )
+                'translation_domain' => 'FOSUserBundle'
             )
         );
 
@@ -47,8 +43,8 @@ class UserType extends AbstractType
                 ),
                 'translation_domain' => 'FOSUserBundle',
                 'constraints' => array(
-                        new NotBlank(),
-                        new Length(array('min' => 3, 'max' => 255))
+                        new NotBlank(array('groups' => 'flow_registration_step1')),
+                        new Length(array('groups' => 'flow_registration_step1', 'min' => 3, 'max' => 255))
                 )
             )
         );
@@ -64,8 +60,8 @@ class UserType extends AbstractType
                 ),
                 'translation_domain' => 'FOSUserBundle',
                 'constraints' => array(
-                        new NotBlank(),
-                        new Length(array('min' => 3, 'max' => 255))
+                        new NotBlank(array('groups' => 'flow_registration_step1')),
+                        new Length(array('groups' => 'flow_registration_step1', 'min' => 3, 'max' => 255))
                 )
             )
         );
@@ -79,11 +75,7 @@ class UserType extends AbstractType
                     'class' => 'col-md-4',
                     'placeholder' => 'enter email'
                 ),
-                'translation_domain' => 'FOSUserBundle',
-                'constraints' => array(
-                        new NotBlank(),
-                        new Email(array('checkMX' => true))
-                )
+                'translation_domain' => 'FOSUserBundle'
             )
         );
     }
@@ -93,7 +85,6 @@ class UserType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class' => 'CanalTP\SamEcoreUserManagerBundle\Entity\User',
-                'intention'  => 'sam_user',
                 'csrf_protection' => false
             )
         );

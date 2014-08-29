@@ -32,7 +32,6 @@ class UserController extends AbstractController
             $entities = $userManager->findUsersBy(array('customer' => $user->getCustomer()));
         }
 
-
         $deleteFormViews = array();
         foreach ($entities as $entity) {
             $id                   = $entity->getId();
@@ -53,18 +52,28 @@ class UserController extends AbstractController
         );
     }
 
-    private function processForm(RegistrationFlow $flow, Form $form, $confirmation)
+    public function editAction(Request $request, User $user = null)
     {
-        if ($flow->isValid($form)) {
-            $flow->saveCurrentStepData($form);
+        $this->isGranted('BUSINESS_MANAGE_USER');
 
+        $isNew = ($user == null);
+        $flow = $this->get('sam.registration.form.flow');
+        $flow->bind(($isNew ? new User() : $user));
+        $form = $flow->createForm();
+
+        if ($flow->isValid($form)) {
+            $user = $form->getData();
+
+            $flow->saveCurrentStepData($form);
+            $user->setStatus($flow->getCurrentStep());
+            $this->get('fos_user.registration.form.handler')->save(
+                $user,
+                $isNew
+            );
+            $isNew = false;
             if ($flow->nextStep()) {
                 $form = $flow->createForm();
             } else {
-                $this->get('fos_user.registration.form.handler')->save(
-                    $form->getData(),
-                    $confirmation
-                );
                 $flow->reset();
 
                 $this->get('session')->getFlashBag()->add(
@@ -75,26 +84,13 @@ class UserController extends AbstractController
                 return $this->redirect($this->generateUrl('sam_user_list'));
             }
         }
-        return (null);
-    }
 
-    public function editAction(Request $request, User $user = null)
-    {
-        $this->isGranted('BUSINESS_MANAGE_USER');
-
-        $flow = $this->get('sam.registration.form.flow');
-        $flow->bind((($user == null) ? new User() : $user));
-        $form = $flow->createForm();
-        $render = $this->processForm($flow, $form, ($user == null));
-
-        if (!$render) {
-            return $this->render('CanalTPSamEcoreUserManagerBundle:User:edit.html.twig', array(
-                'id' => (($user == null) ? $user : $user->getId()),
-                'form' => $form->createView(),
-                'flow' => $flow,
-            ));
-        }
-        return ($render);
+        return $this->render('CanalTPSamEcoreUserManagerBundle:User:edit.html.twig', array(
+            'id' => ($isNew ? !$isNew : $user->getId()),
+            'title' => ($isNew ? 'ctp_user.user.add._title' : 'ctp_user.user.edit._title'),
+            'form' => $form->createView(),
+            'flow' => $flow
+        ));
     }
 
     /**

@@ -27,11 +27,17 @@
             <tag name="form.type" alias="create_user" />
         </service>
 
+        <service id="sam.registration.assign_customer.form.type" class="CanalTP\SamEcoreUserManagerBundle\Form\Type\CustomerType">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="security.context" />
+        </service>
+
         <service id="sam.registration.form.flow"
                 class="CanalTP\SamEcoreUserManagerBundle\Form\Flow\RegistrationFlow"
                 parent="craue.form.flow"
                 scope="request">
             <argument type="service" id="sam.registration.form.type" />
+            <argument type="service" id="sam.registration.assign_customer.form.type" />
         </service>
 
         <service id="canaltp_user.confirmation.form.type" class="CanalTP\SamEcoreUserManagerBundle\Form\Type\ConfirmationFormType">

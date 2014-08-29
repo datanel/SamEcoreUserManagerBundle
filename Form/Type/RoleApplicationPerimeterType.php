@@ -16,7 +16,7 @@ use Doctrine\ORM\EntityRepository;
  */
 class RoleApplicationPerimeterType  extends AbstractType
 {
-    
+
     protected $roleByApplicationListener;
     protected $perimeterSubscriber;
     protected $securityContext;
@@ -34,14 +34,14 @@ class RoleApplicationPerimeterType  extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $sc = $this->securityContext;
-        
+
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
             function (FormEvent $event) use ($sc){
 
                 $form = $event->getForm();
                 $data = $event->getData();
-                
+
                 $disabledAllRoles = !$sc->isGranted('BUSINESS_MANAGE_USER_ROLE');
 
                 $form->add('roles', 'entity', array(
@@ -62,20 +62,20 @@ class RoleApplicationPerimeterType  extends AbstractType
                     'translation_domain' => 'messages',
                     'property' => 'name'
                 ));
-                    
+
                 if (!$form->getParent()->getParent()->getParent()->getData()->user->getId()) {
                     $data->setRoles(array());
                 } else {
                     $apps = $form->getParent()->getParent()->getParent()->getData()->applications;
                     $exists = false;
                     foreach ($apps as $app) {
-                        
+
                         if ($data->getId() === $app->getId()) {
                             $exists = true;
                             break;
                         }
                     }
-                    
+
 
                     if ($exists === false) {
                         $data->setRoles(array());

@@ -8,14 +8,17 @@ use CanalTP\SamEcoreUserManagerBundle\Form\Type\RegistrationStepOneFormType;
 
 class RegistrationFlow extends FormFlow
 {
-    protected $userFormType;
+    private $userType;
+    private $userAssignCustomerType;
 
     /**
      * @inherit
      */
-    public function __construct($userFormType)
+    public function __construct($userType, $userAssignCustomerType)
     {
-        $this->userFormType = $userFormType;
+        $this->userType = $userType;
+        $this->userAssignCustomerType = $userAssignCustomerType;
+        // $this->setAllowDynamicStepNavigation(true);
     }
 
     public function getName()
@@ -23,12 +26,21 @@ class RegistrationFlow extends FormFlow
         return 'registration';
     }
 
+    public function setCurrentStepNumber($nb)
+    {
+        $this->currentStepNumber = $nb;
+    }
+
     protected function loadStepsConfig()
     {
         return array(
             array(
-                'label' => 'User info',
-                'type' => $this->userFormType
+                'label' => 'form.user.step_1.title',
+                'type' => $this->userType
+            ),
+            array(
+                'label' => 'form.user.step_2.title',
+                'type' => $this->userAssignCustomerType
             )
         );
     }

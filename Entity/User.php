@@ -72,7 +72,7 @@ class User extends AbstractUser
     /**
      * @var integer
      */
-    protected $status;
+    protected $status = 1;
 
     /**
      * Random string sent to the user email address in order to verify it
