@@ -17,17 +17,6 @@ use Symfony\Component\Validator\Constraints\Email;
 
 class UserType extends AbstractType
 {
-    protected $class;
-    protected $aFormUserConfig;
-
-    /**
-     * @param string $class The User class name
-     */
-    public function __construct($class)
-    {
-        $this->class = $class;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
@@ -103,14 +92,15 @@ class UserType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => $this->class,
+                'data_class' => 'CanalTP\SamEcoreUserManagerBundle\Entity\User',
                 'intention'  => 'sam_user',
+                'csrf_protection' => false
             )
         );
     }
 
     public function getName()
     {
-        return 'sam_user';
+        return 'create_user';
     }
 }

@@ -9,47 +9,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Exception\AccountStatusException;
 use FOS\UserBundle\Model\UserInterface;
+use CanalTP\SamEcoreUserManagerBundle\Entity\User;
 
 /**
  * {@inheritdoc}
  */
 class RegistrationController extends BaseRegistrationController
 {
-    public function registerAction()
-    {
-        if ($this->container->get('security.context')->isGranted('BUSINESS_MANAGE_USER') === false) {
-            throw new AccessDeniedException($this->container->get('translator')->trans('forbidden'));
-        }
-
-        $form = $this->container->get('fos_user.registration.form');
-        $formHandler = $this->container->get('fos_user.registration.form.handler');
-        $confirmationEnabled = true;
-
-        $process = $formHandler->process($confirmationEnabled);
-        if ($process) {
-            $userRegistration = $form->getData();
-
-            $this->container->get('session')->set(
-                'fos_user_send_confirmation_email/email',
-                $userRegistration->user->getEmail()
-            );
-            $route = 'sam_user_list';
-
-            $this->setFlash('success', 'registration.flash.user_created');
-            $url = $this->container->get('router')->generate($route);
-            $response = new RedirectResponse($url);
-
-            return $response;
-        }
-
-        return $this->container->get('templating')->renderResponse(
-            'FOSUserBundle:Registration:register.html.'.$this->getEngine(),
-            array(
-                'form' => $form->createView(),
-            )
-        );
-    }
-
     /**
      * Tell the user to check his email provider
      */

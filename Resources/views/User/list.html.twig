@@ -36,7 +36,7 @@
             {% if isSuperAdmin %}
                 <td>{{ entity.customer }}</td>
             {% endif %}
-            <td><a href="{{ path('sam_user_edit', { 'id': entity.id }) }}">{{ entity.username }}</a></td>
+            <td><a href="{{ path('sam_user_edit', { 'user': entity.id }) }}">{{ entity.username }}</a></td>
             <td>{{ entity.lastname }} {{ entity.firstname }}</td>
             <td><a href="mailto:{{ entity.email }}">{{ entity.email }}</a></td>
             <td>

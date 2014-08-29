@@ -2,11 +2,13 @@
 
 namespace CanalTP\SamEcoreUserManagerBundle\Controller;
 
-use CanalTP\SamCoreBundle\Controller\AbstractController;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
+use CanalTP\SamCoreBundle\Controller\AbstractController;
 use CanalTP\SamEcoreApplicationManagerBundle\Exception\OutOfBoundsException;
 use CanalTP\SamEcoreUserManagerBundle\Form\Type\ProfilFormType;
-use Symfony\Component\Form\Form;
+use CanalTP\SamEcoreUserManagerBundle\Entity\User;
+use CanalTP\SamEcoreUserManagerBundle\Form\Flow\RegistrationFlow;
 
 class UserController extends AbstractController
 {
@@ -25,7 +27,7 @@ class UserController extends AbstractController
         $customers = $this->container->get('sam_core.customer')->findAllToArray();
         $isSuperAdmin = $user->hasRole('ROLE_SUPER_ADMIN');
         if ($isSuperAdmin) {
-            $entities = $this->container->get('sam_user.user_manager')->findUsers();
+            $entities = $this->container->get('sam.user_manager')->findUsers();
         } else {
             $entities = $userManager->findUsersBy(array('customer' => $user->getCustomer()));
         }
@@ -51,39 +53,46 @@ class UserController extends AbstractController
         );
     }
 
-    private function processForm(Request $request, $userFormModel)
+    private function processForm(RegistrationFlow $flow, Form $form, $confirmation)
     {
-        $formHandler = $this->container->get('fos_user.profile.form.handler');
+        if ($flow->isValid($form)) {
+            $flow->saveCurrentStepData($form);
 
-        if ($formHandler->processUser($userFormModel)) {
-            $this->get('session')->getFlashBag()->add(
-                'success',
-                'profile.flash.updated'
-            );
+            if ($flow->nextStep()) {
+                $form = $flow->createForm();
+            } else {
+                $this->get('fos_user.registration.form.handler')->save(
+                    $form->getData(),
+                    $confirmation
+                );
+                $flow->reset();
 
-            return $this->redirect($this->generateUrl('sam_user_list'));
+                $this->get('session')->getFlashBag()->add(
+                    'success',
+                    'profile.flash.updated'
+                );
+
+                return $this->redirect($this->generateUrl('sam_user_list'));
+            }
         }
-
         return (null);
     }
 
-    public function editAction(Request $request, $id)
+    public function editAction(Request $request, User $user = null)
     {
         $this->isGranted('BUSINESS_MANAGE_USER');
 
-        $this->userManager = $this->get('sam_user.user_manager');
-        $form = $this->container->get('fos_user.profile.form');
-        $userFormModel = $this->getUserFormModel($id);
-        $render = $this->processForm($request, $userFormModel);
+        $flow = $this->get('sam.registration.form.flow');
+        $flow->bind((($user == null) ? new User() : $user));
+        $form = $flow->createForm();
+        $render = $this->processForm($flow, $form, ($user == null));
 
         if (!$render) {
-            return $this->render(
-                'CanalTPSamEcoreUserManagerBundle:User:edit.html.twig',
-                array(
-                    'user' => $userFormModel->user,
-                    'form' => $form->createView(),
-                )
-            );
+            return $this->render('CanalTPSamEcoreUserManagerBundle:User:edit.html.twig', array(
+                'id' => (($user == null) ? $user : $user->getId()),
+                'form' => $form->createView(),
+                'flow' => $flow,
+            ));
         }
         return ($render);
     }
@@ -121,7 +130,7 @@ class UserController extends AbstractController
                 }
 
                 //Use sam user manager ;)
-                $userManager = $this->container->get('sam_user.user_manager');
+                $userManager = $this->container->get('sam.user_manager');
                 $entity = $userManager->findUserBy(array('id' => $id));
 
                 if (!$entity) {
@@ -147,78 +156,6 @@ class UserController extends AbstractController
         return $this->createFormBuilder(array('id' => $id))
             ->add('id', 'hidden')
             ->getForm();
-    }
-
-    private function getUserFormModel($id)
-    {
-        $userManager = $this->get('fos_user.user_manager');
-        $user = $userManager->find($id);
-
-        if (!$user) {
-            throw $this->createNotFoundException('Unable to find User entity.');
-        }
-
-        $apps = array();
-        $appsPA = array();
-        foreach ($user->getUserRoles() as $role) {
-            $application = $role->getApplication();
-            if (!isset($apps[$application->getId()])) {
-                try {
-                    $appRolesPerims = new \CanalTP\SamEcoreApplicationManagerBundle\Form\Model\ApplicationRolesPerimeters();
-                    $appRolesPerims->application = $application;
-                    $appsPA[$application->getId()] = $appRolesPerims;
-                    $appsPA[$application->getId()]->application->getRoles()->clear();
-                    $apps[$application->getId()] = $application;
-
-                    $userPerimeters = $this->get('sam.business_component')
-                        ->getBusinessComponent($application->getCanonicalName())
-                        ->getPerimetersManager()
-                        ->getUserPerimeters($user);
-
-                    $appsPA[$application->getId()]->application->setPerimeters($userPerimeters);
-                } catch (\Exception $e) {
-                }
-            }
-            $appsPA[$application->getId()]->application->addRole($role);
-
-            if ($role->getCanonicalName() == 'ROLE_SUPER_ADMIN') {
-                $appsPA[$application->getId()]->superAdmin = true;
-            }
-        }
-
-        $apps = array_values($apps);
-
-        // A user may not have roles but perimeters so we have to check this (for the checkboxes Applications) I don't like it
-        if (empty($apps)) {
-            $applications = $this->get('doctrine')->getRepository('CanalTPSamCoreBundle:Application')->findAll();
-            foreach ($applications as $application) {
-                try {
-                    $userPerimeters = $this->get('sam.business_component')
-                        ->getBusinessComponent($application->getCanonicalName())
-                        ->getPerimetersManager()
-                        ->getUserPerimeters($user);
-
-                    if (count($userPerimeters)) {
-                        $application->setPerimeters($userPerimeters);
-                        $application->setRoles(array());
-                        $appRolesPerims = new \CanalTP\SamEcoreApplicationManagerBundle\Form\Model\ApplicationRolesPerimeters();
-                        $appRolesPerims->application = $application;
-                        $appsPA[] = $appRolesPerims;
-                        $apps[] = $application;
-                    }
-                } catch (OutOfBoundsException $e) {
-                    // If no business component found, we do not break anything
-                } catch (\Exception $e) {
-                }
-            }
-        }
-
-        $userFormModel = new \CanalTP\SamEcoreUserManagerBundle\Form\Model\UserRegistration;
-        $userFormModel->user = $user;
-        $userFormModel->applications = $apps;
-        $userFormModel->rolesAndPerimetersByApplication = array_values($appsPA);
-
-        return $userFormModel;
     }
 
     public function editProfilProcessForm($user)

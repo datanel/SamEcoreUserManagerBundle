@@ -17,15 +17,22 @@
 
 {% block main_content -%}
     <h1>{{'ctp_user.user.add._title'|trans}}</h1>
-    <hr/>
-    {{ form_start(form, { action: url('fos_user_registration_register'), attr: {class: 'fos_user_registration_register custom' } }) }}
-        {{ bootstrap_set_style('horizontal') }}
+    <div>
+        Steps:
+        {% include 'CraueFormFlowBundle:FormFlow:stepList.html.twig' %}
+    </div>
 
-        {{ form_row(form.user.username) }}
-        {{ form_row(form.user.firstname) }}
-        {{ form_row(form.user.lastname) }}
-        {{ form_row(form.user.email) }}
-        {{ form_row(form.customer) }}
+    <hr/>
+
+    {% if flow.getCurrentStepNumber() == 1 %}
+        {{ form_start(form, { action: url('fos_user_registration_register'), attr: {class: 'fos_user_registration_register custom' } }) }}
+            {{ bootstrap_set_style('horizontal') }}
+
+            {{ form_row(form.username) }}
+            {{ form_row(form.firstname) }}
+            {{ form_row(form.lastname) }}
+            {{ form_row(form.email) }}
+            {# {{ form_row(form.customer) }} #}
 
 {#         {% for application in form.rolesAndPerimetersByApplication %}
             {% if ((loop.index - 1) % 2) == 0 %}<div class="row">{% endif %}
@@ -63,11 +70,21 @@
             {% if (loop.index - 1) % 2 == 1  or loop.index == form.rolesAndPerimetersByApplication|length %}</div>{% endif %}
         {% endfor %}
  #}
+ {#
         <p>
             <button class="btn btn-success" type="submit">
                 <span class="glyphicon glyphicon-plus"></span> {{'ctp_user.user.actions.add.short'|trans}}
             </button>
         </p>
+ #}
+    {% endif %}
+
+    {% include 'CraueFormFlowBundle:FormFlow:buttons.html.twig' with {
+        craue_formflow_button_class_last: 'btn btn-primary',
+        craue_formflow_button_class_back: 'btn',
+        craue_formflow_button_class_reset: 'btn btn-warning',
+        craue_formflow_button_class_next: 'btn btn-success'
+    } %}
 
     {{ form_end(form, {'render_rest': false}) }}
 {% endblock %}

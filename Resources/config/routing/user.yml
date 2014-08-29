@@ -3,8 +3,8 @@ sam_user_list:
     defaults: { _controller: "CanalTPSamEcoreUserManagerBundle:User:list" }
 
 sam_user_edit:
-    pattern:  /edit/{id}
-    defaults: { _controller: "CanalTPSamEcoreUserManagerBundle:User:edit" }
+    pattern:  /edit/{user}
+    defaults: { _controller: "CanalTPSamEcoreUserManagerBundle:User:edit", user: null }
 
 sam_user_delete:
     pattern:  /delete/{id}

@@ -16,10 +16,5 @@ class FormHandlerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $container->getDefinition('canaltp_user.registration.form.handler.default')
-            ->addMethodCall('setBusinessRegistry', array(new Reference('sam.business_component')));
-
-        $container->getDefinition('sam_user.profile.form.handler.default')
-            ->addMethodCall('setBusinessRegistry', array(new Reference('sam.business_component')));
     }
 }
