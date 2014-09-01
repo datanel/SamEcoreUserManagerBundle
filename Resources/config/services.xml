@@ -12,6 +12,11 @@
     </parameters>
 
     <services>
+        <service id="sam_role_by_application.type" class="%sam_role_by_application.type.class%">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="security.context" />
+        </service>
+
         <service
             id="sam.registration.assign_role.role_to_user_application_role_transformer.data_transformer"
             class="CanalTP\SamEcoreUserManagerBundle\Form\DataTransformer\RoleToUserApplicationRoleTransformer">
@@ -34,6 +39,7 @@
         <service id="sam.registration.assign_role.form.type" class="CanalTP\SamEcoreUserManagerBundle\Form\Type\RoleType">
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="service" id="sam.registration.assign_role.role_to_user_application_role_transformer.data_transformer" />
+            <argument type="service" id="sam_role_by_application.type" />
         </service>
 
         <service id="sam.registration.form.flow"
@@ -101,10 +107,6 @@
             <call method="setObjectManager">
                 <argument type="service" id="doctrine.orm.entity_manager" />
             </call>
-        </service>
-
-        <service id="sam_role_by_application.type" class="%sam_role_by_application.type.class%">
-            <tag name="form.type" alias="sam_role_by_application" />
         </service>
     </services>
 </container>

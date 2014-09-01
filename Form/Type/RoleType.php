@@ -14,14 +14,17 @@ class RoleType extends AbstractType
 {
     private $em;
     private $userRolesTransformer;
+    private $roleByApplicationType;
 
     public function __construct(
         EntityManager $entityManager,
-        RoleToUserApplicationRoleTransformer $userRolesTransformer
+        RoleToUserApplicationRoleTransformer $userRolesTransformer,
+        RoleByApplicationType $roleByApplicationType
     )
     {
         $this->em = $entityManager;
         $this->userRolesTransformer = $userRolesTransformer;
+        $this->roleByApplicationType = $roleByApplicationType;
     }
 
     private function initRoleField(FormBuilderInterface $builder)
@@ -31,7 +34,7 @@ class RoleType extends AbstractType
             'collection',
             array(
                 'label' => 'applications',
-                'type' => new RoleByApplicationType()
+                'type' => $this->roleByApplicationType
             )
         )->addModelTransformer($this->userRolesTransformer);
     }

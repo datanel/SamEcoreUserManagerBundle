@@ -7,15 +7,26 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
-use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Security\Core\SecurityContext;
+use Doctrine\ORM\EntityRepository;;
+use Doctrine\ORM\EntityManager;
 
-/**
- * Description of ApplicationRoleType
- *
- * @author akambi <contact@akambi-fagbohoun.com>
- */
 class RoleByApplicationType extends AbstractType
 {
+    private $om;
+    private $currentUserRoles;
+    private $currentUserId;
+
+    public function __construct(EntityManager $om, SecurityContext $securityContext)
+    {
+        $this->om = $om;
+        $user = $securityContext->getToken()->getUser();
+        $this->currentUserRoles = $user->getRoles();
+        $this->currentUserId = $user->getId();
+    }
+
      /**
      * @param FormBuilderInterface $builder
      * @param array                $options
@@ -28,8 +39,7 @@ class RoleByApplicationType extends AbstractType
                 $form = $event->getForm();
                 $data = $event->getData();
 
-
-                $form->add('role', 'entity', array(
+                $form->add('roles', 'entity', array(
                     'label'         => $data->getName(),
                     'multiple'      => true,
                     'expanded'      => true,
@@ -54,9 +64,19 @@ class RoleByApplicationType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'CanalTP\SamCoreBundle\Entity\Application',
+        $resolver->setDefaults(array
+(            'data_class' => 'CanalTP\SamCoreBundle\Entity\Application',
         ));
+    }
+
+    public function finishView(FormView $view, FormInterface $form, array $options)
+    {
+        foreach ($view->children['roles']->children as $role) {
+                if (!array_key_exists($role->vars['value'], $this->currentUserRoles)) {
+                    $role->vars['attr']['disabled'] = 'disabled';
+                }
+                $role->vars['checked'] = true;
+        }
     }
 
     /**
