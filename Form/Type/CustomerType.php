@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Description of ProfileFormType
- *
- * @author akambi
- */
-
 namespace CanalTP\SamEcoreUserManagerBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;

@@ -16,50 +16,35 @@ use Doctrine\ORM\EntityRepository;
  */
 class RoleByApplicationType extends AbstractType
 {
-    const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
-
-    protected $roleByApplicationListener;
-
      /**
      * @param FormBuilderInterface $builder
      * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
-        $builder->add('application', 'sam_role_application_perimetre_type');
-
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
             function (FormEvent $event) {
-
                 $form = $event->getForm();
                 $data = $event->getData();
 
-                $form->add('superAdmin', 'checkbox', array(
-                    'label' => 'Tous les périmètres & permissions pour cette application',
-                    'value' => 'superAdmin',
-                    'required' => false
+
+                $form->add('role', 'entity', array(
+                    'label'         => $data->getName(),
+                    'multiple'      => true,
+                    'expanded'      => true,
+                    'class'         => 'CanalTPSamCoreBundle:Role',
+                    'query_builder' => function (EntityRepository $er) use ($data) {
+                        $qb = $er->createQueryBuilder('r')
+                            ->where('r.application = :application')
+                            ->setParameter('application', $data->getId())
+                            ->orderBy('r.name', 'ASC');
+
+                        return $qb;
+                    },
+                    'translation_domain' => 'messages',
+                    'property' => 'name'
                 ));
-
-                if (!$form->getParent()->getParent()->getData()->user->getId()) {
-                    $data->application->setRoles(array());
-                } else {
-                    $apps = $form->getParent()->getParent()->getData()->applications;
-                    $exists = false;
-                    foreach ($apps as $app) {
-
-                        $userRoles = $form->getParent()->getParent()->getData()->user->getUserRoles();
-                        foreach ($userRoles as $userRole) {
-                            if ($userRole->getApplication()->getId() == $data->application->getId()
-                                && $userRole->getCanonicalName() == self::ROLE_SUPER_ADMIN)
-                            {
-                                //Check or not superAdmin
-                                $data->superAdmin = true;
-                            }
-                        }
-                    }
-                }
             }
         );
     }
@@ -70,7 +55,7 @@ class RoleByApplicationType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'CanalTP\SamEcoreApplicationManagerBundle\Form\Model\ApplicationRolesPerimeters',
+            'data_class' => 'CanalTP\SamCoreBundle\Entity\Application',
         ));
     }
 
@@ -79,6 +64,6 @@ class RoleByApplicationType extends AbstractType
      */
     public function getName()
     {
-        return 'sam_role_by_application';
+        return 'assign_role_by_application';
     }
 }

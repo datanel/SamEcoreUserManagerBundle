@@ -14,6 +14,8 @@ form:
             title: Informations
         step_2:
             title: Choix du client
+        step_3:
+            title: Association des rôles par application
 ctp_core:
     _breadcrumb: Accueil
     toggle_nav: Afficher la navigation

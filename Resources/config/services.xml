@@ -8,19 +8,18 @@
         <parameter key="canaltp_user.confirmation.form.name">canaltp_user_confirmation_form</parameter>
         <parameter key="canaltp_user.confirmation.form.type">canaltp_user_confirmation</parameter>
         <parameter key="sam.registration.step_one.type.class">CanalTP\SamEcoreUserManagerBundle\Form\Type\RegistrationStepOneFormType</parameter>
-        <parameter key="sam.registration.form.listener.class">CanalTP\SamEcoreUserManagerBundle\Form\EventListener\RegistrationSuscriber</parameter>
         <parameter key="sam_role_by_application.type.class">CanalTP\SamEcoreUserManagerBundle\Form\Type\RoleByApplicationType</parameter>
-        <parameter key="sam_role_application_perimeter.type.class">CanalTP\SamEcoreUserManagerBundle\Form\Type\RoleApplicationPerimeterType</parameter>
     </parameters>
 
     <services>
-        <service id="sam.user_provider.email" class="CanalTP\SamEcoreUserManagerBundle\Security\EmailProvider" public="false">
-            <argument type="service" id="fos_user.user_manager" />
+        <service
+            id="sam.registration.assign_role.role_to_user_application_role_transformer.data_transformer"
+            class="CanalTP\SamEcoreUserManagerBundle\Form\DataTransformer\RoleToUserApplicationRoleTransformer">
+            <argument type="service" id="doctrine.orm.entity_manager" />
         </service>
 
-        <service id="sam.registration.form.listener" class="%sam.registration.form.listener.class%">
-            <argument type="service" id="doctrine.orm.entity_manager" />
-            <argument type="service" id="security.context" />
+        <service id="sam.user_provider.email" class="CanalTP\SamEcoreUserManagerBundle\Security\EmailProvider" public="false">
+            <argument type="service" id="fos_user.user_manager" />
         </service>
 
         <service id="sam.registration.form.type" class="CanalTP\SamEcoreUserManagerBundle\Form\Type\UserType">
@@ -32,12 +31,18 @@
             <argument type="service" id="security.context" />
         </service>
 
+        <service id="sam.registration.assign_role.form.type" class="CanalTP\SamEcoreUserManagerBundle\Form\Type\RoleType">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="sam.registration.assign_role.role_to_user_application_role_transformer.data_transformer" />
+        </service>
+
         <service id="sam.registration.form.flow"
                 class="CanalTP\SamEcoreUserManagerBundle\Form\Flow\RegistrationFlow"
                 parent="craue.form.flow"
                 scope="request">
             <argument type="service" id="sam.registration.form.type" />
             <argument type="service" id="sam.registration.assign_customer.form.type" />
+            <argument type="service" id="sam.registration.assign_role.form.type" />
         </service>
 
         <service id="canaltp_user.confirmation.form.type" class="CanalTP\SamEcoreUserManagerBundle\Form\Type\ConfirmationFormType">
@@ -100,12 +105,6 @@
 
         <service id="sam_role_by_application.type" class="%sam_role_by_application.type.class%">
             <tag name="form.type" alias="sam_role_by_application" />
-        </service>
-
-        <service id="sam_role_application_perimetre_type.type" class="%sam_role_application_perimeter.type.class%">
-            <argument type="service" id="canal_tp_sam.perimeter.form.listener" />
-            <argument type="service" id="security.context" />
-            <tag name="form.type" alias="sam_role_application_perimetre_type" />
         </service>
     </services>
 </container>

@@ -126,6 +126,8 @@ class User extends AbstractUser
      */
     protected $userRoles;
 
+    protected $applications;
+
     protected $customer;
 
     /**
@@ -135,6 +137,7 @@ class User extends AbstractUser
     {
         parent::__construct();
         $this->userRoles = new ArrayCollection();
+        $this->applications = new ArrayCollection();
     }
 
     /**
@@ -228,6 +231,42 @@ class User extends AbstractUser
     // {
     //     $this->roles->removeElement($role);
     // }
+
+    /**
+     * Get roles
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getApplications()
+    {
+        return $this->applications;
+    }
+
+    /**
+     * Set currentApplicationRoles
+     *
+     * @return Role
+     */
+    public function setApplications($applications)
+    {
+        $this->applications = $applications;
+
+        return $this;
+    }
+
+
+    /**
+     * Add roles
+     *
+     * @param Role $role
+     * @return User
+     */
+    public function addApplication($application)
+    {
+        $this->applications[] = $application;
+
+        return $this;
+    }
 
     /**
      * Get roles

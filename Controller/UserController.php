@@ -14,7 +14,6 @@ class UserController extends AbstractController
 {
     private $userManager = null;
 
-
     /**
      * Lists all User entities.
      */

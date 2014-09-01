@@ -35,6 +35,14 @@
 
             {{ form_row(form.customer) }}
 
+    {% elseif flow.getCurrentStepNumber() == 3 %}
+
+        {% for customerApplications in form.applications %}
+            {% for customerApplication in customerApplications %}
+                {{ form_row(customerApplication) }}
+            {% endfor %}
+        {% endfor %}
+
     {% endif %}
 
     <input type="hidden" name="{{ flow.getFormStepKey() }}" value="{{ flow.getCurrentStepNumber() }}" />
