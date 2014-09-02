@@ -31,6 +31,7 @@ class FixturesUser extends AbstractFixture implements OrderedFixtureInterface
 
     public function load(ObjectManager $em)
     {
+        //TODO:
         $users = array(
             array(
                 'username'  => 'Sam',
@@ -38,7 +39,21 @@ class FixturesUser extends AbstractFixture implements OrderedFixtureInterface
                 'lastname'  => 'Dictator',
                 'email'     => 'sam@canaltp.fr',
                 'password'  => 'sam',
-                'roles'     => array('role-super-admin-sam')
+                'roles'     => array(
+                    'role-super-admin-sam',
+                    'role-user-sam',
+                    'role-referent-sam',
+                    'role-obs-sam',
+                    'role-admin-sam',
+                    'role-obs-mtt',
+                    'role-user-mtt',
+                    'role-admin-mtt',
+                    'ROLE_ADMIN_MATRIX',
+                    'ROLE_USER_MATRIX',
+                    'ROLE_ROOT_REAL_TIME',
+                    'ROLE_ADMIN_REAL_TIME',
+                    'ROLE_USER_REAL_TIME'
+                )
             ),
         );
 

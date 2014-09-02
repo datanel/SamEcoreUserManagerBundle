@@ -39,7 +39,9 @@
 
         {% for customerApplications in form.applications %}
             {% for customerApplication in customerApplications %}
-                {{ form_row(customerApplication) }}
+                {% if (customerApplication|length) %}
+                    {{ form_row(customerApplication) }}
+                {% endif %}
             {% endfor %}
         {% endfor %}
 
@@ -53,7 +55,13 @@
 {% endblock %}
 
 {% block left_menu -%}
-    {% include 'CanalTPSamEcoreUserManagerBundle:User:common_menu.html.twig' %}
+    {% if (link_back_to_list is not defined) or (link_back_to_list != false) -%}
+        <a class="btn btn-default" href="{{ path('sam_user_list') }}">
+            <span class="glyphicon glyphicon-arrow-left"></span>
+            {{'ctp_user.user.actions.back.list'|trans}}
+        </a>
+    {% endif %}
+
     <hr/>
 
     <div>
