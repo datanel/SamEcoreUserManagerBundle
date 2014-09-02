@@ -47,12 +47,7 @@
 
     <input type="hidden" name="{{ flow.getFormStepKey() }}" value="{{ flow.getCurrentStepNumber() }}" />
 
-    {% include 'CraueFormFlowBundle:FormFlow:buttons.html.twig' with {
-        craue_formflow_button_class_last: 'btn btn-primary',
-        craue_formflow_button_class_back: 'btn',
-        craue_formflow_button_class_reset: 'btn btn-warning',
-        craue_formflow_button_class_next: 'btn btn-success'
-    } %}
+    {% include 'CanalTPSamEcoreUserManagerBundle:User:buttons.html.twig' %}
 
     {{ form_end(form, {'render_rest': false}) }}
 {% endblock %}

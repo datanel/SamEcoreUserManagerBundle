@@ -48,7 +48,8 @@ class RoleType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'CanalTP\SamEcoreUserManagerBundle\Entity\User'
+                'data_class' => 'CanalTP\SamEcoreUserManagerBundle\Entity\User',
+                'csrf_protection' => false
             )
         );
     }

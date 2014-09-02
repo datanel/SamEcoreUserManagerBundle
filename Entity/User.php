@@ -329,15 +329,13 @@ class User extends AbstractUser
         // we need to make sure to have at least one role
         $roles[] = static::ROLE_DEFAULT;
 
+
         foreach ($this->getUserRoles() as $role) {
             $roles[$role->getId()] = $role->getCanonicalName();
         }
         return array_unique($roles);
     }
 
-    /**
-     * Appeler avant la mise à jour d'un objet en base de donnée
-     */
     public function onPostLoad()
     {
         $aRoles = array();

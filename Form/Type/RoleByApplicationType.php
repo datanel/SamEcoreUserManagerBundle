@@ -71,11 +71,17 @@ class RoleByApplicationType extends AbstractType
 
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
+        $userEditRoles = $form->getParent()->getParent()->getData()->getRoles();
+
         foreach ($view->children['roles']->children as $role) {
-                if (!array_key_exists($role->vars['value'], $this->currentUserRoles)) {
-                    $role->vars['attr']['disabled'] = 'disabled';
-                }
+            if (!array_key_exists($role->vars['value'], $this->currentUserRoles)) {
+                $role->vars['attr']['disabled'] = 'disabled';
+            }
+            if (array_key_exists($role->vars['value'], $userEditRoles)) {
                 $role->vars['checked'] = true;
+            } else {
+                $role->vars['checked'] = false;
+            }
         }
     }
 
