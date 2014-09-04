@@ -67,7 +67,7 @@ class UserController extends AbstractController
             $user->setStatus($flow->getCurrentStep());
             $this->get('fos_user.registration.form.handler')->save(
                 $user,
-                $isNew
+                false
             );
             $isNew = false;
             if ($flow->nextStep()) {

@@ -26,15 +26,18 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
      */
     public function save(User $user, $confirmation = false)
     {
-        if ($confirmation) {
+        if (!$user->isEnabled() && $user->getStatus() == User::STATUS_STEP_1) {
+            $user->setPlainPassword(md5(time()));
+        }
+        if (!$user->isEnabled() && $user->getStatus() == User::STATUS_STEP_3) {
             $user->setEnabled(false);
             if (null === $user->getConfirmationToken()) {
                 $user->setConfirmationToken($this->tokenGenerator->generateToken());
             }
-            $user->setPlainPassword(md5(time()));
+            $user->setStatus(User::MAIL_SENDED);
             $this->userManager->updateUser($user);
             $this->mailer->sendConfirmationEmailMessage($user);
-        } else {
+        } else if ($confirmation && $user->getStatus() == User::MAIL_SENDED) {
             $user->setEnabled(true);
         }
 

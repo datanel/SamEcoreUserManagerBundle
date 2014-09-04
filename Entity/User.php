@@ -10,8 +10,10 @@ class User extends AbstractUser
 {
     const ROLE_ADMIN = 'ROLE_ADMIN';
 
-    const STATUS_STEP_1 = 0;
-    const STATUS_STEP_2 = 1;
+    const STATUS_STEP_1 = 1;
+    const STATUS_STEP_2 = 2;
+    const STATUS_STEP_3 = 3;
+    const MAIL_SENDED = 4;
 
     protected $id;
 
