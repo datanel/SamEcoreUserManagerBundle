@@ -364,4 +364,12 @@ class User extends AbstractUser
     {
         return (in_array($role, $this->getRoles()));
     }
+
+    public function getStatusKey()
+    {
+        if ($this->isEnabled()) {
+            return ('ctp_user.user.status.active');
+        }
+        return ('ctp_user.user.status.step_' . $this->getStatus());
+    }
 }

@@ -25,6 +25,12 @@ ctp_user:
     user:
         _menu: Utilisateurs
         _breadcrumb: Utilisateurs
+        status:
+            step_1: En cours de création
+            step_2: En cours de création
+            step_3: En cours de création
+            step_4: En attente
+            active: Actif
         roles:
             super_admin: Super Admin
             admin: Admin
@@ -51,6 +57,7 @@ ctp_user:
             customer: Client
             username: Login
             groups: Applications
+            status: Statut
             name: Nom
             url: Url
             email: Email
@@ -93,3 +100,10 @@ ctp_user:
         add:
             _breadcrumb: Ajout
             _title: Ajout d'un sim
+    profil:
+        _menu: Mon profil
+        _breadcrumb: profil
+        edit:
+            _title: Mon profil
+            actions: Sauvegarder
+            validate: Vos informations ont bien été enregistré

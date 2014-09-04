@@ -82,6 +82,14 @@
             </constraint>
         </property>
 
+        <property name="customer">
+            <constraint name="NotBlank">
+                <option name="groups">
+                    <value>flow_registration_step2</value>
+                </option>
+            </constraint>
+        </property>
+
         <property name="groups">
             <constraint name="Count">
                 <option name="min">1</option>

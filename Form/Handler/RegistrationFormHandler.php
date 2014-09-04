@@ -34,9 +34,9 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
             if (null === $user->getConfirmationToken()) {
                 $user->setConfirmationToken($this->tokenGenerator->generateToken());
             }
-            $user->setStatus(User::MAIL_SENDED);
             $this->userManager->updateUser($user);
             $this->mailer->sendConfirmationEmailMessage($user);
+            $user->setStatus(User::MAIL_SENDED);
         } else if ($confirmation && $user->getStatus() == User::MAIL_SENDED) {
             $user->setEnabled(true);
         }
