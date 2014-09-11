@@ -14,7 +14,7 @@ class RoleToUserApplicationRoleTransformer implements DataTransformerInterface
     public function __construct(ObjectManager $om, SecurityContext $securityContext)
     {
         $this->om = $om;
-        $this->securityContext = $securityContext;
+        $this->currentUser = $securityContext->getToken()->getUser();
     }
 
     public function transform($user)
@@ -48,14 +48,14 @@ class RoleToUserApplicationRoleTransformer implements DataTransformerInterface
         if (!$user) {
             return $user;
         }
-        $currentUser = $this->securityContext->getToken()->getUser();
         $userRoles = array();
+        $currentUserRoles = $this->currentUser->getRoles();
 
         foreach ($user->getApplications() as $application) {
             $userRoles = array_merge(
                 $userRoles,
                 $this->getRoles(
-                    $currentUser->getRoles(),
+                    $currentUserRoles,
                     $application->getRoles()
                 )
             );

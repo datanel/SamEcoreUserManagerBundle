@@ -16,15 +16,14 @@ use Doctrine\ORM\EntityManager;
 class RoleByApplicationType extends AbstractType
 {
     private $om;
-    private $currentUserRoles;
-    private $currentUserId;
+    private $securityContext;
+    private $currentUser;
 
     public function __construct(EntityManager $om, SecurityContext $securityContext)
     {
         $this->om = $om;
-        $user = $securityContext->getToken()->getUser();
-        $this->currentUserRoles = $user->getRoles();
-        $this->currentUserId = $user->getId();
+        $this->securityContext = $securityContext;
+        $this->currentUser = $securityContext->getToken()->getUser();
     }
 
      /**
@@ -72,9 +71,12 @@ class RoleByApplicationType extends AbstractType
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
         $userEditRoles = $form->getParent()->getParent()->getData()->getRoles();
+        $currentUserRoles = $this->currentUser->getRoles();
+        // TODO: Check business by Application
+        $canAssignAll = $this->securityContext->isGranted('BUSINESS_MANAGE_USER_ROLE');
 
         foreach ($view->children['roles']->children as $role) {
-            if (!array_key_exists($role->vars['value'], $this->currentUserRoles)) {
+            if ($canAssignAll == false && !array_key_exists($role->vars['value'], $currentUserRoles)) {
                 $role->vars['attr']['disabled'] = 'disabled';
             }
             if (array_key_exists($role->vars['value'], $userEditRoles)) {

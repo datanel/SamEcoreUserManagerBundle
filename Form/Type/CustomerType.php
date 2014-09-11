@@ -37,7 +37,6 @@ class CustomerType extends AbstractType
             'expanded' => false,
             'choices' => $choices,
             'empty_value' => ($isSuperAdmin ? 'global.please_choose' : false),
-            'disabled' => ($isSuperAdmin ? false : true),
             'translation_domain' => 'messages'
         ));
     }
