@@ -15,6 +15,7 @@ class RoleToUserApplicationRoleTransformer implements DataTransformerInterface
     {
         $this->om = $om;
         $this->currentUser = $securityContext->getToken()->getUser();
+        $this->securityContext = $securityContext;
     }
 
     public function transform($user)
@@ -36,7 +37,8 @@ class RoleToUserApplicationRoleTransformer implements DataTransformerInterface
         $userRoles = array();
 
         foreach ($submitedRoles as $role) {
-            if (array_key_exists($role->getId(), $officialRoles)) {
+            if ($this->securityContext->isGranted('BUSINESS_MANAGE_USER_ROLE')
+                || array_key_exists($role->getId(), $officialRoles)) {
                 $userRoles[] = $role;
             }
         }

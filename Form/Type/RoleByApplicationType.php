@@ -63,8 +63,8 @@ class RoleByApplicationType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array
-(            'data_class' => 'CanalTP\SamCoreBundle\Entity\Application',
+        $resolver->setDefaults(array(
+            'data_class' => 'CanalTP\SamCoreBundle\Entity\Application',
         ));
     }
 
