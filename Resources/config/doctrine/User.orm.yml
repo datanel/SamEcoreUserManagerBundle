@@ -58,7 +58,7 @@ CanalTP\SamEcoreUserManagerBundle\Entity\User:
             type: boolean
         expiresAt:
             column: usr_expires_at
-            type: boolean
+            type: datetime
             nullable: true
         confirmationToken:
             column: usr_confirmation_token
