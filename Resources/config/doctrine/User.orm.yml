@@ -75,23 +75,19 @@ CanalTP\SamEcoreUserManagerBundle\Entity\User:
             column: usr_credentials_expire_at
             type: datetime
             nullable: true
-        customer:
-            column: cus_id
-            type: integer
     uniqueConstraints:
         username_idx:
             columns: [ usr_username, usr_username_canonical ]
         email_idx:
             columns: [ usr_email, usr_email_canonical ]
-    # TODO: Refs #IUS-268: BNeed to discuss about relation between User un customer
-    # manyToOne:
-    #     customer:
-    #         targetEntity: CanalTP\SamCoreBundle\Entity\Customer
-    #         inversedBy: applications
-    #         nullable: true
-    #         joinColumn:
-    #             name: usr_id
-    #             referencedColumnName: cus_id
+    manyToOne:
+        customer:
+            targetEntity: CanalTP\NmmPortalBundle\Entity\Customer
+            inversedBy: users
+            nullable: true
+            joinColumn:
+                name: cus_id
+                referencedColumnName: cus_id
     manyToMany:
         userRoles:
             targetEntity: CanalTP\SamCoreBundle\Entity\Role

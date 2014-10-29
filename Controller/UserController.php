@@ -23,7 +23,6 @@ class UserController extends AbstractController
 
         $userManager = $this->container->get('fos_user.user_manager');
         $user = $this->get('security.context')->getToken()->getUser();
-        $customers = $this->container->get('sam_core.customer')->findAllToArray();
         $isSuperAdmin = $user->hasRole('ROLE_SUPER_ADMIN');
         if ($isSuperAdmin) {
             $entities = $this->container->get('sam.user_manager')->findUsers();
@@ -36,9 +35,6 @@ class UserController extends AbstractController
             $id                   = $entity->getId();
             $deleteForm           = $this->createDeleteForm($id);
             $deleteFormViews[$id] = $deleteForm->createView();
-            if ($entity->getCustomer()) {
-                $entity->setCustomer($customers[$entity->getCustomer()]);
-            }
         }
 
         return $this->render(
