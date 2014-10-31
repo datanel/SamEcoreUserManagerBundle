@@ -24,18 +24,23 @@ class CustomerType extends AbstractType
         $repository = $this->em->getRepository('CanalTPSamCoreBundle:Customer');
         $user = $this->securityContext->getToken()->getUser();
         $isSuperAdmin = $user->hasRole('ROLE_SUPER_ADMIN');
-        if ($isSuperAdmin) {
-            $choices = $repository->findAllToArray();
-        } else {
-            $choices = $repository->findByToArray(array(
-                'id' => $user->getCustomer()
-            ));
-        }
 
-        $builder->add('customer', 'choice', array(
+        $builder->add('customer', 'entity', array(
             'label' => 'role.field.customer',
             'expanded' => false,
-            'choices' => $choices,
+            'class' => 'CanalTPNmmPortalBundle:Customer',
+            'property' => 'name',
+            'query_builder' => function(\Doctrine\ORM\EntityRepository $er) use ($isSuperAdmin, $user) {
+                if ($isSuperAdmin) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.name', 'ASC');
+                } else {
+                    return $er->createQueryBuilder('c')
+                        ->where('c.id = :custId')
+                        ->setParameter('custId', $user->getCustomer()->getId())
+                        ->orderBy('c.name', 'ASC');
+                }
+            },
             'empty_value' => ($isSuperAdmin ? 'global.please_choose' : false),
             'translation_domain' => 'messages'
         ));
