@@ -3,7 +3,7 @@
     "type": "symfony-bundle",
     "description": "Symfony SamEcoreUserManagerBundle",
     "keywords": ["Sam User"],
-    "homepage": "http://hg.prod.canaltp.fr/Sam/SamEcoreUserManagerBundle/summary",
+    "homepage": "https://github.com/CanalTP/SamEcoreUserManagerBundle",
     "license": "proprietary",
     "authors": [
         {
