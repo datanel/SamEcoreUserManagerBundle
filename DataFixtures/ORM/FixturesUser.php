@@ -12,6 +12,7 @@ class FixturesUser extends AbstractFixture implements OrderedFixtureInterface
 {
     use UserTrait;
 
+    // TODO: Add all aplications role.
     private $users = array(
         array(
             'id'        => null,
@@ -26,10 +27,7 @@ class FixturesUser extends AbstractFixture implements OrderedFixtureInterface
                 'role-user-sam',
                 'role-referent-sam',
                 'role-obsevateur-sam',
-                'role-admin-mtt',
-                'role-admin-realtime',
-                'role-admin-matrix',
-                'role-admin-nmp'
+                'role-admin-mtt'
             ),
             'customer'  => 'customer-canaltp'
         )
