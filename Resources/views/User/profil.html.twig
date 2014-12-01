@@ -13,7 +13,7 @@
 {% block main_content -%}
     <h1>{{'ctp_user.profil.edit._title'|trans}}</h1>
     <hr/>
-    {{ form_start(form, { action: url('sam_user_edit_profil'), attr: {'novalidate': 'novalidate', class: 'fos_user_registration_register custom' } }) }}
+    {{ form_start(form, { action: path('sam_user_edit_profil'), attr: {'novalidate': 'novalidate', class: 'fos_user_registration_register custom' } }) }}
         {{ bootstrap_set_style('horizontal') }}
 
         {{ form_row(form.lastname) }}
