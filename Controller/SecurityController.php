@@ -77,6 +77,8 @@ class SecurityController extends AbstractController
             $this->container->getParameter('fos_user.template.engine')
         );
 
+        $data = array_merge($data, array('targetPath' => $this->container->get('request')->headers->get('referer')));
+
         return $this->container->get('templating')->renderResponse($template, $data);
     }
 
