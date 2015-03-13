@@ -19,7 +19,7 @@
 {% block main_content -%}
     <h1>{{ title|trans }}</h1>
     <hr/>
-    {{ form_start(form, { action: url('sam_user_edit', { 'user': id }), attr: {class: 'fos_user_registration_register custom' } }) }}
+    {{ form_start(form, { action: path('sam_user_edit', { 'user': id }), attr: {class: 'fos_user_registration_register custom' } }) }}
     {{ bootstrap_set_style('horizontal') }}
     {% if flow.getCurrentStepNumber() == 1 %}
 

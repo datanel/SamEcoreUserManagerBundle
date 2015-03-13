@@ -25,7 +25,7 @@
     <hr/>
 
     {% if flow.getCurrentStepNumber() == 1 %}
-        {{ form_start(form, { action: url('fos_user_registration_register'), attr: {class: 'fos_user_registration_register custom' } }) }}
+        {{ form_start(form, { action: path('fos_user_registration_register'), attr: {class: 'fos_user_registration_register custom' } }) }}
             {{ bootstrap_set_style('horizontal') }}
 
             {{ form_row(form.username) }}

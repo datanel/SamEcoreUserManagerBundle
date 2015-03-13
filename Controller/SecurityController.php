@@ -62,6 +62,18 @@ class SecurityController extends AbstractController
         );
     }
 
+    private function getReferer()
+    {
+        $result = $this->container->get('request')->headers->get('referer');
+
+        if (is_null($result))
+        {
+            $result = $this->container->get('session')->get('_security.main.target_path');
+        }
+
+        return ($result);
+    }
+
     /**
      * Renders the login template with the given parameters. Overwrite this function in
      * an extended controller to provide additional data for the login template.
@@ -76,6 +88,8 @@ class SecurityController extends AbstractController
             'FOSUserBundle:Security:login.html.%s',
             $this->container->getParameter('fos_user.template.engine')
         );
+
+        $data = array_merge($data, array('targetPath' => $this->getReferer()));
 
         return $this->container->get('templating')->renderResponse($template, $data);
     }
