@@ -26,8 +26,7 @@ class FixturesUser extends AbstractFixture implements OrderedFixtureInterface
                 'role-admin-sam',
                 'role-user-sam',
                 'role-referent-sam',
-                'role-obsevateur-sam',
-                'role-admin-mtt'
+                'role-obsevateur-sam'
             ),
             'customer'  => 'customer-canaltp'
         )
