@@ -25,7 +25,7 @@ class ConfirmationFormType extends AbstractType
                 null,
                 array(
                     'label' => 'form.firstname',
-                    'translation_domain' => 'CanalTPSamEcoreUserManagerBundle'
+                    'translation_domain' => 'FOSUserBundle'
                 )
             )
             ->add(
@@ -33,7 +33,7 @@ class ConfirmationFormType extends AbstractType
                 null,
                 array(
                     'label' => 'form.lastname',
-                    'translation_domain' => 'CanalTPSamEcoreUserManagerBundle'
+                    'translation_domain' => 'FOSUserBundle'
                 )
             )
             ->add(
