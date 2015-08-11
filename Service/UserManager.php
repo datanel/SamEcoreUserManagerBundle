@@ -3,6 +3,7 @@
 namespace CanalTP\SamEcoreUserManagerBundle\Service;
 
 use CanalTP\SamEcoreApplicationManagerBundle\Component\BusinessComponentRegistry;
+use CanalTP\SamEcoreApplicationManagerBundle\Perimeter\BusinessPerimeterManagerInterface;
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Doctrine\UserManager as BaseUserManager;
 
@@ -57,14 +58,15 @@ class UserManager extends BaseUserManager
         foreach ($roles as $role) {
             $appNames[$role->getApplication()->getId()] = $role->getApplication()->getCanonicalName();
         }
-
         //remove all links between user and perimeters in all apps
         foreach ($appNames as $appName) {
-            try{
-                $this->getBusinessRegistry()
+            try {
+                $perimetersManager = $this->getBusinessRegistry()
                     ->getBusinessComponent($appName)
-                    ->getPerimetersManager()
-                    ->deleteUserPerimeters($user);
+                    ->getPerimetersManager();
+                if ($perimetersManager instanceof BusinessPerimeterManagerInterface) {
+                    $perimetersManager->deleteUserPerimeters($user);
+                }
             } catch (\Exception $e) {
             }
         }

@@ -106,4 +106,4 @@ ctp_user:
         edit:
             _title: Mon profil
             actions: Sauvegarder
-            validate: Vos informations ont bien été enregistré
+            validate: Vos informations ont bien été enregistrées
