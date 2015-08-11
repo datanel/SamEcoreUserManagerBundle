@@ -4,7 +4,7 @@
 
 {% block body %}
     <div id="security-login-form" class="col-md-offset-2 col-md-8">
-        <div class="panel panel-default">   
+        <div class="panel panel-default">
             <div class="panel-heading"> {{ 'security.login.title'|trans({}, 'FOSUserBundle') }}</div>
             <div class="panel-body">
                 {% if error %}
@@ -15,8 +15,6 @@
                 {% endif %}
                 <form role="form" class="form-horizontal" action="{{ path("fos_user_security_check") }}" method="post">
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
-
-                    <input type="hidden" name="_target_path" value="{{targetPath}}" />
 
                     <div class="form-group">
                         <label class="col-sm-3 control-label" for="username">{{ 'security.login.username'|trans({}, 'FOSUserBundle') }}</label>
