@@ -16,15 +16,5 @@ class ConfirmUser
     /**
      * @var string
      */
-    public $firstname;
-
-    /**
-     * @var string
-     */
-    public $lastname;
-
-    /**
-     * @var string
-     */
     public $new;
 }
