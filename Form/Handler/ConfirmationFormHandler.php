@@ -76,8 +76,6 @@ class ConfirmationFormHandler
 
     protected function onSuccess(User $user)
     {
-        $user->setFirstname($this->getFirstname());
-        $user->setLastname($this->getLastname());
         $user->setPlainPassword($this->getNewPassword());
         $user->setConfirmationToken(null);
         $user->setPasswordRequestedAt(null);
