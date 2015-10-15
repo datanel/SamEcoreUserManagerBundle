@@ -21,22 +21,6 @@ class ConfirmationFormType extends AbstractType
     {
         $builder
             ->add(
-                'firstname',
-                null,
-                array(
-                    'label' => 'form.firstname',
-                    'translation_domain' => 'FOSUserBundle'
-                )
-            )
-            ->add(
-                'lastname',
-                null,
-                array(
-                    'label' => 'form.lastname',
-                    'translation_domain' => 'FOSUserBundle'
-                )
-            )
-            ->add(
                 'new',
                 'repeated',
                 array(
