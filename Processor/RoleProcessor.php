@@ -3,7 +3,7 @@
 namespace CanalTP\SamEcoreUserManagerBundle\Processor;
 
 use FOS\UserBundle\Model\UserManagerInterface;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Cette classe a pour but de gerer les differentes données
@@ -14,18 +14,18 @@ use Symfony\Component\Security\Core\SecurityContext;
  * */
 class RoleProcessor
 {
-    private $securityContext;
+    private $authorizationChecker;
     private $userManager;
 
     /**
      * __construct
      *
-     * @param SecurityContext      $securityContext
-     * @param UserManagerInterface $userManager
+     * @param AuthorizationCheckerInterface $authorizationChecker
+     * @param UserManagerInterface          $userManager
      */
-    public function __construct(SecurityContext $securityContext, UserManagerInterface $userManager)
+    public function __construct(AuthorizationCheckerInterface $authorizationChecker, UserManagerInterface $userManager)
     {
-        $this->securityContext = $securityContext;
+        $this->authorizationChecker = $authorizationChecker;
         $this->userManager = $userManager;
     }
 
@@ -40,7 +40,7 @@ class RoleProcessor
     {
         $roleSuperAdmin = 'ROLE_SUPER_ADMIN';
 
-        if ($this->securityContext->isGranted($roleSuperAdmin)) {
+        if ($this->authorizationChecker->isGranted($roleSuperAdmin)) {
             $entities = $this->userManager->findPaginateUsers($page);
         } else {
             $entities = $this->userManager->findPaginateUsersExcludingRole($roleSuperAdmin, $page);
@@ -60,7 +60,7 @@ class RoleProcessor
     {
         $roleSuperAdmin = 'ROLE_SUPER_ADMIN';
 
-        if ($this->securityContext->isGranted($roleSuperAdmin)) {
+        if ($this->authorizationChecker->isGranted($roleSuperAdmin)) {
             $count = $this->userManager->countUsers();
         } else {
             $count = $this->userManager->countUsersExcludingRole($roleSuperAdmin);

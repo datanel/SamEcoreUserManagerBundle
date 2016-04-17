@@ -4,26 +4,30 @@ namespace CanalTP\SamEcoreUserManagerBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Security\Core\SecurityContext;
-use Doctrine\ORM\EntityRepository;;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManager;
 
 class RoleByApplicationType extends AbstractType
 {
     private $om;
-    private $securityContext;
+    private $authorizationChecker;
     private $currentUser;
 
-    public function __construct(EntityManager $om, SecurityContext $securityContext)
-    {
+    public function __construct(
+        EntityManager $om,
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorizationChecker
+    ) {
         $this->om = $om;
-        $this->securityContext = $securityContext;
-        $this->currentUser = $securityContext->getToken()->getUser();
+        $this->currentUser = $tokenStorage->getToken()->getUser();
+        $this->authorizationChecker = $authorizationChecker;
     }
 
      /**
@@ -59,9 +63,9 @@ class RoleByApplicationType extends AbstractType
     }
 
     /**
-     * @param OptionsResolverInterface $resolver
+     * @param OptionsResolver $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'data_class' => 'CanalTP\SamCoreBundle\Entity\Application',
@@ -73,7 +77,7 @@ class RoleByApplicationType extends AbstractType
         $userEditRoles = $form->getParent()->getParent()->getData()->getRoles();
         $currentUserRoles = $this->currentUser->getRoles();
         // TODO: Check business by Application
-        $canAssignAll = $this->securityContext->isGranted('BUSINESS_MANAGE_USER');
+        $canAssignAll = $this->authorizationChecker->isGranted('BUSINESS_MANAGE_USER');
 
         foreach ($view->children['roles']->children as $role) {
             if ($canAssignAll == false && !array_key_exists($role->vars['value'], $currentUserRoles)) {
@@ -85,13 +89,5 @@ class RoleByApplicationType extends AbstractType
                 $role->vars['checked'] = false;
             }
         }
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return 'assign_role_by_application';
     }
 }

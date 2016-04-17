@@ -3,19 +3,24 @@
 namespace CanalTP\SamEcoreUserManagerBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class RoleToUserApplicationRoleTransformer implements DataTransformerInterface
 {
     private $om;
-    private $securityContext;
+    private $authorizationChecker;
+    private $currentUser;
 
-    public function __construct(ObjectManager $om, SecurityContext $securityContext)
-    {
+    public function __construct(
+        ObjectManager $om,
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorizationChecker
+    ) {
         $this->om = $om;
-        $this->currentUser = $securityContext->getToken()->getUser();
-        $this->securityContext = $securityContext;
+        $this->currentUser = $tokenStorage->getToken()->getUser();
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     public function transform($user)
@@ -37,7 +42,7 @@ class RoleToUserApplicationRoleTransformer implements DataTransformerInterface
         $userRoles = array();
 
         foreach ($submitedRoles as $role) {
-            if ($this->securityContext->isGranted('BUSINESS_MANAGE_USER')
+            if ($this->authorizationChecker->isGranted('BUSINESS_MANAGE_USER')
                 || array_key_exists($role->getId(), $officialRoles)) {
                 $userRoles[] = $role;
             }

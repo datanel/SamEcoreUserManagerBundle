@@ -13,7 +13,7 @@ namespace CanalTP\SamEcoreUserManagerBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ConfirmationFormType extends AbstractType
 {
@@ -33,7 +33,7 @@ class ConfirmationFormType extends AbstractType
             );
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
@@ -41,10 +41,5 @@ class ConfirmationFormType extends AbstractType
                 'intention'  => 'confirmation',
             )
         );
-    }
-
-    public function getName()
-    {
-        return 'canaltp_user_confirmation';
     }
 }

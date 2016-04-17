@@ -4,11 +4,9 @@ namespace CanalTP\SamEcoreUserManagerBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityManager;
 use CanalTP\SamEcoreUserManagerBundle\Form\DataTransformer\RoleToUserApplicationRoleTransformer;
-use CanalTP\SamEcoreUserManagerBundle\Form\Type\RoleByApplicationType;
 
 class RoleType extends AbstractType
 {
@@ -44,7 +42,7 @@ class RoleType extends AbstractType
         $this->initRoleField($builder);
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
@@ -52,10 +50,5 @@ class RoleType extends AbstractType
                 'csrf_protection' => false
             )
         );
-    }
-
-    public function getName()
-    {
-        return 'assign_role';
     }
 }

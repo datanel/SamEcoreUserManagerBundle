@@ -4,25 +4,25 @@ namespace CanalTP\SamEcoreUserManagerBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Doctrine\ORM\EntityManager;
 
 class CustomerType extends AbstractType
 {
     private $em;
-    private $securityContext;
+    private $tokenStorage;
 
-    public function __construct(EntityManager $entityManager, SecurityContext $securityContext)
+    public function __construct(EntityManager $entityManager, TokenStorageInterface $tokenStorage)
     {
         $this->em = $entityManager;
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
     }
 
     private function initCustomerField(FormBuilderInterface $builder)
     {
         $repository = $this->em->getRepository('CanalTPSamCoreBundle:Customer');
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         $isSuperAdmin = $user->hasRole('ROLE_SUPER_ADMIN');
 
         $builder->add('customer', 'entity', array(
@@ -51,7 +51,7 @@ class CustomerType extends AbstractType
         $this->initCustomerField($builder);
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
@@ -60,10 +60,5 @@ class CustomerType extends AbstractType
                 'csrf_protection' => false
             )
         );
-    }
-
-    public function getName()
-    {
-        return 'assign_customer';
     }
 }

@@ -161,7 +161,7 @@ class UserController extends AbstractController
     /**
      * Displays a form to edit profil of current user.
      */
-    public function editProfilAction()
+    public function editProfilAction(Request $request)
     {
         $app = $this->get('canal_tp_sam.application.finder')->getCurrentApp();
         $id = $this->get('security.context')->getToken()->getUser()->getId();
@@ -172,7 +172,7 @@ class UserController extends AbstractController
             $user
         );
 
-        $form->handleRequest($this->getRequest());
+        $form->handleRequest($request);
         if ($form->isValid()) {
             $this->editProfilProcessForm($user);
         }

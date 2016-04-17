@@ -54,12 +54,4 @@ class ProfilFormType extends BaseRegistrationFormType
             ]
         );
     }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return 'edit_user_profil';
-    }
 }
