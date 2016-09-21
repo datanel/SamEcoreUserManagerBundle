@@ -104,34 +104,20 @@
 
     <class name="CanalTP\SamEcoreUserManagerBundle\Form\Model\ConfirmUser">
         <property name="new">
-            <constraint name="NotBlank">
-                <option name="message">fos_user.new_password.blank</option>
-                <option name="groups">
-                    <value>Confirmation</value>
-                </option>
-            </constraint>
-            <constraint name="Length">
-                <option name="min">2</option>
-                <option name="minMessage">fos_user.new_password.short</option>
+            <constraint name="Regex">
+                <option name="pattern">/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^\w\s]).{10,128}$/</option>
+                <option name="message">confirm_password.validation_rules</option>
                 <option name="groups">
                     <value>Confirmation</value>
                 </option>
             </constraint>
         </property>
     </class>
-
     <class name="FOS\UserBundle\Form\Model\ChangePassword">
         <property name="new">
-            <constraint name="NotBlank">
-                <option name="message">fos_user.new_password.blank</option>
-                <option name="groups">
-                    <value>ChangePassword</value>
-                    <value>ResetPassword</value>
-                </option>
-            </constraint>
-            <constraint name="Length">
-                <option name="min">2</option>
-                <option name="minMessage">fos_user.new_password.short</option>
+            <constraint name="Regex">
+                <option name="pattern">/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^\w\s]).{10,128}$/</option>
+                <option name="message">confirm_password.validation_rules</option>
                 <option name="groups">
                     <value>ChangePassword</value>
                     <value>ResetPassword</value>
