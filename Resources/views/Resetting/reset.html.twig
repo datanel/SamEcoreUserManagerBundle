@@ -7,7 +7,7 @@
     <div class="panel panel-default">
         <div class="panel-heading">Génération d'un nouveau mot de passe</div>
             <div class="panel-body">
-                {{ 'confirm_password.validation_rules'|trans({}, 'FOSUserBundle') }}
+                {{ 'confirm_password.validation_rules'|trans({}, 'FOSUserBundle')|nl2br }}
             </div>
             <div class="panel-body">
                 <form action="{{ path('fos_user_resetting_reset', {'token': token}) }}" {{ form_enctype(form) }} method="POST" class="fos_user_resetting_reset">
