@@ -29,5 +29,4 @@ class FeatureContext extends MinkContext
         $this->assertElementContainsText('.has-error label', $field);
         $this->assertElementContainsText('.has-error ul.help-block', $message);
     }
-
 }
