@@ -21,7 +21,7 @@ Feature: User reset password
     When I fill in "Nouveau mot de passe :" with "<password>"
     And I fill in "Vérification :" with "<password>"
     And I press "Modifier le mot de passe"
-    Then I get an error saying "Cette valeur n'est pas valide." on the field "Nouveau mot de passe :"
+    Then I get an error saying "Ce mot de passe ne respecte pas les critères de sécurité." on the field "Nouveau mot de passe :"
   Examples:
     |password|
     |passwordest|
