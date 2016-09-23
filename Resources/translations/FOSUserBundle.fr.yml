@@ -44,6 +44,7 @@ confirm_password:
         - au moins un caractère majuscule
         - au moins un chiffre
         - au moins un caractère autre (spécial, ponctuation, …)
+    error_message: Ce mot de passe ne respecte pas les critères de sécurité.
 
 # Registration
 registration:

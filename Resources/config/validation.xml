@@ -106,6 +106,7 @@
         <property name="new">
             <constraint name="Regex">
                 <option name="pattern">/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^\w\s]).{10,128}$/</option>
+                <option name="message">confirm_password.error_message</option>
                 <option name="groups">
                     <value>Confirmation</value>
                 </option>
@@ -116,6 +117,7 @@
         <property name="new">
             <constraint name="Regex">
                 <option name="pattern">/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^\w\s]).{10,128}$/</option>
+                <option name="message">confirm_password.error_message</option>
                 <option name="groups">
                     <value>ChangePassword</value>
                     <value>ResetPassword</value>
