@@ -13,7 +13,7 @@ Feature: User password profile
         Then I should see an "#validation-rules" element
 
     Scenario: Edit with same valid passwords
-        And I fill in "Mot de passe :" with "GoodPassword123!"
+        When I fill in "Mot de passe :" with "GoodPassword123!"
         And I fill in "Vérification :" with "GoodPassword123!"
         And I press "Sauvegarder"
         And I should see "Vos informations ont bien été enregistrées" in the ".alert-success" element
