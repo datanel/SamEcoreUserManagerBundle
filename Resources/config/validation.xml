@@ -49,6 +49,13 @@
             </constraint>
         </property>
 
+        <property name="plainPassword">
+            <constraint name="Regex">
+                <option name="pattern">/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^\w\s]).{10,128}$/</option>
+                <option name="message">confirm_password.error_message</option>
+            </constraint>
+        </property>
+
         <property name="email">
             <constraint name="NotBlank">
                 <option name="message">fos_user.email.blank</option>

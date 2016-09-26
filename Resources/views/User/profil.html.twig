@@ -10,6 +10,12 @@
 
 {% endblock %}
 
+{% block left_menu -%}
+    <div id="validation-rules" class="panel-body">
+        {{ 'confirm_password.validation_rules'|trans({}, 'FOSUserBundle')|nl2br }}
+    </div>
+{% endblock %}
+
 {% block main_content -%}
     <h1>{{'ctp_user.profil.edit._title'|trans}}</h1>
     <hr/>
