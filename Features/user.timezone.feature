@@ -16,3 +16,4 @@ Feature: User timezone edit
         When I fill in "Fuseau horaire :" with "Europe/Paris"
         And I press "Sauvegarder"
         And I should see "Vos informations ont bien été enregistrées" in the ".alert-success" element
+        And I should see "Paris" in the "#edit_user_profil_timezone" element
