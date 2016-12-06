@@ -48,6 +48,11 @@ class User extends AbstractUser
     protected $emailCanonical;
 
     /**
+     * @var string
+     */
+    protected $timezone;
+
+    /**
      * @var boolean
      */
     protected $enabled;
@@ -372,4 +377,28 @@ class User extends AbstractUser
         }
         return ('ctp_user.user.status.step_' . $this->getStatus());
     }
+
+    /**
+     * Set timezone
+     *
+     * @param  string $timezone
+     * @return User
+     */
+    public function setTimezone($timezone)
+    {
+        $this->timezone = $timezone;
+
+        return $this;
+    }
+
+    /**
+     * Get timezone
+     *
+     * @return string
+     */
+    public function getTimezone()
+    {
+        return $this->timezone;
+    }
+
 }

@@ -31,6 +31,8 @@
 
             {{ form_row(form.email) }}
 
+            {{ form_row(form.timezone) }}
+
     {% elseif flow.getCurrentStepNumber() == 2 %}
 
             {{ form_row(form.customer) }}

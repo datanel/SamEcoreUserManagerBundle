@@ -4,7 +4,6 @@ namespace CanalTP\SamEcoreUserManagerBundle\Form\Type;
 
 use FOS\UserBundle\Form\Type\RegistrationFormType as BaseRegistrationFormType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ProfilFormType extends BaseRegistrationFormType
@@ -44,6 +43,16 @@ class ProfilFormType extends BaseRegistrationFormType
             )
         );
         $builder->add('email', 'email', array('disabled' => true));
+
+        $builder->add(
+            'timezone',
+            'timezone',
+            [
+              'label' => 'form.timezone',
+              'preferred_choices' => array('Europe/Paris'),
+              'translation_domain' => 'FOSUserBundle'
+            ]
+        );
     }
 
     /**

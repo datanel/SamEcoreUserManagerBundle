@@ -72,6 +72,16 @@ class UserType extends AbstractType
                 'translation_domain' => 'FOSUserBundle'
             )
         );
+
+        $builder->add(
+            'timezone',
+            'timezone',
+            [
+              'label' => 'form.timezone',
+              'preferred_choices' => array('Europe/Paris'),
+              'translation_domain' => 'FOSUserBundle'
+            ]
+        );
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

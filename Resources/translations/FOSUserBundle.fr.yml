@@ -102,6 +102,7 @@ form:
     firstname: "Prénom"
     lastname: "Nom"
     email: "Adresse e-mail :"
+    timezone: "Fuseau horaire :"
     current_password: "Mot de passe actuel :"
     password: "Mot de passe :"
     password_confirmation: "Vérification :"

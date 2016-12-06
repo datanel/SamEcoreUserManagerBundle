@@ -1,8 +1,8 @@
 Feature: User reset password
     Background:
         Given the following data in "public.t_user_usr" exist:
-          | usr_first_name | usr_last_name | usr_username | usr_username_canonical | usr_email           | usr_email_canonical | usr_salt                        | usr_password                                                                             | usr_enabled | usr_locked | usr_expired | usr_confirmation_token                      | usr_password_requested_at | usr_credentials_expired | cus_id | usr_status |
-          | TestUser       | TestUser      | TestUser     | testuser               | testuser@canaltp.fr | testuser@canaltp.fr | ik5mmzc7ia04o44kowokkw8gkc8coc8 | eV/AToo3NOL9S3HzWC67EE2ZKDn2OLZMKQ4cTPBLx+/H88G7oho5OWMsrj9hiNR4VOy19ryYJaHoZahw9m7doQ== | TRUE        | FALSE      | FALSE       | MeRhd4K1QZyh_TuuP8M6ft4xRU-p1A6KKZn0zUfPVSk | 2099-09-23 13:36:17       | 0                       | 1      |  1         |
+          | usr_first_name | usr_last_name | usr_username | usr_username_canonical | usr_email           | usr_email_canonical | usr_salt                        | usr_password                                                                             | usr_enabled | usr_locked | usr_expired | usr_confirmation_token                      | usr_password_requested_at | usr_credentials_expired | cus_id | usr_status | usr_timezone |
+          | TestUser       | TestUser      | TestUser     | testuser               | testuser@canaltp.fr | testuser@canaltp.fr | ik5mmzc7ia04o44kowokkw8gkc8coc8 | eV/AToo3NOL9S3HzWC67EE2ZKDn2OLZMKQ4cTPBLx+/H88G7oho5OWMsrj9hiNR4VOy19ryYJaHoZahw9m7doQ== | TRUE        | FALSE      | FALSE       | MeRhd4K1QZyh_TuuP8M6ft4xRU-p1A6KKZn0zUfPVSk | 2099-09-23 13:36:17       | 0                       | 1      |  1         | Europe/Paris |
         And I am on "/admin/resetting/reset/MeRhd4K1QZyh_TuuP8M6ft4xRU-p1A6KKZn0zUfPVSk"
 
     Scenario: Validation rules presence
