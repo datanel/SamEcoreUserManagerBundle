@@ -12,7 +12,7 @@ Feature: User reset password
         When I fill in "Nouveau mot de passe :" with "GoodPassword123!"
         And I fill in "Vérification :" with "GoodPassword123!"
         And I press "Modifier le mot de passe"
-        Then I should see "resetting.flash.success" in the ".fos_user_success" element
+        Then I should see "Le mot de passe a été réinitialisé avec succès" in the ".fos_user_success" element
 
     Scenario: User creation with different passwords
         When I fill in "Nouveau mot de passe :" with "GoodPassword123!"

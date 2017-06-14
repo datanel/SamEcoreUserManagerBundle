@@ -74,20 +74,21 @@ class ResettingController extends BaseResettingController
         $user = $this->container->get('fos_user.user_manager')->findUserByEmail($email);
 
         if (null === $user) {
-            $this->setFlash(self::SESSION_ADMIN_RESET, 'user.list.admin.reset.no.user');
+            $this->setFlash(self::SESSION_ADMIN_RESET, 'ctp_user.user.actions.reset_password.not_exist');
         } else {
             $code = $this->resetEmail($user);
+
             switch ($code) {
                 case self::RESET_EMAIL_ALREADY_SENT:
                     $this->setFlash(
                         self::SESSION_ADMIN_RESET,
-                        'user.list.admin.reset.already.sent'
+                        'ctp_user.user.actions.reset_password.already_sent'
                     );
                     break;
                 case self::RESET_EMAIL_OK:
                     $this->setFlash(
                         self::SESSION_ADMIN_RESET,
-                        'user.list.admin.reset.ok'
+                        'ctp_user.user.actions.reset_password.sent'
                     );
                     break;
             }
@@ -130,5 +131,17 @@ class ResettingController extends BaseResettingController
         $this->container->get('fos_user.user_manager')->updateUser($user);
 
         return self::RESET_EMAIL_OK;
+    }
+
+    /**
+     * Generate the redirection url when the resetting is completed.
+     *
+     * @param \FOS\UserBundle\Model\UserInterface $user
+     *
+     * @return string
+     */
+    protected function getRedirectionUrl(UserInterface $user)
+    {
+        return $this->container->get('router')->generate('root');
     }
 }

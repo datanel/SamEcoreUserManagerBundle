@@ -46,6 +46,9 @@ ctp_user:
             reset_password:
                 short: Réinitialiser le mot de passe
                 full: Demander un renouvellement de mot de passe
+                not_exist: L'utilisateur est introuvable.
+                already_sent: La demande de réinitialisation de mot de passe a déjà été envoyée
+                sent: La demande de réinitialisation de mot de passe a été envoyée
             cancel:
                 short: Annuler
             back:
@@ -107,3 +110,7 @@ ctp_user:
             _title: Mon profil
             actions: Sauvegarder
             validate: Vos informations ont bien été enregistrées
+
+resetting:
+    flash:
+        success: Le mot de passe a été réinitialisé avec succès
