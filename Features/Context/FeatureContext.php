@@ -4,21 +4,20 @@ namespace CanalTP\SamEcoreUserManagerBundle\Features\Context;
 
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\MinkExtension\Context\MinkContext;
+use Behat\Behat\Context\SnippetAcceptingContext;
+use Behat\Symfony2Extension\Context\KernelDictionary;
 
-class FeatureContext extends MinkContext
+class FeatureContext extends MinkContext implements SnippetAcceptingContext
 {
+    use KernelDictionary;
     /**
      * @AfterScenario
      * @param AfterScenarioScope $scope
      */
     public function afterScenario(AfterScenarioScope $scope)
     {
-        $environment = $scope->getEnvironment();
-        $doctrineDbalContext = $environment->getContext('CanalTP\SamCoreBundle\Features\Context\DoctrineDbalContext');
-
-        $doctrineDbalContext->truncateTables([
-            'public.t_user_usr',
-        ]);
+        $connection = $this->getContainer()->get('doctrine.dbal.default_connection');
+        $connection->executeUpdate("DELETE FROM public.t_user_usr WHERE usr_email!='admin@canaltp.fr'");
     }
 
     /**
