@@ -61,7 +61,7 @@ ctp_user:
             username: Login
             groups: Applications
             status: Statut
-            name: Nom
+            name: Nom Prénom
             url: Url
             email: Email
             last_login: Dernière connexion

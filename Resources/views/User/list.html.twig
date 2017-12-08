@@ -19,11 +19,12 @@
     {% if isSuperAdmin %}
         <th>{{'ctp_user.user.list.customer'|trans}}</th>
     {% endif %}
+    <th>{{'ctp_user.user.list.last_login'|trans}}</th>
     <th>{{'ctp_user.user.list.username'|trans}}</th>
     <th>{{'ctp_user.user.list.name'|trans}}</th>
     <th>{{'ctp_user.user.list.email'|trans}}</th>
-    <th>{{'ctp_user.user.list.profil'|trans}}</th>
     <th>{{'ctp_user.user.list.groups'|trans}}</th>
+    <th>{{'ctp_user.user.list.profil'|trans}}</th>
     <th>{{'ctp_user.user.list.status'|trans}}</th>
     {% if is_granted('BUSINESS_MANAGE_USER') %}
         <th>{{'ctp_user.user.list.actions'|trans}}</th>
@@ -36,14 +37,10 @@
             {% if isSuperAdmin %}
                 <td>{{ entity.customer.name }}</td>
             {% endif %}
+            <td>{{ entity.lastLogin.format('d/m/Y') }}</td>
             <td><a href="{{ path('sam_user_edit', { 'user': entity.id }) }}">{{ entity.username }}</a></td>
             <td>{{ entity.lastname }} {{ entity.firstname }}</td>
             <td><a href="mailto:{{ entity.email }}">{{ entity.email }}</a></td>
-            <td>
-                {% for role in entity.userRoles %}
-                    <div>{{ role.name }}</div>
-                {% endfor %}
-            </td>
             <td>
                 {% set apps = [] %}
 
@@ -55,6 +52,11 @@
 
                 {% for app in apps %}
                     <div>{{ app }}</div>
+                {% endfor %}
+            </td>
+            <td>
+                {% for role in entity.userRoles %}
+                    <div>{{ role.name }}</div>
                 {% endfor %}
             </td>
             <td class="text-center">{{ entity.getStatusKey|trans }}</td>
@@ -122,4 +124,3 @@
         });
     </script>
 {% endblock %}
-
