@@ -16,8 +16,12 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
      */
     public function afterScenario(AfterScenarioScope $scope)
     {
-        $connection = $this->getContainer()->get('doctrine.dbal.default_connection');
-        $connection->executeUpdate("DELETE FROM public.t_user_usr WHERE usr_email!='admin@canaltp.fr'");
+        $environment = $scope->getEnvironment();
+        $doctrineDbalContext = $environment->getContext('CanalTP\SamCoreBundle\Features\Context\DoctrineDbalContext');
+
+        $doctrineDbalContext->truncateTables([
+            'public.t_user_usr',
+        ]);
     }
 
     /**
