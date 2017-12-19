@@ -41,6 +41,8 @@ ctp_user:
             add:
                 short: Ajouter
                 full: Ajouter un utilisateur
+            download:
+                csv: Télécharger la liste
             delete:
                 short: Supprimer
             reset_password:
