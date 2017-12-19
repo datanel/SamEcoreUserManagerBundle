@@ -41,7 +41,7 @@
             {% if isSuperAdmin %}
                 <td>{{ entity.customer.name }}</td>
             {% endif %}
-            <td>{{ entity.lastLogin.format('d/m/Y') }}</td>
+            <td>{{ entity.lastLogin.format('d/m/Y')|default('00/00/0000') }}</td>
             <td><a href="{{ path('sam_user_edit', { 'user': entity.id }) }}">{{ entity.username }}</a></td>
             <td>{{ entity.lastname }} {{ entity.firstname }}</td>
             <td><a href="mailto:{{ entity.email }}">{{ entity.email }}</a></td>
@@ -122,8 +122,7 @@
                     cssGoto: '.gotoPage',
                     size: 50
                 };
-
-                $("#table").tablesorter().tablesorterPager(pagerOptions);
+                $("#table").tablesorter({dateFormat: 'ddmmyyyy'}).tablesorterPager(pagerOptions);
             });
             $("a#user_list_download_csv").click(function () {
                 $('#table').tableExport({type:'csv',escape:'false',tableName:'users'});
