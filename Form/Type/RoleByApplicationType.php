@@ -73,7 +73,7 @@ class RoleByApplicationType extends AbstractType
         $userEditRoles = $form->getParent()->getParent()->getData()->getRoles();
         $currentUserRoles = $this->currentUser->getRoles();
         // TODO: Check business by Application
-        $canAssignAll = $this->securityContext->isGranted('BUSINESS_MANAGE_USER_ROLE');
+        $canAssignAll = $this->securityContext->isGranted('BUSINESS_MANAGE_USER');
 
         foreach ($view->children['roles']->children as $role) {
             if ($canAssignAll == false && !array_key_exists($role->vars['value'], $currentUserRoles)) {

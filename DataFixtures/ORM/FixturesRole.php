@@ -21,7 +21,6 @@ class FixturesRole extends AbstractFixture implements OrderedFixtureInterface
             'permissions'   => array(
                 'BUSINESS_VIEW_USER',
                 'BUSINESS_MANAGE_USER',
-                'BUSINESS_MANAGE_USER_ROLE',
                 'BUSINESS_MANAGE_USER_PERIMETER',
                 'BUSINESS_VIEW_ROLE',
                 'BUSINESS_MANAGE_ROLE'
@@ -49,7 +48,6 @@ class FixturesRole extends AbstractFixture implements OrderedFixtureInterface
             'permissions'  => array(
                 'BUSINESS_VIEW_USER',
                 'BUSINESS_MANAGE_USER',
-                'BUSINESS_MANAGE_USER_ROLE',
                 'BUSINESS_MANAGE_USER_PERIMETER',
                 'BUSINESS_MANAGE_PERMISSION',
                 'BUSINESS_VIEW_ROLE',
@@ -64,7 +62,6 @@ class FixturesRole extends AbstractFixture implements OrderedFixtureInterface
             'permissions'  => array(
                 'BUSINESS_VIEW_USER',
                 'BUSINESS_MANAGE_USER',
-                'BUSINESS_MANAGE_USER_ROLE',
                 'BUSINESS_MANAGE_USER_PERIMETER',
                 'BUSINESS_MANAGE_PERMISSION',
                 'BUSINESS_VIEW_ROLE',
